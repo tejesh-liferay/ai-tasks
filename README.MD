@@ -19,11 +19,11 @@ Sample AI Tasks are provided in the samples folder. Se [here](https://github.com
 ## Known Limitations
 * [Multimodalilty is not yet supported](https://github.com/langchain4j/langchain4j/issues/938) 
 
-## Maintainers
+## Team
 
 * [Petteri Karttunen](https://github.com/peerkar)
-* [Fabian Bouché](https://github.com/fabian-bouche-liferay)
 * [Louis-Guillaume Durand](https://github.com/lgdd)
+* [Fabian Bouché](https://github.com/fabian-bouche-liferay)
 * [Carlos Montenegro](https://github.com/cgmonte)
 * [Andrew Jardine](https://github.com/andrewatliferay)
 
