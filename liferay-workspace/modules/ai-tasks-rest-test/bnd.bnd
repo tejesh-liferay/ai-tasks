@@ -1,0 +1,8 @@
+Bundle-Name: AI Tasks REST Test
+Bundle-SymbolicName: fi.soveltia.liferay.aitasks.rest.test
+Bundle-Version: 1.0.0
+-includeresource: fi.soveltia.liferay.aitasks.rest.client.jar=../ai-tasks-rest-client/build/libs/fi.soveltia.liferay.aitasks.rest.client-1.0.0.jar;lib:=true
+-provider-policy:\
+	${replacestring;${range;[==,\
+	==]};.*,\
+	(.*)];$1}

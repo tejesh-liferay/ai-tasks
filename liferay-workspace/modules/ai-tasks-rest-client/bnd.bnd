@@ -1,0 +1,3 @@
+Bundle-Name: AI Tasks REST Client
+Bundle-SymbolicName: fi.soveltia.liferay.aitasks.rest.client
+Bundle-Version: 1.0.0

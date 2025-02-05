@@ -1,0 +1,6 @@
+Bundle-Name: AI Tasks Language
+Bundle-SymbolicName: fi.soveltia.liferay.aitasks.language
+Bundle-Version: 1.0.0
+Provide-Capability:\
+	liferay.resource.bundle;\
+		resource.bundle.base.name="content.Language"

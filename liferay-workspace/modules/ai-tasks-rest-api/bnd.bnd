@@ -1,0 +1,6 @@
+Bundle-Name: AI Tasks REST API
+Bundle-SymbolicName: fi.soveltia.liferay.aitasks.rest.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	fi.soveltia.liferay.aitasks.rest.dto.v1_0,\
+	fi.soveltia.liferay.aitasks.rest.resource.v1_0
