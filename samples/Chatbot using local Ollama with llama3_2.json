@@ -1,0 +1,44 @@
+{
+	"configuration": {
+		"debug": true,
+		"edges": [
+		],
+		"nodes": [
+			{
+				"id": "1",
+				"label": "Ollama with llama3.2",
+				"parameters": {
+					"baseUrl": "http://localhost:11434",
+					"inputParameters": {
+						"text": {
+							"type": "text"
+						}
+					},
+					"memoryMaxMessages": 50,
+					"modelName": "llama3.2",
+					"outputParameterName": "text",
+					"promptTemplate": "{{input.text}}",
+					"temperature": 0.7,
+					"useChatMemory": true
+				},
+				"type": "ollamaChatModel",
+				"uiConfiguration": {
+					"position": {
+						"x": -1403.6625510246258,
+						"y": -100.53371057610677
+					}
+				}
+			}
+		],
+		"startNodeId": "1"
+	},
+	"description_i18n": {
+		"en_US": "Chatbot using local llama3.2 on Ollama"
+	},
+	"enabled": true,
+	"externalReferenceCode": "sampleOllamaWithLlama3.2",
+	"schemaVersion": "1.0",
+	"title_i18n": {
+		"en_US": "Chatbot using local llama3.2 on Ollama"
+	}
+}
