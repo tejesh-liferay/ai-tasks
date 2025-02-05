@@ -268,6 +268,25 @@ const OllamaChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                     </div>
                 </div>
             </Tab>
+            <Tab id={'toolsSettings'} label={'Tools'}>
+                <div>
+                    <div className="form-group">
+                        <label htmlFor="tools">Tools</label>
+                        <textarea
+                            className="form-control"
+                            id="tools"
+                            rows="20"
+                            value={JSON.stringify(nodeParameters.tools, undefined, 2)}
+                            onChange={(e) => {
+                                onChange('tools', JSON.parse(e.currentTarget.value));
+                            }}
+                        />
+                        <small className="form-text text-muted">
+                            Tools configuration as JSON.
+                        </small>
+                    </div>
+                </div>
+            </Tab>
             <Tab id={'outputSettings'} label={'Output'}>
                 <div>
                     <div className="form-group">

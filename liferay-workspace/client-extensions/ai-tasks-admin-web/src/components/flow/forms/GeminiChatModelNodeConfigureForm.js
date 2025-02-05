@@ -252,6 +252,25 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                     </div>
                 </div>
             </Tab>
+            <Tab id={'toolsSettings'} label={'Tools'}>
+                <div>
+                    <div className="form-group">
+                        <label htmlFor="tools">Tools</label>
+                        <textarea
+                            className="form-control"
+                            id="tools"
+                            rows="20"
+                            value={JSON.stringify(nodeParameters.tools, undefined, 2)}
+                            onChange={(e) => {
+                                onChange('tools', JSON.parse(e.currentTarget.value));
+                            }}
+                        />
+                        <small className="form-text text-muted">
+                            Tools configuration as JSON.
+                        </small>
+                    </div>
+                </div>
+            </Tab>
             <Tab id={'outputSettings'} label={'Output'}>
                 <div>
                     <div className="form-group">
@@ -296,10 +315,10 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                             className="form-control"
                             id="responseSchema"
                             rows="3"
-                            value={nodeParameters.safetySettings}
                             onChange={(e) => {
-                                onChange('responseSchema', e.currentTarget.value);
+                                onChange('responseSchema', JSON.parse(e.currentTarget.value));
                             }}
+                            value={JSON.stringify(nodeParameters.responseSchema, undefined, 2)}
                         />
                         <small className="form-text text-muted">
                             Response schema as JSON.
@@ -311,10 +330,10 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                             className="form-control"
                             id="safetySettings"
                             rows="3"
-                            value={nodeParameters.safetySettings}
                             onChange={(e) => {
-                                onChange('safetySettings', e.currentTarget.value);
+                                onChange('safetySettings', JSON.parse(e.currentTarget.value));
                             }}
+                            value={JSON.stringify(nodeParameters.safetySettings, undefined, 2)}
                         />
                         <small className="form-text text-muted">
                         </small>

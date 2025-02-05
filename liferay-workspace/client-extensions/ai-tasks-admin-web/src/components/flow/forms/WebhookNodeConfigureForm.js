@@ -54,10 +54,10 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                             className="form-control"
                             id="body"
                             rows="3"
-                            value={nodeParameters.systemMessage}
                             onChange={(e) => {
-                                onChange('body', e.currentTarget.value);
+                                onChange('body', JSON.parse(e.currentTarget.value));
                             }}
+                            value={JSON.stringify(nodeParameters.body, undefined, 2)}
                         />
                         <small className="form-text text-muted">
                             Enter the body payload as JSON.
@@ -69,10 +69,10 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                             className="form-control"
                             id="headers"
                             rows="3"
-                            value={nodeParameters.headers}
                             onChange={(e) => {
-                                onChange('headers', e.currentTarget.value);
+                                onChange('headers', JSON.parse(e.currentTarget.value));
                             }}
+                            value={JSON.stringify(nodeParameters.headers, undefined, 2)}
                         />
                         <small className="form-text text-muted">
                             Enter the headers as JSON.

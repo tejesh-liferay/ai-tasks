@@ -241,10 +241,10 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                             id="logitBias"
                             placeholder="Enter logit bias"
                             rows="3"
-                            value={nodeParameters.logitBias}
                             onChange={(e) => {
-                                onChange('logitBias', e.currentTarget.value);
+                                onChange('logitBias', JSON.parse(e.currentTarget.value));
                             }}
+                            value={JSON.stringify(nodeParameters.logitBias, undefined, 2)}
                         />
                         <small className="form-text text-muted">Logit bias as JSON. See  See https://platform.openai.com/docs/api-reference/chat.</small>
                     </div>
@@ -280,6 +280,25 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                         />
                         <small className="form-text text-muted">
                             Instructions given to the model to set up its behavior.
+                        </small>
+                    </div>
+                </div>
+            </Tab>
+            <Tab id={'toolsSettings'} label={'Tools'}>
+                <div>
+                    <div className="form-group">
+                        <label htmlFor="tools">Tools</label>
+                        <textarea
+                            className="form-control"
+                            id="tools"
+                            rows="20"
+                            value={JSON.stringify(nodeParameters.tools, undefined, 2)}
+                            onChange={(e) => {
+                                onChange('tools', JSON.parse(e.currentTarget.value));
+                            }}
+                        />
+                        <small className="form-text text-muted">
+                            Tools configuration as JSON.
                         </small>
                     </div>
                 </div>
@@ -329,10 +348,10 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                             className="form-control"
                             id="customHeaders"
                             rows="3"
-                            value={nodeParameters.customHeaders}
                             onChange={(e) => {
-                                onChange('customHeaders', e.currentTarget.value);
+                                onChange('customHeaders', JSON.parse(e.currentTarget.value));
                             }}
+                            value={JSON.stringify(nodeParameters.customHeaders, undefined, 2)}
                         />
                         <small className="form-text text-muted">
                             Custom headers as JSON.
