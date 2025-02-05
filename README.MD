@@ -13,7 +13,7 @@ AI Tasks is an LLM integrated workflow orchestration tool for  Liferay. It can b
 
 ## Examples
 
-Sample AI Tasks are provided in the samples folder. Se [here](https://github.com/peerkar/ai-tasks/wiki/Examples) for instructions.
+Sample AI Tasks are provided in the [samples](./samples) folder. Se [here](https://github.com/peerkar/ai-tasks/wiki/Examples) for instructions.
 
 
 ## Team
