@@ -1,20 +1,15 @@
 # AI Tasks
 
 ## TL;DR 
-AI Tasks is an LLM integrated workflow orchestration tool for  Liferay. It can be used standalone, but also integrated to Liferay workflows and to external worfklow orchestrators. It allows to visually define workflows which are then exposed through REST endpoints. Liferay integration enables governing access, permissions and auditing with the standard Liferay tools as well as easy integration to existing or new Liferay features, to leverage AI.
+AI Tasks is an LLM integrated workflow orchestration tool for  Liferay. It can be used standalone, but also integrated to Liferay workflows and to external worfklow orchestrators and vice versa. It allows to visually define AI workflows which are then exposed through a REST endpoint. Liferay integration enables governing access, permissions and auditing with the standard Liferay tools as well as easy integration to existing or new Liferay features, to leverage AI.
 
 ![AI Tasks admin](./ai-tasks-admin.png)
 
 ## Documentation 
-
-* [Installation](https://github.com/peerkar/ai-tasks/wiki/Installation)
-* [Configuration](https://github.com/peerkar/ai-tasks/wiki/Configuration)
-* [Extending](https://github.com/peerkar/ai-tasks/wiki/Extending)
+See the [wiki](https://github.com/peerkar/ai-tasks/wiki)
 
 ## Examples
-
-Sample AI Tasks are provided in the [samples](./samples) folder. Se [here](https://github.com/peerkar/ai-tasks/wiki/Examples) for instructions.
-
+Sample AI Tasks are provided in the [samples](./samples) folder.
 
 ## Team
 
