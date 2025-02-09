@@ -4,6 +4,7 @@ import { useDnD } from '../../contexts/DnDContext';
 import {
 GEMINI_CHAT_MODEL,
 GOOGLE_IMAGEN,
+HUGGING_FACE_CHAT_MODEL,
 LIFERAY_SEARCH,
 OLLAMA_CHAT_MODEL,
 OPENAI_CHAT_MODEL,
@@ -66,6 +67,19 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
               }
             >
               <h4>Google Imagen</h4>
+            </div>
+          </div>
+          <div
+            className={'hugging-face-chat-model-node'}
+            onDragStart={(event) => onDragStart(event, HUGGING_FACE_CHAT_MODEL)}
+            draggable
+          >
+            <div
+              className={
+                'node-header-container d-flex flex-row align-items-center justify-content-center'
+              }
+            >
+              <h4>HuggingFace Chat Model</h4>
             </div>
           </div>
           <div

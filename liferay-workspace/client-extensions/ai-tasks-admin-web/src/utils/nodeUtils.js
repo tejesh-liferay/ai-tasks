@@ -2,6 +2,7 @@ import {
     ENTRY_POINT_NODE,
     GEMINI_CHAT_MODEL,
     GOOGLE_IMAGEN,
+    HUGGING_FACE_CHAT_MODEL,
     LIFERAY_SEARCH,
     OLLAMA_CHAT_MODEL,
     OPENAI_CHAT_MODEL,
@@ -38,6 +39,19 @@ export const getDefaultParameters = (nodeType) => {
             project: '',
             publisher: 'google',
             sampleImageSize: 1536,
+        };
+    }
+    if (nodeType === HUGGING_FACE_CHAT_MODEL) {
+        return {
+            accessToken: '',
+            baseUrl: '',
+            maxNewTokens: '',
+            modelName: '',
+            outputParameterName: 'text',
+            returnFullText: true,
+            temperature: 0.7,
+            timeout: 20,
+            waitForModel: true,
         };
     }
     if (nodeType === LIFERAY_SEARCH) {

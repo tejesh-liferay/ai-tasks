@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Tab, Tabs } from '../../ui/Tabs';
 
-const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
+const OpenAIChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
     const rangeWidth = (nodeParameters.temperature / 2) * 100;
     return (
         <Tabs>
@@ -479,4 +479,4 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
     );
 };
 
-export default GeminiChatModelNodeConfigureForm;
+export default OpenAIChatModelNodeConfigureForm;

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useAITasksContext } from '../../contexts/AITasksContext';
 import GeminiChatModelNodeConfigureForm from './forms/GeminiChatModelNodeConfigureForm';
 import GoogleImagenNodeConfigureForm from './forms/GoogleImagenNodeConfigureForm';
+import HuggingFaceChatModelNodeConfigureForm from './forms/HuggingFaceChatModelNodeConfigureForm';
 import LiferaySearchNodeConfigureForm from './forms/LiferaySearchNodeConfigureForm';
 import OllamaChatModelNodeConfigureForm from './forms/OllamaChatModelNodeConfigureForm';
 import OpenAIChatModelNodeConfigureForm from './forms/OpenAIChatModelNodeConfigureForm';
@@ -12,6 +13,7 @@ import WebhookNodeConfigureForm from './forms/WebhookNodeConfigureForm';
 import {
 GEMINI_CHAT_MODEL,
 GOOGLE_IMAGEN,
+HUGGING_FACE_CHAT_MODEL,
 LIFERAY_SEARCH,
 OLLAMA_CHAT_MODEL,
 OPENAI_CHAT_MODEL,
@@ -60,6 +62,15 @@ const AITaskFlowNodeConfigure = () => {
         />
       );
     }
+
+  if (currentNode.type === HUGGING_FACE_CHAT_MODEL) {
+    return (
+      <HuggingFaceChatModelNodeConfigureForm
+        nodeParameters={currentNode.parameters}
+        onChange={handleParameterChange}
+      />
+    );
+  }
 
   if (currentNode.type === LIFERAY_SEARCH) {
     return (

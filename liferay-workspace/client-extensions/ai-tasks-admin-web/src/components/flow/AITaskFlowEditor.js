@@ -16,6 +16,7 @@ import '@xyflow/react/dist/style.css';
 import EntryPointNode from './nodes/EntryPointNode';
 import GeminiChatModelNode from './nodes/GeminiChatModelNode';
 import GoogleImagenNode from './nodes/GoogleImagenNode';
+import HuggingFaceChatModelNode from './nodes/HuggingFaceChatModelNode';
 import LiferaySearchNode from './nodes/LiferaySearchNode';
 import OllamaChatModelNode from './nodes/OllamaChatModelNode';
 import OpenAIChatModelNode from './nodes/OpenAIChatModelNode';
@@ -34,6 +35,7 @@ import {
     ENTRY_POINT_NODE,
     GEMINI_CHAT_MODEL,
     GOOGLE_IMAGEN,
+    HUGGING_FACE_CHAT_MODEL,
     LIFERAY_SEARCH,
     OLLAMA_CHAT_MODEL,
     OPENAI_CHAT_MODEL,
@@ -69,6 +71,7 @@ const AITaskFlowEditor = ({ onConfigChange }) => {
         [ENTRY_POINT_NODE]: EntryPointNode,
         [GEMINI_CHAT_MODEL]: GeminiChatModelNode,
         [GOOGLE_IMAGEN]: GoogleImagenNode,
+        [HUGGING_FACE_CHAT_MODEL]: HuggingFaceChatModelNode,
         [LIFERAY_SEARCH]: LiferaySearchNode,
         [OLLAMA_CHAT_MODEL]: OllamaChatModelNode,
         [OPENAI_CHAT_MODEL]: OpenAIChatModelNode,

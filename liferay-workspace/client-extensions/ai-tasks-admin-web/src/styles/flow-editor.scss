@@ -71,6 +71,10 @@
   @extend %node-base;
 }
 
+.hugging-face-chat-model-node {
+  @extend %node-base;
+}
+
 .liferay-search-node {
   @extend %node-base;
 }
