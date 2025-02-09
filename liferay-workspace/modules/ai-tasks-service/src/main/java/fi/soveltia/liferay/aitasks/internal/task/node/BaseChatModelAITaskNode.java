@@ -2,13 +2,12 @@ package fi.soveltia.liferay.aitasks.internal.task.node;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.util.*;
+import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -18,12 +17,10 @@ import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.WebSearchContentRetriever;
 import dev.langchain4j.rag.query.router.DefaultQueryRouter;
-import dev.langchain4j.rag.query.router.QueryRouter;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.Result;
-
-import dev.langchain4j.web.search.WebSearchEngine;
 import dev.langchain4j.web.search.google.customsearch.GoogleCustomWebSearchEngine;
+
 import fi.soveltia.liferay.aitasks.configuration.AITasksConfigurationProvider;
 import fi.soveltia.liferay.aitasks.internal.task.ai.services.AIChatAssistant;
 import fi.soveltia.liferay.aitasks.internal.task.chat.memory.ChatMemoryStoreProvider;
@@ -37,6 +34,7 @@ import fi.soveltia.liferay.aitasks.task.context.AITaskContext;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeResponse;
 
 import java.time.Duration;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -93,61 +91,6 @@ public abstract class BaseChatModelAITaskNode
 			jsonObject, result);
 	}
 
-	private RetrievalAugmentor _getWebSearchRetrievalAugmentor(JSONObject jsonObject) {
-
-		List<ContentRetriever> contentRetrievers = new ArrayList<>();
-
-		for (String key : jsonObject.keySet()) {
-
-			// Currently Custom Google engine only
-
-			if (!StringUtil.equals("google-custom", key)) {
-				continue;
-			}
-
-			contentRetrievers.add(_createGoogleCustomWebSearchContentRetriever(
-					jsonObject.getJSONObject(key)));
-		}
-
-		if (contentRetrievers.isEmpty()) {
-			return null;
-		}
-
-		return DefaultRetrievalAugmentor.builder()
-				.queryRouter(new DefaultQueryRouter(
-						contentRetrievers.toArray(new ContentRetriever[0])))
-				.build();
-	}
-
-	private ContentRetriever _createGoogleCustomWebSearchContentRetriever(JSONObject jsonObject) {
-
-		GoogleCustomWebSearchEngine.GoogleCustomWebSearchEngineBuilder googleCustomWebSearchEngineBuilder =
-				GoogleCustomWebSearchEngine.builder();
-
-		SetterUtil.setNotBlankString(googleCustomWebSearchEngineBuilder::apiKey,
-				jsonObject.getString("apiKey"));
-		SetterUtil.setNotBlankString(googleCustomWebSearchEngineBuilder::csi,
-				jsonObject.getString("csi"));
-		googleCustomWebSearchEngineBuilder.includeImages(
-				jsonObject.getBoolean("includeImage"));
-		googleCustomWebSearchEngineBuilder.logRequests(
-				jsonObject.getBoolean("logRequests"));
-		googleCustomWebSearchEngineBuilder.logResponses(
-				jsonObject.getBoolean("logResponses"));
-		SetterUtil.setNotNullInteger(googleCustomWebSearchEngineBuilder::maxRetries,
-				jsonObject, "maxRetries");
-
-		if (jsonObject.has("timeout")) {
-			googleCustomWebSearchEngineBuilder.timeout(
-					Duration.ofSeconds(jsonObject.getInt("timeout")));
-		}
-
-		return WebSearchContentRetriever.builder()
-				.webSearchEngine(googleCustomWebSearchEngineBuilder.build())
-				.maxResults(jsonObject.getInt("maxResults", 3))
-				.build();
-	}
-
 	protected AIChatAssistant getAIChatAssistant(
 		JSONObject jsonObject, String systemMessage) {
 
@@ -160,8 +103,9 @@ public abstract class BaseChatModelAITaskNode
 		setChatMemoryProvider(builder, jsonObject);
 
 		if (jsonObject.has("webSearchRetrievalAugmentor")) {
-
-			RetrievalAugmentor retrievalAugmentor = _getWebSearchRetrievalAugmentor(jsonObject.getJSONObject("webSearchRetrievalAugmentor"));
+			RetrievalAugmentor retrievalAugmentor =
+				_getWebSearchRetrievalAugmentor(
+					jsonObject.getJSONObject("webSearchRetrievalAugmentor"));
 
 			if (retrievalAugmentor != null) {
 				builder.retrievalAugmentor(retrievalAugmentor);
@@ -173,10 +117,7 @@ public abstract class BaseChatModelAITaskNode
 		}
 
 		ListUtil.isNotEmptyForEach(
-			getTools(jsonObject),
-			tool -> {
-					builder.tools(tool);
-			});
+			getTools(jsonObject), tool -> builder.tools(tool));
 
 		return builder.build();
 	}
@@ -220,9 +161,8 @@ public abstract class BaseChatModelAITaskNode
 		List<Object> aiTaskTools = new ArrayList<>();
 
 		for (String key : toolsJSONObject.keySet()) {
-
 			Object aiTaskTool = aiToolsProvider.getTool(
-					toolsJSONObject.getJSONObject(key), key);
+				toolsJSONObject.getJSONObject(key), key);
 
 			if (aiTaskTool != null) {
 				aiTaskTools.add(aiTaskTool);
@@ -262,6 +202,44 @@ public abstract class BaseChatModelAITaskNode
 	@Reference
 	protected ChatModelListenerProvider chatModelListenerProvider;
 
+	private ContentRetriever _createGoogleCustomWebSearchContentRetriever(
+		JSONObject jsonObject) {
+
+		GoogleCustomWebSearchEngine.GoogleCustomWebSearchEngineBuilder
+			googleCustomWebSearchEngineBuilder =
+				GoogleCustomWebSearchEngine.builder();
+
+		SetterUtil.setNotBlankString(
+			googleCustomWebSearchEngineBuilder::apiKey,
+			jsonObject.getString("apiKey"));
+		SetterUtil.setNotBlankString(
+			googleCustomWebSearchEngineBuilder::csi,
+			jsonObject.getString("csi"));
+
+		googleCustomWebSearchEngineBuilder.includeImages(
+			jsonObject.getBoolean("includeImage"));
+		googleCustomWebSearchEngineBuilder.logRequests(
+			jsonObject.getBoolean("logRequests"));
+		googleCustomWebSearchEngineBuilder.logResponses(
+			jsonObject.getBoolean("logResponses"));
+
+		SetterUtil.setNotNullInteger(
+			googleCustomWebSearchEngineBuilder::maxRetries, jsonObject,
+			"maxRetries");
+
+		if (jsonObject.has("timeout")) {
+			googleCustomWebSearchEngineBuilder.timeout(
+				Duration.ofSeconds(jsonObject.getInt("timeout")));
+		}
+
+		return WebSearchContentRetriever.builder(
+		).webSearchEngine(
+			googleCustomWebSearchEngineBuilder.build()
+		).maxResults(
+			jsonObject.getInt("maxResults", 3)
+		).build();
+	}
+
 	private Map<String, Object> _getDebugInfo(
 		boolean debug, Result<?> result, String systemMessage,
 		String userMessage) {
@@ -273,9 +251,38 @@ public abstract class BaseChatModelAITaskNode
 		return HashMapBuilder.<String, Object>put(
 			"systemMessage", systemMessage
 		).put(
-			"userMessage", userMessage.toString()
+			"userMessage", userMessage
 		).putAll(
 			getCommonDebugInfo(result.finishReason(), result.tokenUsage())
+		).build();
+	}
+
+	private RetrievalAugmentor _getWebSearchRetrievalAugmentor(
+		JSONObject jsonObject) {
+
+		List<ContentRetriever> contentRetrievers = new ArrayList<>();
+
+		for (String key : jsonObject.keySet()) {
+
+			// Currently Custom Google engine only
+
+			if (!StringUtil.equals("google-custom", key)) {
+				continue;
+			}
+
+			contentRetrievers.add(
+				_createGoogleCustomWebSearchContentRetriever(
+					jsonObject.getJSONObject(key)));
+		}
+
+		if (contentRetrievers.isEmpty()) {
+			return null;
+		}
+
+		return DefaultRetrievalAugmentor.builder(
+		).queryRouter(
+			new DefaultQueryRouter(
+				contentRetrievers.toArray(new ContentRetriever[0]))
 		).build();
 	}
 

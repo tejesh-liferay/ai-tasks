@@ -8,7 +8,6 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
-import dev.langchain4j.chain.ConversationalChain;
 import dev.langchain4j.data.message.AudioContent;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.ImageContent;
@@ -16,7 +15,6 @@ import dev.langchain4j.data.message.PdfFileContent;
 import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.message.VideoContent;
-import dev.langchain4j.data.video.Video;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 
@@ -60,10 +58,9 @@ public class PromptUtil {
 
 		if (inputParametersJSONObject == null) {
 			return _getPrompt(
-					aiTaskContext, input,
-					_getPromptTemplate("promptTemplate", jsonObject),
-					MapUtil.getString(input, "text"));
-
+				aiTaskContext, input,
+				_getPromptTemplate("promptTemplate", jsonObject),
+				MapUtil.getString(input, "text"));
 		}
 
 		List<Content> contents = new ArrayList<>();
@@ -102,18 +99,17 @@ public class PromptUtil {
 			}
 		}
 
-		UserMessage userMessage = UserMessage.from(contents.toArray(new Content[0]));
+		UserMessage userMessage = UserMessage.from(
+			contents.toArray(new Content[0]));
 
 		if (userMessage.hasSingleText()) {
 			return userMessage.singleText();
 		}
-		else {
-			// TODO: implement when AIServices support multimodality
-			// See https://github.com/langchain4j/langchain4j/issues/938
 
-			return userMessage.singleText();
-		}
+		// TODO: implement when AIServices support multimodality
+		// See https://github.com/langchain4j/langchain4j/issues/938
 
+		return userMessage.singleText();
 	}
 
 	public static String getUserMessageString(

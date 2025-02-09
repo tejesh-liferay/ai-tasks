@@ -9,6 +9,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 
+import fi.soveltia.liferay.aitasks.model.AITask;
 import fi.soveltia.liferay.aitasks.rest.dto.v1_0.Configuration;
 import fi.soveltia.liferay.aitasks.rest.dto.v1_0.Node;
 import fi.soveltia.liferay.aitasks.service.AITaskService;
@@ -28,9 +29,8 @@ public class ChatMemoryManagerImpl implements ChatMemoryManager {
 		long userId) {
 
 		try {
-			fi.soveltia.liferay.aitasks.model.AITask aiTask =
-				_aiTaskService.fetchAITaskByExternalReferenceCode(
-					externalReferenceCode, companyId);
+			AITask aiTask = _aiTaskService.fetchAITaskByExternalReferenceCode(
+				externalReferenceCode, companyId);
 
 			if (aiTask == null) {
 				_log.error(
@@ -66,9 +66,8 @@ public class ChatMemoryManagerImpl implements ChatMemoryManager {
 		MessageWindowChatMemory memory = MessageWindowChatMemory.builder(
 		).id(
 			StringBundler.concat(
-					companyId, StringPool.POUND, userId,
-				StringPool.POUND, externalReferenceCode, StringPool.POUND,
-				nodeId)
+				companyId, StringPool.POUND, userId, StringPool.POUND,
+				externalReferenceCode, StringPool.POUND, nodeId)
 		).chatMemoryStore(
 			_chatMemoryStoreProvider.getChatMemoryStore()
 		).maxMessages(
@@ -78,11 +77,9 @@ public class ChatMemoryManagerImpl implements ChatMemoryManager {
 		memory.clear();
 	}
 
-	private Node _getNode(
-			fi.soveltia.liferay.aitasks.model.AITask aiTask, String nodeId)
-	 {
-
-		Configuration configuration = Configuration.toDTO(aiTask.getConfigurationJSON());
+	private Node _getNode(AITask aiTask, String nodeId) {
+		Configuration configuration = Configuration.toDTO(
+			aiTask.getConfigurationJSON());
 
 		for (Node node : configuration.getNodes()) {
 			if (StringUtil.equals(node.getId(), nodeId)) {

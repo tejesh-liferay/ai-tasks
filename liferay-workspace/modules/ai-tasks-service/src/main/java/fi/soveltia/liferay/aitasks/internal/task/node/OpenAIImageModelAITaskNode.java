@@ -25,7 +25,6 @@ public class OpenAIImageModelAITaskNode
 	}
 
 	protected ImageModel getImageModel(JSONObject jsonObject) {
-
 		return ImageModelUtil.getOpenAIImageModel(jsonObject);
 	}
 

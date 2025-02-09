@@ -52,7 +52,7 @@ public class GeminiChatModelAITaskNode
 		SetterUtil.setNotNullInteger(
 			builder::maxOutputTokens, jsonObject, "maxOutputTokens");
 		SetterUtil.setNotNullInteger(
-			builder::maxRetries, jsonObject,"maxRetries");
+			builder::maxRetries, jsonObject, "maxRetries");
 		SetterUtil.setNotBlankString(
 			builder::modelName, jsonObject.getString("modelName"));
 		SetterUtil.setNotBlankString(
@@ -77,9 +77,8 @@ public class GeminiChatModelAITaskNode
 
 		SetterUtil.setNotNullDoubleAsFloat(
 			builder::temperature, jsonObject, "temperature");
-		SetterUtil.setNotNullInteger(builder::topK, jsonObject,"topK");
-		SetterUtil.setNotNullDoubleAsFloat(
-			builder::topP, jsonObject, "topP");
+		SetterUtil.setNotNullInteger(builder::topK, jsonObject, "topK");
+		SetterUtil.setNotNullDoubleAsFloat(builder::topP, jsonObject, "topP");
 
 		builder.useGoogleSearch(jsonObject.getBoolean("useGoogleSearch"));
 

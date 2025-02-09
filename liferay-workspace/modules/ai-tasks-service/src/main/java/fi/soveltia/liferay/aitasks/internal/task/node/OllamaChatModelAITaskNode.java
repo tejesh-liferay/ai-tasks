@@ -8,19 +8,12 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.chat.request.ResponseFormat;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 
-import dev.langchain4j.service.Result;
-import fi.soveltia.liferay.aitasks.internal.task.ai.services.AIChatAssistant;
-import fi.soveltia.liferay.aitasks.internal.util.PromptUtil;
 import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
-import fi.soveltia.liferay.aitasks.internal.web.cache.ChatModelAITaskNodeWebCacheItem;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
-import fi.soveltia.liferay.aitasks.task.context.AITaskContext;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
 
 import java.time.Duration;
-import java.util.Map;
 
-import fi.soveltia.liferay.aitasks.task.node.AITaskNodeResponse;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -31,7 +24,6 @@ import org.osgi.service.component.annotations.Component;
 )
 public class OllamaChatModelAITaskNode
 	extends BaseChatModelAITaskNode implements AITaskNode {
-
 
 	@Override
 	public AITaskNodeInformation getAITaskNodeInformation() {
@@ -67,10 +59,9 @@ public class OllamaChatModelAITaskNode
 			builder::maxRetries, jsonObject, "maxRetries");
 		SetterUtil.setNotBlankString(
 			builder::modelName, jsonObject.getString("modelName"));
+		SetterUtil.setNotNullInteger(builder::numCtx, jsonObject, "numCtx");
 		SetterUtil.setNotNullInteger(
-			builder::numCtx, jsonObject, "numCtx");
-		SetterUtil.setNotNullInteger(
-			builder::numPredict, jsonObject,"numPredict");
+			builder::numPredict, jsonObject, "numPredict");
 
 		SetterUtil.setNotNullDouble(
 			builder::repeatPenalty, jsonObject, "repeatPenalty");
@@ -100,9 +91,8 @@ public class OllamaChatModelAITaskNode
 			builder.timeout(Duration.ofSeconds(jsonObject.getInt("timeout")));
 		}
 
-		SetterUtil.setNotNullInteger(builder::topK, jsonObject,"topK");
-		SetterUtil.setNotNullDouble(
-			builder::topP, jsonObject, "topP");
+		SetterUtil.setNotNullInteger(builder::topK, jsonObject, "topK");
+		SetterUtil.setNotNullDouble(builder::topP, jsonObject, "topP");
 
 		return builder.build();
 	}

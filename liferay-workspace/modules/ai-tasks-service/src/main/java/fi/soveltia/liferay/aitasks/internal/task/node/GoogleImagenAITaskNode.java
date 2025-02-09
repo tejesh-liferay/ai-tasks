@@ -1,12 +1,10 @@
 package fi.soveltia.liferay.aitasks.internal.task.node;
 
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.util.Validator;
 
 import dev.langchain4j.model.vertexai.VertexAiImageModel;
 
 import fi.soveltia.liferay.aitasks.internal.task.util.ImageModelUtil;
-import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
 
@@ -29,4 +27,5 @@ public class GoogleImagenAITaskNode
 	protected VertexAiImageModel getImageModel(JSONObject jsonObject) {
 		return ImageModelUtil.getVertexAiImageModel(jsonObject);
 	}
+
 }

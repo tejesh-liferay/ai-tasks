@@ -47,8 +47,7 @@ public class OpenAIChatModelAITaskNode
 		}
 
 		SetterUtil.setNotNullDouble(
-			builder::frequencyPenalty,
-			jsonObject, "frequencyPenalty");
+			builder::frequencyPenalty, jsonObject, "frequencyPenalty");
 
 		if (jsonObject.has("chatModelListeners")) {
 			builder.listeners(
@@ -65,9 +64,9 @@ public class OpenAIChatModelAITaskNode
 		builder.logResponses(jsonObject.getBoolean("logResponses"));
 
 		SetterUtil.setNotNullInteger(
-			builder::maxRetries, jsonObject,"maxRetries");
+			builder::maxRetries, jsonObject, "maxRetries");
 		SetterUtil.setNotNullInteger(
-			builder::maxTokens, jsonObject,"maxTokens");
+			builder::maxTokens, jsonObject, "maxTokens");
 		SetterUtil.setNotBlankString(
 			builder::modelName, jsonObject.getString("modelName"));
 		SetterUtil.setNotBlankString(
@@ -84,14 +83,13 @@ public class OpenAIChatModelAITaskNode
 		}
 
 		SetterUtil.setNotNullDouble(
-			builder::temperature, jsonObject,"temperature");
+			builder::temperature, jsonObject, "temperature");
 
 		if (jsonObject.has("timeout")) {
 			builder.timeout(Duration.ofSeconds(jsonObject.getInt("timeout")));
 		}
 
-		SetterUtil.setNotNullDouble(
-			builder::topP, jsonObject, "topP");
+		SetterUtil.setNotNullDouble(builder::topP, jsonObject, "topP");
 		SetterUtil.setNotBlankString(
 			builder::user, jsonObject.getString("user"));
 

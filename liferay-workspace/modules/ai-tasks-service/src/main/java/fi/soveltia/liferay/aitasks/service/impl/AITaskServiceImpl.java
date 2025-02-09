@@ -39,8 +39,8 @@ public class AITaskServiceImpl extends AITaskServiceBaseImpl {
 
 	@Override
 	public AITask addAITask(
-			String configurationJSON, Map<Locale, String> descriptionMap, boolean enabled,
-			String externalReferenceCode, boolean readOnly,
+			String configurationJSON, Map<Locale, String> descriptionMap,
+			boolean enabled, String externalReferenceCode, boolean readOnly,
 			String schemaVersion, ServiceContext serviceContext,
 			Map<Locale, String> titleMap)
 		throws PortalException {
@@ -49,8 +49,8 @@ public class AITaskServiceImpl extends AITaskServiceBaseImpl {
 			getPermissionChecker(), null, AITaskActionKeys.ADD_AI_TASK);
 
 		return aiTaskLocalService.addAITask(
-			configurationJSON, descriptionMap, enabled, externalReferenceCode, readOnly,
-			schemaVersion, serviceContext, titleMap, getUserId());
+			configurationJSON, descriptionMap, enabled, externalReferenceCode,
+			readOnly, schemaVersion, serviceContext, titleMap, getUserId());
 	}
 
 	@Override
@@ -122,9 +122,10 @@ public class AITaskServiceImpl extends AITaskServiceBaseImpl {
 
 	@Override
 	public AITask updateAITask(
-			String configurationJSON, Map<Locale, String> descriptionMap, boolean enabled,
-			String externalReferenceCode, long aiTaskId, String schemaVersion,
-			ServiceContext serviceContext, Map<Locale, String> titleMap)
+			String configurationJSON, Map<Locale, String> descriptionMap,
+			boolean enabled, String externalReferenceCode, long aiTaskId,
+			String schemaVersion, ServiceContext serviceContext,
+			Map<Locale, String> titleMap)
 		throws PortalException {
 
 		_aiTaskModelResourcePermission.check(
@@ -138,8 +139,8 @@ public class AITaskServiceImpl extends AITaskServiceBaseImpl {
 		}
 
 		return aiTaskLocalService.updateAITask(
-			configurationJSON, descriptionMap, enabled, externalReferenceCode, aiTaskId,
-			schemaVersion, serviceContext, titleMap);
+			configurationJSON, descriptionMap, enabled, externalReferenceCode,
+			aiTaskId, schemaVersion, serviceContext, titleMap);
 	}
 
 	@Reference(

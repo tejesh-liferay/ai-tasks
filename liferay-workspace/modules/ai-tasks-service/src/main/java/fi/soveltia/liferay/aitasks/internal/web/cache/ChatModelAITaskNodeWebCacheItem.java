@@ -7,8 +7,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.webcache.WebCacheItem;
 import com.liferay.portal.kernel.webcache.WebCachePoolUtil;
 
-import dev.langchain4j.data.message.UserMessage;
-
 import fi.soveltia.liferay.aitasks.configuration.AITasksConfiguration;
 
 import java.util.function.BiFunction;
@@ -28,7 +26,7 @@ public class ChatModelAITaskNodeWebCacheItem implements WebCacheItem {
 				StringBundler.concat(
 					ChatModelAITaskNodeWebCacheItem.class.getName(),
 					StringPool.POUND, chatMemoryId, StringPool.POUND, id,
-					StringPool.POUND, userMessage.toString()),
+					StringPool.POUND, userMessage),
 				new ChatModelAITaskNodeWebCacheItem(
 					aiTasksConfiguration, biFunction, chatMemoryId,
 					userMessage));

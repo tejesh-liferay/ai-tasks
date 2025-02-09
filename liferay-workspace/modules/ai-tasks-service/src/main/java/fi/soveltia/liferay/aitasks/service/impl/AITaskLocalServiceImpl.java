@@ -43,8 +43,8 @@ public class AITaskLocalServiceImpl extends AITaskLocalServiceBaseImpl {
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AITask addAITask(
-			String configurationJSON, Map<Locale, String> descriptionMap, boolean enabled,
-			String externalReferenceCode, boolean readOnly,
+			String configurationJSON, Map<Locale, String> descriptionMap,
+			boolean enabled, String externalReferenceCode, boolean readOnly,
 			String schemaVersion, ServiceContext serviceContext,
 			Map<Locale, String> titleMap, long userId)
 		throws PortalException {
@@ -123,9 +123,10 @@ public class AITaskLocalServiceImpl extends AITaskLocalServiceBaseImpl {
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AITask updateAITask(
-			String configurationJSON, Map<Locale, String> descriptionMap, boolean enabled,
-			String externalReferenceCode, long aiTaskId, String schemaVersion,
-			ServiceContext serviceContext, Map<Locale, String> titleMap)
+			String configurationJSON, Map<Locale, String> descriptionMap,
+			boolean enabled, String externalReferenceCode, long aiTaskId,
+			String schemaVersion, ServiceContext serviceContext,
+			Map<Locale, String> titleMap)
 		throws PortalException {
 
 		_validate(titleMap, serviceContext);

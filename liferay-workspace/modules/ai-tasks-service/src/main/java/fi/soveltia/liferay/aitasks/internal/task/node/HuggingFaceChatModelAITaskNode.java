@@ -39,10 +39,9 @@ public class HuggingFaceChatModelAITaskNode
 		SetterUtil.setNotNullInteger(
 			builder::maxNewTokens, jsonObject, "maxNewTokens");
 		SetterUtil.setNotBlankString(
-			builder::modelId, jsonObject.getString("modelName"));
+			builder::modelId, jsonObject.getString("modelId"));
 
 		builder.returnFullText(jsonObject.getBoolean("returnFullText"));
-		builder.waitForModel(jsonObject.getBoolean("waitForModel"));
 
 		SetterUtil.setNotNullDouble(
 			builder::temperature, jsonObject, "temperature");
@@ -50,6 +49,8 @@ public class HuggingFaceChatModelAITaskNode
 		if (jsonObject.has("timeout")) {
 			builder.timeout(Duration.ofSeconds(jsonObject.getInt("timeout")));
 		}
+
+		builder.waitForModel(jsonObject.getBoolean("waitForModel"));
 
 		return builder.build();
 	}

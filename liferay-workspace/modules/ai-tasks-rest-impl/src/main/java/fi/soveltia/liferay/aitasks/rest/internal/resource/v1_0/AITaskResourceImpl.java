@@ -1,8 +1,6 @@
 package fi.soveltia.liferay.aitasks.rest.internal.resource.v1_0;
 
 import com.liferay.petra.string.StringBundler;
-import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.search.Field;
@@ -103,7 +101,7 @@ public class AITaskResourceImpl extends BaseAITaskResourceImpl {
 				_jsonFactory.createJSONObject(
 					_jsonFactory.looseSerialize(aiTask.getDescriptionMap()))
 			).put(
-					"enabled", aiTask.getEnabled()
+				"enabled", aiTask.getEnabled()
 			).put(
 				"externalReferenceCode", aiTask.getExternalReferenceCode()
 			).put(
@@ -224,8 +222,9 @@ public class AITaskResourceImpl extends BaseAITaskResourceImpl {
 				_getConfigurationJSON(aiTask),
 				LocalizedMapUtil.getLocalizedMap(
 					contextAcceptLanguage.getPreferredLocale(),
-					aiTask.getDescription(), aiTask.getDescription_i18n()),aiTask.getEnabled(),
-				aiTask.getExternalReferenceCode(), false, _getSchemaVersion(),
+					aiTask.getDescription(), aiTask.getDescription_i18n()),
+				aiTask.getEnabled(), aiTask.getExternalReferenceCode(), false,
+				_getSchemaVersion(),
 				ServiceContextFactory.getInstance(contextHttpServletRequest),
 				LocalizedMapUtil.getLocalizedMap(
 					contextAcceptLanguage.getPreferredLocale(),
@@ -236,7 +235,9 @@ public class AITaskResourceImpl extends BaseAITaskResourceImpl {
 	public void postAITaskByExternalReferenceCodeClear(
 		String externalReferenceCode, String nodeId) {
 
-			_chatMemoryManager.clearChatMemory(contextCompany.getCompanyId(), externalReferenceCode, nodeId, contextUser.getUserId());
+		_chatMemoryManager.clearChatMemory(
+			contextCompany.getCompanyId(), externalReferenceCode, nodeId,
+			contextUser.getUserId());
 	}
 
 	@Override
@@ -252,8 +253,8 @@ public class AITaskResourceImpl extends BaseAITaskResourceImpl {
 				contextAcceptLanguage.getPreferredLocale(), contextUriInfo,
 				contextUser),
 			_aiTaskService.addAITask(
-				aiTask.getConfigurationJSON(), aiTask.getDescriptionMap(), aiTask.getEnabled(),
-				null, false, aiTask.getSchemaVersion(),
+				aiTask.getConfigurationJSON(), aiTask.getDescriptionMap(),
+				aiTask.getEnabled(), null, false, aiTask.getSchemaVersion(),
 				ServiceContextFactory.getInstance(contextHttpServletRequest),
 				TitleMapUtil.copy(aiTask.getTitleMap())));
 	}
@@ -326,9 +327,9 @@ public class AITaskResourceImpl extends BaseAITaskResourceImpl {
 				_getConfigurationJSON(aiTask),
 				LocalizedMapUtil.getLocalizedMap(
 					contextAcceptLanguage.getPreferredLocale(),
-					aiTask.getDescription(), aiTask.getDescription_i18n()), aiTask.getEnabled(),
-				aiTask.getExternalReferenceCode(), aiTaskId,
-				_getSchemaVersion(),
+					aiTask.getDescription(), aiTask.getDescription_i18n()),
+				aiTask.getEnabled(), aiTask.getExternalReferenceCode(),
+				aiTaskId, _getSchemaVersion(),
 				ServiceContextFactory.getInstance(contextHttpServletRequest),
 				LocalizedMapUtil.getLocalizedMap(
 					contextAcceptLanguage.getPreferredLocale(),
@@ -365,10 +366,10 @@ public class AITaskResourceImpl extends BaseAITaskResourceImpl {
 		new AITaskEntityModel();
 
 	@Reference
-	private ChatMemoryManager _chatMemoryManager;
+	private AITaskService _aiTaskService;
 
 	@Reference
-	private AITaskService _aiTaskService;
+	private ChatMemoryManager _chatMemoryManager;
 
 	@Reference
 	private DTOConverterRegistry _dtoConverterRegistry;

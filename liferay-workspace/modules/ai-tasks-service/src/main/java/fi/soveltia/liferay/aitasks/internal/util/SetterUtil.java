@@ -1,7 +1,6 @@
 
 package fi.soveltia.liferay.aitasks.internal.util;
 
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -27,13 +26,13 @@ public class SetterUtil {
 	public static void setNotNullDouble(
 		Consumer<Double> consumer, Double value) {
 
-		if (value != null && !value.isNaN()) {
+		if ((value != null) && !value.isNaN()) {
 			consumer.accept(value.doubleValue());
 		}
 	}
 
 	public static void setNotNullDouble(
-			Consumer<Double> consumer, JSONObject jsonObject, String key) {
+		Consumer<Double> consumer, JSONObject jsonObject, String key) {
 
 		if (jsonObject.has(key)) {
 			consumer.accept(jsonObject.getDouble(key));
@@ -49,10 +48,9 @@ public class SetterUtil {
 	}
 
 	public static void setNotNullDoubleAsFloat(
-			Consumer<Float> consumer, JSONObject jsonObject, String key) {
+		Consumer<Float> consumer, JSONObject jsonObject, String key) {
 
 		if (jsonObject.has(key)) {
-
 			Double value = jsonObject.getDouble(key);
 
 			consumer.accept(value.floatValue());
@@ -68,22 +66,24 @@ public class SetterUtil {
 	}
 
 	public static void setNotNullInteger(
-			Consumer<Integer> consumer, JSONObject jsonObject, String key) {
+		Consumer<Integer> consumer, JSONObject jsonObject, String key) {
 
 		if (jsonObject.has(key)) {
 			consumer.accept(jsonObject.getInt(key));
 		}
 	}
 
-	public static void setNotNullLong(Consumer<Long> consumer, Long value) {
-		if (value != null) {
-			consumer.accept(value);
+	public static void setNotNullLong(
+		Consumer<Long> consumer, JSONObject jsonObject, String key) {
+
+		if (jsonObject.has(key)) {
+			consumer.accept(jsonObject.getLong(key));
 		}
 	}
 
-	public static void setNotNullLong(Consumer<Long> consumer, JSONObject jsonObject, String key) {
-		if (jsonObject.has(key)) {
-			consumer.accept(jsonObject.getLong(key));
+	public static void setNotNullLong(Consumer<Long> consumer, Long value) {
+		if (value != null) {
+			consumer.accept(value);
 		}
 	}
 

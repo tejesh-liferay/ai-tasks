@@ -41,18 +41,18 @@ public class WebHookAITaskTool implements AITaskTool {
 			_jsonObject = configurationJSONObject;
 		}
 
-
 		@Tool(
-				"Calls an external webhook. Use this only when only the URL is given."
+			"Calls an external webhook. Use this only when only the URL is given."
 		)
 		public String callURL(@P("The URL to call") String url)
-				throws IOException, JSONException {
+			throws IOException, JSONException {
 
 			Http.Options options = new Http.Options();
 
 			url = StringUtil.trim(url);
 
 			options.setLocation(url);
+
 			options.setMethod(_getMethod());
 
 			_setBody(null, options);
@@ -152,7 +152,7 @@ public class WebHookAITaskTool implements AITaskTool {
 				parameterJSONObject = jsonFactory.createJSONObject(json);
 			}
 
-			if (bodyJSONObject == null && parameterJSONObject == null) {
+			if ((bodyJSONObject == null) && (parameterJSONObject == null)) {
 				return;
 			}
 
