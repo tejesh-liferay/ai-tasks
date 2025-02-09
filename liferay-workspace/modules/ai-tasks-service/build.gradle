@@ -7,6 +7,7 @@ dependencies {
 	api project(":modules:ai-tasks-api")
 	api project(":modules:ai-tasks-rest-api")
 	api project(":modules:ai-tasks-spi")
+
 	compileInclude group: "ch.qos.logback", name: "logback-classic", version: "1.5.16"
 	compileInclude group: "com.damnhandy", name: "handy-uri-templates", version: "2.1.7"
 	compileInclude group: "com.github.everit-org.json-schema", name: "org.everit.json.schema", version: "1.11.1"
@@ -44,6 +45,7 @@ dependencies {
 	compileInclude group: "dev.ai4j", name: "openai4j", version: "0.17.0"
 	compileInclude group: "dev.langchain4j", name: "langchain4j", version: "1.0.0-alpha1"
 	compileInclude group: "dev.langchain4j", name: "langchain4j-core", version: "1.0.0-alpha1"
+	compileInclude group: "dev.langchain4j", name: "langchain4j-hugging-face", version: "1.0.0-beta1"
 	compileInclude group: "dev.langchain4j", name: "langchain4j-ollama", version: "1.0.0-alpha1"
 	compileInclude group: "dev.langchain4j", name: "langchain4j-open-ai", version: "1.0.0-alpha1"
 	compileInclude group: "dev.langchain4j", name: "langchain4j-vertex-ai", version: "1.0.0-alpha1"
@@ -74,5 +76,6 @@ dependencies {
 	compileInclude group: "org.mapdb", name: "mapdb", version: "3.1.0"
 	compileInclude group: "org.openjsse", name: "openjsse", version: "1.1.14"
 	compileInclude group: "org.threeten", name: "threetenbp", version: "1.6.9"
+
 	compileOnly group: "com.liferay.portal", name: "release.dxp.api"
 }
