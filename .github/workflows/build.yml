@@ -17,16 +17,5 @@ jobs:
           java-version: '17'
           build-extra-args: '-x :modules:ai-tasks-rest-test:build'
           profile: 'prod'
-          upload-bundle: true
-          upload-artifacts: true
-          retention-days: '1'
-      - name: Download Built Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: artifacts--jdk-17
-      - name: Download Built Bundle
-        uses: actions/download-artifact@v4
-        with:
-          name: bundle--jdk-17
-      - name: Verify Artifacts
-        run: ls -la
+          upload-bundle: false
+          upload-artifacts: false
