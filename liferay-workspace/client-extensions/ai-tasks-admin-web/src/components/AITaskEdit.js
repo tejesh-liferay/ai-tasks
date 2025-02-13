@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 import React, { useCallback, useEffect, useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 import { JsonEditor } from 'json-edit-react';

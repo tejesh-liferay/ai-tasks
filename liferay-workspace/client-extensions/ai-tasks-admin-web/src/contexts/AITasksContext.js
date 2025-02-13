@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 import React, { createContext, useContext, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 const EmptyState = ({ image, title, description, button }) => {
   const images = {
     empty: '/o/admin-theme/images/states/empty_state.svg',

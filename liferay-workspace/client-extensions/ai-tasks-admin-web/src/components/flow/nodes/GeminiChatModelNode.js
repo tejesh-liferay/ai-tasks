@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 import React, { memo } from 'react';
 import { Handle } from '@xyflow/react';
 

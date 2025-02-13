@@ -1,3 +1,8 @@
+/**
+ * @author Louis-Guillaume Durand
+ * @author Petteri Karttunen
+ */
+
 import React, { memo } from 'react';
 import { Handle } from '@xyflow/react';
 

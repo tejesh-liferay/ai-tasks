@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 import { useState, useEffect } from 'react';
 
 function useChatHistory(taskId) {

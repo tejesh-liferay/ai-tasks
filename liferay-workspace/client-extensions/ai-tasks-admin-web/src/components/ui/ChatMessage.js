@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 const ChatMessage = ({ role, metadata, children }) => {
   return (
     <div

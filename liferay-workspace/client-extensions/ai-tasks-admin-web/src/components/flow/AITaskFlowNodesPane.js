@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 import React from 'react';
 import Icon from '../ui/Icon';
 import { useDnD } from '../../contexts/DnDContext';

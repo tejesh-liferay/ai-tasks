@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 const Icon = ({ name, className }) => {
   return (
       <svg aria-hidden="true"

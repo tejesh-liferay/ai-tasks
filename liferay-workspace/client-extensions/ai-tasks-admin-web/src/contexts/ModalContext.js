@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 import React, { createContext, useContext, useState } from 'react';
 
 import Modal from '../components/ui/Modal';
