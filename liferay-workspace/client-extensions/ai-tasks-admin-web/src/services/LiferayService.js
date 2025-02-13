@@ -1,4 +1,8 @@
 /**
+ * @author Louis-Guillaume Durand
+ */
+
+/**
  * @module LiferayService
  * A service for making API calls to Liferay REST endpoints using Liferay.Util.fetch.
  */

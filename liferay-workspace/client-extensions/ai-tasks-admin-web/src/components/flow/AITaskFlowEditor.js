@@ -1,3 +1,8 @@
+/**
+ * @author Louis-Guillaume Durand
+ * @author Petteri Karttunen
+ */
+
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
     addEdge,

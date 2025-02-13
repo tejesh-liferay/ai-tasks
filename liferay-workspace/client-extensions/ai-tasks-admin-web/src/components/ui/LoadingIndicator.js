@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 const LoadingIndicator = () => {
   return (
       <span

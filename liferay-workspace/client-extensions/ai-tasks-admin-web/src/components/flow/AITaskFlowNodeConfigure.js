@@ -1,3 +1,8 @@
+/**
+ * @author Louis-Guillaume Durand
+ * @author Petteri Karttunen
+ */
+
 import React, { useEffect, useState } from 'react';
 
 import { useAITasksContext } from '../../contexts/AITasksContext';

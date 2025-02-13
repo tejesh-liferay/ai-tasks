@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 import React, { useState } from 'react';
 
 import Icon from './ui/Icon';

@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 import {
     ENTRY_POINT_NODE,
     GEMINI_CHAT_MODEL,

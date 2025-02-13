@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 import React from "react";
 
 const Label = ({type, className, children}) => (
