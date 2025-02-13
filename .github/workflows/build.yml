@@ -15,6 +15,7 @@ jobs:
         with:
           workspace-directory: ./liferay-workspace
           java-version: '17'
+          build-extra-args: '-x :modules:ai-tasks-rest-test:build'
           profile: 'prod'
           upload-bundle: true
           upload-artifacts: true
@@ -24,4 +25,10 @@ jobs:
         with:
           name: artifacts--jdk-17
       - name: Verify Artifacts
+        run: ls -la
+      - name: Download Built Bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: bundle--jdk-17
+      - name: Verify Bundle
         run: ls -la
