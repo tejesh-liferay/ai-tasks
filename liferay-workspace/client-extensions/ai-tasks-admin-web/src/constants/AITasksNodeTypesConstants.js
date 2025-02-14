@@ -1,3 +1,8 @@
+/**
+ * @author Louis-Guillaume Durand
+ * @author Petteri Karttunen
+ */
+
 export const ENTRY_POINT_NODE = 'entryPointNode';
 export const GEMINI_CHAT_MODEL = 'geminiChatModel';
 export const GOOGLE_IMAGEN = 'googleImagen';

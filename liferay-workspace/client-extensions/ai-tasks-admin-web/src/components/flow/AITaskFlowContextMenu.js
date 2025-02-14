@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 import React, { useCallback } from 'react';
 import { useReactFlow } from '@xyflow/react';
 import Icon from '../ui/Icon';

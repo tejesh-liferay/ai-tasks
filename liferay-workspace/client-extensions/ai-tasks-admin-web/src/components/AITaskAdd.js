@@ -1,3 +1,7 @@
+/**
+ * @author Louis-Guillaume Durand
+ */
+
 import React, { useState } from 'react';
 import { useAITasksContext } from '../contexts/AITasksContext';
 import { JsonEditor } from 'json-edit-react';
