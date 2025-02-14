@@ -1,0 +1,59 @@
+name: Release Liferay Bundle & Modules
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          release-type: simple
+  upload-release:
+    needs: release-please
+    if: needs.release-please.outputs.release_created
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lgdd/liferay-build-action@v2
+        with:
+          java-version: '17'
+          build-extra-args: '-x :modules:ai-tasks-rest-test:build'
+          profile: 'prod'
+          upload-bundle: true
+          upload-artifacts: true
+          retention-days: '1'
+      - name: Download Built Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts--jdk-17
+      - name: Download Built Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bundle--jdk-17
+      - name: Upload Release Files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -rf dist
+          mkdir -p dist/client-extensions
+          mkdir -p dist/modules
+          cp ai-tasks-*.zip dist/client-extensions/
+          cp fi.soveltia.liferay.aitasks.*.jar dist/modules/
+          cd dist/
+          zip -r ai-tasks-widgets--jdk17.zip client-extensions/ modules/
+          mv ai-tasks-widgets--jdk17.zip ../
+          cd ../
+          mv liferay-workspace-prod-*.zip ai-tasks-liferay-bundle--jdk17.zip
+          gh release upload ${{ needs.release-please.outputs.tag_name }} ai-tasks-widgets--jdk17.zip ai-tasks-liferay-bundle--jdk17.zip

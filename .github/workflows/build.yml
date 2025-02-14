@@ -1,0 +1,21 @@
+name: Build Liferay Workspace
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Workspace
+        uses: lgdd/liferay-build-action@v2
+        with:
+          workspace-directory: ./liferay-workspace
+          java-version: '17'
+          build-extra-args: '-x :modules:ai-tasks-rest-test:build'
+          profile: 'prod'
+          upload-bundle: false
+          upload-artifacts: false
