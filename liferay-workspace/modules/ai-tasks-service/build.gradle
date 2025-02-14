@@ -3,6 +3,10 @@ buildService {
 	testDir = "../ai-tasks-test/src/testIntegration/java"
 }
 
+ext {
+	langchain4jVersion = "1.0.0-beta1"
+}
+
 dependencies {
 	api project(":modules:ai-tasks-api")
 	api project(":modules:ai-tasks-rest-api")
@@ -43,13 +47,13 @@ dependencies {
 	compileInclude group: "com.squareup.retrofit2", name: "converter-gson", version: "2.11.0"
 	compileInclude group: "com.squareup.retrofit2", name: "retrofit", version: "2.11.0"
 	compileInclude group: "dev.ai4j", name: "openai4j", version: "0.17.0"
-	compileInclude group: "dev.langchain4j", name: "langchain4j", version: "1.0.0-beta1"
-	compileInclude group: "dev.langchain4j", name: "langchain4j-core", version: "1.0.0-beta1"
-	compileInclude group: "dev.langchain4j", name: "langchain4j-hugging-face", version: "1.0.0-beta1"
-	compileInclude group: "dev.langchain4j", name: "langchain4j-ollama", version: "1.0.0-beta1"
-	compileInclude group: "dev.langchain4j", name: "langchain4j-open-ai", version: "1.0.0-beta1"
-	compileInclude group: "dev.langchain4j", name: "langchain4j-vertex-ai", version: "1.0.0-beta1"
-	compileInclude group: "dev.langchain4j", name: "langchain4j-vertex-ai-gemini", version: "1.0.0-beta1"
+	compileInclude group: "dev.langchain4j", name: "langchain4j", version: "${langchain4jVersion}"
+	compileInclude group: "dev.langchain4j", name: "langchain4j-core", version: "${langchain4jVersion}"
+	compileInclude group: "dev.langchain4j", name: "langchain4j-hugging-face", version: "${langchain4jVersion}"
+	compileInclude group: "dev.langchain4j", name: "langchain4j-ollama", version: "${langchain4jVersion}"
+	compileInclude group: "dev.langchain4j", name: "langchain4j-open-ai", version: "${langchain4jVersion}"
+	compileInclude group: "dev.langchain4j", name: "langchain4j-vertex-ai", version: "${langchain4jVersion}"
+	compileInclude group: "dev.langchain4j", name: "langchain4j-vertex-ai-gemini", version: "${langchain4jVersion}"
 	compileInclude group: "io.github.opensabe-tech", name: "langchain4j-web-search-engine-google-custom", version: "0.32.0.1"
 	compileInclude group: "io.grpc", name: "grpc-alts", version: "1.62.2"
 	compileInclude group: "io.grpc", name: "grpc-api", version: "1.62.2"
