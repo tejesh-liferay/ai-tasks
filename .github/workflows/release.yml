@@ -30,7 +30,7 @@ jobs:
       - uses: lgdd/liferay-build-action@v2
         with:
           java-version: '17'
-          build-extra-args: '-x :modules:ai-tasks-rest-test:build'
+          build-extra-args: '-x :modules:ai-tasks-rest-test:build :modules:ai-tasks-rest-client:build'
           profile: 'prod'
           upload-bundle: true
           upload-artifacts: true
@@ -51,6 +51,8 @@ jobs:
           mkdir -p dist/client-extensions
           mkdir -p dist/modules
           cp ai-tasks-*.zip dist/client-extensions/
+          rm fi.soveltia.liferay.aitasks.rest.client.jar
+          rm fi.soveltia.liferay.aitasks.rest.test.jar
           cp fi.soveltia.liferay.aitasks.*.jar dist/modules/
           cd dist/
           zip -r ai-tasks-widgets--jdk17.zip client-extensions/ modules/
