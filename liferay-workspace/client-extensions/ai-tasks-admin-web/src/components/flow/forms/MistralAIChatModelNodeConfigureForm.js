@@ -197,7 +197,7 @@ const OpenAIChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                             id="promptTemplate"
                             placeholder="Enter prompt template (e.g. {{input.text}})"
                             rows="3"
-                            value={nodeParameters.promptTemplate}
+                            value={nodeParameters.promptTemplate || "{{input.text}}"}
                             onChange={(e) => {
                                 onChange('promptTemplate', e.currentTarget.value);
                             }}

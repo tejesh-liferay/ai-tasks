@@ -4,6 +4,7 @@
 
 import React, { memo } from 'react';
 import { Handle } from '@xyflow/react';
+
 import { useNodeMenu } from '../../../contexts/NodeMenuContext';
 import Icon from '../../ui/Icon';
 

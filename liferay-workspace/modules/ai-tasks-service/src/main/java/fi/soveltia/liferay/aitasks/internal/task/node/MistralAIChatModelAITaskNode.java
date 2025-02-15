@@ -1,18 +1,17 @@
 package fi.soveltia.liferay.aitasks.internal.task.node;
 
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.json.JSONUtil;
+
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
+
 import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
-import org.osgi.service.component.annotations.Component;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Petteri Karttunen
@@ -30,7 +29,7 @@ public class MistralAIChatModelAITaskNode
 
 	protected ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
 		MistralAiChatModel.MistralAiChatModelBuilder builder =
-				MistralAiChatModel.builder();
+			MistralAiChatModel.builder();
 
 		SetterUtil.setNotBlankString(
 			builder::apiKey, jsonObject.getString("apiKey"));
@@ -50,7 +49,7 @@ public class MistralAIChatModelAITaskNode
 		SetterUtil.setNotBlankString(
 			builder::responseFormat, jsonObject.getString("responseFormat"));
 		SetterUtil.setNotNullBoolean(
-				builder::safePrompt, jsonObject, "safePrompt");
+			builder::safePrompt, jsonObject, "safePrompt");
 
 		SetterUtil.setNotNullDouble(
 			builder::temperature, jsonObject, "temperature");
@@ -63,4 +62,5 @@ public class MistralAIChatModelAITaskNode
 
 		return builder.build();
 	}
+
 }
