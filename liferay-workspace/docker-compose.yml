@@ -7,6 +7,8 @@ services:
         - TARGET_ENV=local
     ports:
       - "8080:8080"
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: ~/.config/gcloud/application_default_credentials.json
     volumes:
       - liferay_data:/opt/liferay/data
       - ./build/docker/deploy:/mnt/liferay/deploy
