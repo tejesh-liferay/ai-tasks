@@ -244,11 +244,10 @@ const OllamaChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                         <label htmlFor="promptTemplate">Prompt Template</label>
                         <textarea
                             className="form-control"
-                            defaultValue="{{input.text}}"
                             id="promptTemplate"
                             placeholder="Enter prompt template (e.g. {{input.text}})"
                             rows="3"
-                            value={nodeParameters.promptTemplate}
+                            value={nodeParameters.promptTemplate || "{{input.text}}"}
                             onChange={(e) => {
                                 onChange('promptTemplate', e.currentTarget.value);
                             }}
@@ -392,7 +391,7 @@ const OllamaChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                         onChange('logRequests', e.currentTarget.checked);
                                     }}
                                 />
-                                <span class="custom-control-label">Log Requests in the console.</span>
+                                <span className="custom-control-label">Log Requests in the console.</span>
                             </label>
                         </div>
                         <div className="custom-control custom-checkbox custom-control-outside">
@@ -408,7 +407,7 @@ const OllamaChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                         onChange('logResponses', e.currentTarget.checked);
                                     }}
                                 />
-                                <span class="custom-control-label">Log Responses in the console.</span>
+                                <span className="custom-control-label">Log Responses in the console.</span>
                             </label>
                         </div>
                     </div>

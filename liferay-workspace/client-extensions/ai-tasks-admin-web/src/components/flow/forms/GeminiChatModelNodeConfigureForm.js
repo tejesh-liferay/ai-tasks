@@ -136,7 +136,7 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                         onChange('useGoogleSearch', e.currentTarget.checked);
                                     }}
                                 />
-                                <span class="custom-control-label">Ground results with Google Search.</span>
+                                <span className="custom-control-label">Ground results with Google Search.</span>
                             </label>
                         </div>
                     </div>
@@ -229,11 +229,10 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                         <label htmlFor="promptTemplate">Prompt Template</label>
                         <textarea
                             className="form-control"
-                            defaultValue="{{input.text}}"
                             id="promptTemplate"
                             placeholder="Enter prompt template (e.g. {{input.text}})"
                             rows="3"
-                            value={nodeParameters.promptTemplate}
+                            value={nodeParameters.promptTemplate || "{{input.text}}"}
                             onChange={(e) => {
                                 onChange('promptTemplate', e.currentTarget.value);
                             }}
@@ -403,7 +402,7 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                         onChange('logRequests', e.currentTarget.checked);
                                     }}
                                 />
-                                <span class="custom-control-label">Log Requests in the console.</span>
+                                <span className="custom-control-label">Log Requests in the console.</span>
                             </label>
                         </div>
                         <div className="custom-control custom-checkbox custom-control-outside">
@@ -419,7 +418,7 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                         onChange('logResponses', e.currentTarget.checked);
                                     }}
                                 />
-                                <span class="custom-control-label">Log Responses in the console.</span>
+                                <span className="custom-control-label">Log Responses in the console.</span>
                             </label>
                         </div>
                     </div>

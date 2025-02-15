@@ -20,6 +20,7 @@ import {
 
 import './styles/index.scss';
 import { ModalProvider, useModal } from './contexts/ModalContext';
+import { NodeMenuProvider } from './contexts/NodeMenuContext';
 
 const AITaskRouting = () => (
   <Routes>
@@ -34,9 +35,11 @@ const App = () => {
     <HashRouter>
       <AITasksProvider>
         <ModalProvider>
-          <ReactFlowProvider>
-            <AITaskRouting />
-          </ReactFlowProvider>
+          <NodeMenuProvider>
+            <ReactFlowProvider>
+              <AITaskRouting />
+            </ReactFlowProvider>
+          </NodeMenuProvider>
         </ModalProvider>
       </AITasksProvider>
     </HashRouter>

@@ -7,7 +7,6 @@ import React from 'react';
 import { Tab, Tabs } from '../../ui/Tabs';
 
 const GoogleImagenNodeConfigureForm = ({ nodeParameters, onChange }) => {
-    const rangeWidth = (nodeParameters.temperature / 2) * 100;
     return (
         <Tabs>
             <Tab id={'generalSettings'} label={'General Settings'}>
@@ -199,11 +198,10 @@ const GoogleImagenNodeConfigureForm = ({ nodeParameters, onChange }) => {
                         <label htmlFor="promptTemplate">Prompt Template</label>
                         <textarea
                             className="form-control"
-                            defaultValue="{{input.text}}"
                             id="promptTemplate"
                             placeholder="Enter prompt template (e.g. {{input.text}})"
                             rows="3"
-                            value={nodeParameters.promptTemplate}
+                            value={nodeParameters.promptTemplate || "{{input.text}}"}
                             onChange={(e) => {
                                 onChange('promptTemplate', e.currentTarget.value);
                             }}
@@ -214,7 +212,6 @@ const GoogleImagenNodeConfigureForm = ({ nodeParameters, onChange }) => {
                         <label htmlFor="negativePrompt">Negative Prompt</label>
                         <textarea
                             className="form-control"
-                            defaultValue=""
                             id="negativePrompt"
                             placeholder="Enter negative prompt"
                             rows="3"
@@ -295,7 +292,7 @@ const GoogleImagenNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                         onChange('logRequests', e.currentTarget.checked);
                                     }}
                                 />
-                                <span class="custom-control-label">Log Requests in the console.</span>
+                                <span className="custom-control-label">Log Requests in the console.</span>
                             </label>
                         </div>
                         <div className="custom-control custom-checkbox custom-control-outside">
@@ -311,7 +308,7 @@ const GoogleImagenNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                         onChange('logResponses', e.currentTarget.checked);
                                     }}
                                 />
-                                <span class="custom-control-label">Log Responses in the console.</span>
+                                <span className="custom-control-label">Log Responses in the console.</span>
                             </label>
                         </div>
                     </div>

@@ -12,9 +12,11 @@
     height: 14px;
     background-color: #80acff;
   }
+
   .react-flow__controls {
     bottom: 170px !important;
   }
+
   .react-flow__minimap {
     border: 4px solid var(--gray-500);
     border-radius: 8px;
@@ -38,25 +40,36 @@
     height: 5.3rem;
     min-width: 12rem;
     padding: 1rem;
+
+    .node-header-label {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 15rem;
+    }
   }
 
   .node-details-container {
     padding: 1rem;
+
     .detail-label {
       text-transform: uppercase;
       font-size: 0.8rem;
       font-weight: 700;
       color: var(--gray-600)
     }
+
     .detail-value {
       font-style: italic;
       margin-left: 5rem;
     }
   }
+
   &:hover {
     border-color: #b3cdff;
     border-width: .125rem;
     box-shadow: rgba(17, 17, 26, .1) 0 4px 16px, rgba(17, 17, 26, .05) 0 8px 32px;
+
     .react-flow__handle {
       opacity: 100;
     }
@@ -102,7 +115,6 @@
 .webhook-node {
   @extend %node-base;
 }
-
 
 
 .start-node {
