@@ -59,4 +59,4 @@ jobs:
           mv ai-tasks-widgets--jdk17.zip ../
           cd ../
           mv liferay-workspace-prod-*.zip ai-tasks-liferay-bundle--jdk17.zip
-          gh release upload ${{ needs.release-please.outputs.tag_name }} ai-tasks-widgets--jdk17.zip ai-tasks-liferay-bundle--jdk17.zip
+          gh release upload ${{ needs.release-please.outputs.tag_name }} ai-tasks-widgets-${{ steps.release.outputs.tag_name }}--jdk17.zip ai-tasks-liferay-bundle-${{ steps.release.outputs.tag_name }}--jdk17.zip
