@@ -1,6 +1,8 @@
 Bundle-Name: AI Tasks API
 Bundle-SymbolicName: fi.soveltia.liferay.aitasks.api
+# x-release-please-start-version
 Bundle-Version: 1.0.0
+# x-release-please-end
 Export-Package:\
 	fi.soveltia.liferay.aitasks.configuration,\
 	fi.soveltia.liferay.aitasks.constants,\

@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   release-please:
+    if: github.repository_owner == 'peerkar'
     runs-on: ubuntu-latest
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
@@ -19,17 +20,18 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          release-type: simple
+          config-file: 'release-please-config.json'
+          manifest-file: '.release-please-manifest.json'
   upload-release:
     needs: release-please
-    if: needs.release-please.outputs.release_created
+    if: github.repository_owner == 'peerkar' && needs.release-please.outputs.release_created
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: lgdd/liferay-build-action@v2
         with:
           java-version: '17'
-          build-extra-args: '-x :modules:ai-tasks-rest-test:build'
+          build-extra-args: '-x :modules:ai-tasks-rest-test:build :modules:ai-tasks-rest-client:build'
           profile: 'prod'
           upload-bundle: true
           upload-artifacts: true
@@ -50,10 +52,12 @@ jobs:
           mkdir -p dist/client-extensions
           mkdir -p dist/modules
           cp ai-tasks-*.zip dist/client-extensions/
+          rm fi.soveltia.liferay.aitasks.rest.client.jar
+          rm fi.soveltia.liferay.aitasks.rest.test.jar
           cp fi.soveltia.liferay.aitasks.*.jar dist/modules/
           cd dist/
           zip -r ai-tasks-widgets--jdk17.zip client-extensions/ modules/
           mv ai-tasks-widgets--jdk17.zip ../
           cd ../
           mv liferay-workspace-prod-*.zip ai-tasks-liferay-bundle--jdk17.zip
-          gh release upload ${{ needs.release-please.outputs.tag_name }} ai-tasks-widgets--jdk17.zip ai-tasks-liferay-bundle--jdk17.zip
+          gh release upload ${{ needs.release-please.outputs.tag_name }} ai-tasks-widgets-${{ steps.release.outputs.tag_name }}--jdk17.zip ai-tasks-liferay-bundle-${{ steps.release.outputs.tag_name }}--jdk17.zip
