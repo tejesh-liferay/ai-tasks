@@ -62,6 +62,7 @@
     height: 90%;
     overflow: auto;
     transition: opacity 0.15s ease;
+    scroll-behavior: smooth;
 
     .chat-preview-message {
       .message {
