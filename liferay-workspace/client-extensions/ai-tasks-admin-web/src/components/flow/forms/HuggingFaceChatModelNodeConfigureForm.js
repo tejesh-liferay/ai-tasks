@@ -159,7 +159,7 @@ const HuggingFaceChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => 
                                     onChange('waitForModel', e.currentTarget.checked);
                                 }}
                             />
-                            <span class="custom-control-label">Wait for the model</span>
+                            <span className="custom-control-label">Wait for the model</span>
                         </label>
                     </div>
                 </div>
@@ -170,11 +170,10 @@ const HuggingFaceChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => 
                         <label htmlFor="promptTemplate">Prompt Template</label>
                         <textarea
                             className="form-control"
-                            defaultValue="{{input.text}}"
                             id="promptTemplate"
                             placeholder="Enter prompt template (e.g. {{input.text}})"
                             rows="3"
-                            value={nodeParameters.promptTemplate}
+                            value={nodeParameters.promptTemplate || "{{input.text}}"}
                             onChange={(e) => {
                                 onChange('promptTemplate', e.currentTarget.value);
                             }}
