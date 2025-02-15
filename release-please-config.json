@@ -1,0 +1,28 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "liferay-workspace/client-extensions/ai-tasks-admin-web/package.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "liferay-workspace/client-extensions/ai-tasks-chat/package.json",
+          "jsonpath": "$.version"
+        },
+        "liferay-workspace/modules/ai-tasks-api/bnd.bnd",
+        "liferay-workspace/modules/ai-tasks-language/bnd.bnd",
+        "liferay-workspace/modules/ai-tasks-rest-api/bnd.bnd",
+        "liferay-workspace/modules/ai-tasks-rest-client/bnd.bnd",
+        "liferay-workspace/modules/ai-tasks-rest-impl/bnd.bnd",
+        "liferay-workspace/modules/ai-tasks-rest-test/bnd.bnd",
+        "liferay-workspace/modules/ai-tasks-service/bnd.bnd",
+        "liferay-workspace/modules/ai-tasks-spi/bnd.bnd"
+      ]
+    }
+  },
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+}

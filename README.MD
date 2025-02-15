@@ -1,5 +1,7 @@
 # AI Tasks
 
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://app.gitter.im/#/room/#peerkar/ai-tasks:gitter.im)
+
 ## TL;DR 
 AI Tasks is an LLM integrated workflow orchestration tool for  Liferay. It can be used standalone, but also integrated to Liferay workflows and to external worfklow orchestrators and vice versa. It allows to visually define AI workflows which are then exposed through a REST endpoint. Liferay integration enables governing access, permissions and auditing with the standard Liferay tools as well as easy integration to existing or new Liferay features, to leverage AI.
 

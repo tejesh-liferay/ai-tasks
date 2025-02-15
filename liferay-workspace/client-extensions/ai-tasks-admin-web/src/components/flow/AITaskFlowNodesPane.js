@@ -6,10 +6,12 @@ import React from 'react';
 import Icon from '../ui/Icon';
 import { useDnD } from '../../contexts/DnDContext';
 import {
+ANTHROPIC_CHAT_MODEL,
 GEMINI_CHAT_MODEL,
 GOOGLE_IMAGEN,
 HUGGING_FACE_CHAT_MODEL,
 LIFERAY_SEARCH,
+MISTRALAI_CHAT_MODEL,
 OLLAMA_CHAT_MODEL,
 OPENAI_CHAT_MODEL,
 OPENAI_IMAGE_MODEL,
@@ -47,6 +49,19 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
       </div>
       <div className="container">
         <div className="flow-nodes-pane-area d-flex flex-column">
+          <div
+            className={'anthropic-chat-model-node'}
+            onDragStart={(event) => onDragStart(event, ANTHROPIC_CHAT_MODEL)}
+            draggable
+          >
+            <div
+              className={
+                'node-header-container d-flex flex-row align-items-center justify-content-center'
+              }
+            >
+              <h4>Anthropic Chat Model</h4>
+            </div>
+          </div>
           <div
             className={'gemini-chat-model-node'}
             onDragStart={(event) => onDragStart(event, GEMINI_CHAT_MODEL)}
@@ -97,6 +112,19 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
               }
             >
               <h4>Liferay Search</h4>
+            </div>
+          </div>
+          <div
+            className={'mistralai-chat-model-node'}
+            onDragStart={(event) => onDragStart(event, MISTRALAI_CHAT_MODEL)}
+            draggable
+          >
+            <div
+              className={
+                'node-header-container d-flex flex-row align-items-center justify-content-center'
+              }
+            >
+              <h4>MistralAI Chat Model</h4>
             </div>
           </div>
           <div

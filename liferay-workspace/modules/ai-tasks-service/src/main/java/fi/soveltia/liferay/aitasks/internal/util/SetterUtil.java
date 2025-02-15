@@ -11,6 +11,14 @@ import java.util.function.Consumer;
  */
 public class SetterUtil {
 
+	public static void setNotNullBoolean(
+			Consumer<Boolean> consumer, JSONObject jsonObject, String key) {
+
+		if (jsonObject.has(key)) {
+			consumer.accept(jsonObject.getBoolean(key));
+		}
+	}
+
 	public static void setNotBlankString(
 		Consumer<String> consumer, String value) {
 

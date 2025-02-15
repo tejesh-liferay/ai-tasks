@@ -1,6 +1,8 @@
 Bundle-Name: AI Tasks Service
 Bundle-SymbolicName: fi.soveltia.liferay.aitasks.service
+# x-release-please-start-version
 Bundle-Version: 1.0.0
+# x-release-please-end
 Import-Package:\
 	!android.*,\
 	\

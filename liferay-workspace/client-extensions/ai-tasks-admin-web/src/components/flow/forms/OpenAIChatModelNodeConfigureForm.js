@@ -25,7 +25,7 @@ const OpenAIChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                             }}
                         />
                         <small className="form-text text-muted">
-                            OpenAI API key. To use environment variables, prefix the variable name with env:
+                            API key. To use environment variables, prefix the variable name with env:
                         </small>
                     </div>
 
@@ -57,7 +57,7 @@ const OpenAIChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                             }}
                         />
                         <small className="form-text text-muted">
-                            Enter the OpenAI model name
+                            Enter the model name
                         </small>
                     </div>
                     <div className="form-row">
@@ -211,7 +211,7 @@ const OpenAIChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                 className="form-control"
                                 id="topP"
                                 min="1"
-                                value={nodeParameters.topK}
+                                value={nodeParameters.topP}
                                 onChange={(e) => {
                                     onChange('topP', e.currentTarget.value);
                                 }}

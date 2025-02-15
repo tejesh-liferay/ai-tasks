@@ -18,11 +18,13 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
+import AnthropicChatModelNode from './nodes/AnthropicChatModelNode';
 import EntryPointNode from './nodes/EntryPointNode';
 import GeminiChatModelNode from './nodes/GeminiChatModelNode';
 import GoogleImagenNode from './nodes/GoogleImagenNode';
 import HuggingFaceChatModelNode from './nodes/HuggingFaceChatModelNode';
 import LiferaySearchNode from './nodes/LiferaySearchNode';
+import MistralAIChatModelNode from './nodes/MistralAIChatModelNode';
 import OllamaChatModelNode from './nodes/OllamaChatModelNode';
 import OpenAIChatModelNode from './nodes/OpenAIChatModelNode';
 import OpenAIImageModelNode from './nodes/OpenAIImageModelNode';
@@ -37,11 +39,13 @@ import ModalFooterButtonGroup from '../ui/ModalFooterButtonGroup';
 import { useModal } from '../../contexts/ModalContext';
 import { toCamelCase } from '../../utils/stringUtils';
 import {
+  ANTHROPIC_CHAT_MODEL,
   ENTRY_POINT_NODE,
   GEMINI_CHAT_MODEL,
   GOOGLE_IMAGEN,
   HUGGING_FACE_CHAT_MODEL,
   LIFERAY_SEARCH,
+  MISTRALAI_CHAT_MODEL,
   OLLAMA_CHAT_MODEL,
   OPENAI_CHAT_MODEL,
   OPENAI_IMAGE_MODEL,
@@ -81,11 +85,13 @@ const AITaskFlowEditor = () => {
   const selectedNodeRef = useRef(selectedNode);
 
   const nodeTypes = {
+    [ANTHROPIC_CHAT_MODEL]: AnthropicChatModelNode,
     [ENTRY_POINT_NODE]: EntryPointNode,
     [GEMINI_CHAT_MODEL]: GeminiChatModelNode,
     [GOOGLE_IMAGEN]: GoogleImagenNode,
     [HUGGING_FACE_CHAT_MODEL]: HuggingFaceChatModelNode,
     [LIFERAY_SEARCH]: LiferaySearchNode,
+    [MISTRALAI_CHAT_MODEL]: MistralAIChatModelNode,
     [OLLAMA_CHAT_MODEL]: OllamaChatModelNode,
     [OPENAI_CHAT_MODEL]: OpenAIChatModelNode,
     [OPENAI_IMAGE_MODEL]: OpenAIImageModelNode,

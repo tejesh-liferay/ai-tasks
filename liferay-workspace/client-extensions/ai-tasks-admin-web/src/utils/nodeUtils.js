@@ -3,11 +3,13 @@
  */
 
 import {
+    ANTHROPIC_CHAT_MODEL,
     ENTRY_POINT_NODE,
     GEMINI_CHAT_MODEL,
     GOOGLE_IMAGEN,
     HUGGING_FACE_CHAT_MODEL,
     LIFERAY_SEARCH,
+    MISTRALAI_CHAT_MODEL,
     OLLAMA_CHAT_MODEL,
     OPENAI_CHAT_MODEL,
     OPENAI_IMAGE_MODEL,
@@ -15,6 +17,20 @@ import {
 } from '../constants/AITasksNodeTypesConstants';
 
 export const getDefaultParameters = (nodeType) => {
+    if (nodeType === ANTHROPIC_CHAT_MODEL) {
+        return {
+            apiKey: 'env:ANTHROPIC_API_KEY',
+            baseUrl: '',
+            memoryMaxMessages: 20,
+            modelName: 'claude-3-sonnet-20240229',
+            outputParameterName: 'text',
+            promptTemplate: '{{input.text}}',
+            systemMessage: '',
+            temperature: 0.7,
+            timeout: 20,
+            useChatMemory: true,
+        };
+    }
     if (nodeType === GEMINI_CHAT_MODEL) {
         return {
             location: '',
@@ -65,6 +81,20 @@ export const getDefaultParameters = (nodeType) => {
             sxpBlueprintExternalReferenceCode: 'semantic_search',
             taskContextOutputParameterName: 'ragDocuments',
             documentResultField: 'content_{{taskContext.currentLanguageId}}',
+        };
+    }
+    if (nodeType === MISTRALAI_CHAT_MODEL) {
+        return {
+            apiKey: 'env:MISTRALAI_API_KEY',
+            baseUrl: '',
+            memoryMaxMessages: 20,
+            modelName: 'mistral-small-latest',
+            outputParameterName: 'text',
+            promptTemplate: '{{input.text}}',
+            systemMessage: '',
+            temperature: 0.7,
+            timeout: 20,
+            useChatMemory: true,
         };
     }
     if (nodeType === OLLAMA_CHAT_MODEL) {
