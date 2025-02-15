@@ -63,6 +63,10 @@
   }
 }
 
+.anthropic-chat-model-node {
+  @extend %node-base;
+}
+
 .gemini-chat-model-node {
   @extend %node-base;
 }
@@ -72,6 +76,10 @@
 }
 
 .hugging-face-chat-model-node {
+  @extend %node-base;
+}
+
+.mistralai-chat-model-node {
   @extend %node-base;
 }
 

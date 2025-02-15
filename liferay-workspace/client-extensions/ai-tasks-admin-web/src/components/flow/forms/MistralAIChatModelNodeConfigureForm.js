@@ -1,5 +1,4 @@
 /**
- * @author Louis-Guillaume Durand
  * @author Petteri Karttunen
  */
 
@@ -7,78 +6,59 @@ import React from 'react';
 
 import { Tab, Tabs } from '../../ui/Tabs';
 
-const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
+const OpenAIChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
     const rangeWidth = (nodeParameters.temperature / 2) * 100;
     return (
         <Tabs>
             <Tab id={'generalSettings'} label={'General Settings'}>
                 <div>
                     <div className="form-group">
-                        <label htmlFor="project">Project</label>
+                        <label htmlFor="apiKey">API Key</label>
                         <input
                             type="text"
                             className="form-control"
-                            id="project"
-                            placeholder="Enter project name"
-                            value={nodeParameters.project}
+                            id="apiKey"
+                            placeholder="Enter API key"
+                            value={nodeParameters.apiKey}
                             onChange={(e) => {
-                                onChange('project', e.currentTarget.value);
+                                onChange('apiKey', e.currentTarget.value);
                             }}
                         />
                         <small className="form-text text-muted">
-                            The name of the project this configuration applies to.
+                            API key. To use environment variables, prefix the variable name with env:
                         </small>
                     </div>
-                    <div className="form-row">
-                        <div className="form-group col-6">
-                            <label htmlFor="model">Model</label>
-                            {/* TODO: Provide an endpoint to fetch Gemini models */}
-                            <select
-                                className="form-control"
-                                id="model"
-                                value={nodeParameters.model}
-                                onChange={(e) => {
-                                    onChange('model', e.currentTarget.value);
-                                }}
-                            >
-                                <option value={'gemini-2.0-flash-exp'}>
-                                    Gemini 2.0 Flash (gemini-2.0-flash-exp)
-                                </option>
-                                <option value={'gemini-1.5-flash'}>Gemini 1.5 Flash (gemini-1.5-flash)</option>
-                                <option value={'gemini-1.5-flash-8b'}>
-                                    Gemini 1.5 Flash-8B (gemini-1.5-flash-8b)
-                                </option>
-                                <option value={'gemini-1.5-pro'}>Gemini 1.5 Pro (gemini-1.5-pro)</option>
-                            </select>
-                            <small className="form-text text-muted">
-                                The Gemini model variant name to use:
-                                https://ai.google.dev/gemini-api/docs/models/gemini
-                            </small>
-                        </div>
-                        <div className="form-group col-6">
-                            <label htmlFor="location">Location</label>
-                            {/* TODO: Provide an endpoint to fetch Google Cloud locations for Gemini */}
-                            <select
-                                className="form-control"
-                                id="location"
-                                value={nodeParameters.location}
-                                onChange={(e) => {
-                                    onChange('location', e.currentTarget.value);
-                                }}
-                            >
-                                <option value={'us-central1'}>Iowa (us-central1)</option>
-                                <option value={'us-west1'}>Oregon (us-west1)</option>
-                                <option value={'us-west4'}>Las Vegas (us-west4)</option>
-                                <option value={'us-east4'}>N. Virginia (us-east4)</option>
-                                <option value={'europe-west1'}>Belgium (europe-west1)</option>
-                                <option value={'europe-north1'}>Finland (europe-north1)</option>
-                                <option value={'asia-southeast1'}>Singapore (asia-southeast1)</option>
-                            </select>
-                            <small className="form-text text-muted">
-                                Gemini serving location in Google Cloud:
-                                https://cloud.google.com/gemini/docs/locations.
-                            </small>
-                        </div>
+
+                    <div className="form-group">
+                        <label htmlFor="baseUrl">Base URL</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="baseUrl"
+                            placeholder="Enter base URL"
+                            value={nodeParameters.baseUrl}
+                            onChange={(e) => {
+                                onChange('baseUrl', e.currentTarget.value);
+                            }}
+                        />
+                        <small className="form-text text-muted">
+                        </small>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="modelName">Model Name</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="modelName"
+                            placeholder="Enter the model name"
+                            value={nodeParameters.modelName}
+                            onChange={(e) => {
+                                onChange('modelName', e.currentTarget.value);
+                            }}
+                        />
+                        <small className="form-text text-muted">
+                            Enter the model name
+                        </small>
                     </div>
                     <div className="form-row">
                         <div className="form-group col-6">
@@ -122,24 +102,6 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                             </small>
                         </div>
                     </div>
-                    <div className="form-group">
-                        <div className="custom-control custom-checkbox custom-control-outside">
-                            <label>
-                                <input
-                                    className="custom-control-input"
-                                    defaultChecked={nodeParameters.useGoogleSearch}
-                                    id="useGoogleSearch"
-                                    name="useGoogleSearch"
-                                    type="checkbox"
-                                    value={nodeParameters.useGoogleSearch}
-                                    onChange={(e) => {
-                                        onChange('useGoogleSearch', e.currentTarget.checked);
-                                    }}
-                                />
-                                <span class="custom-control-label">Ground results with Google Search.</span>
-                            </label>
-                        </div>
-                    </div>
                 </div>
             </Tab>
             <Tab id={'modelSettings'} label={'Model'}>
@@ -174,22 +136,22 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                             output.
                         </small>
                     </div>
+                    <div className="form-group col-6">
+                        <label htmlFor="seed">Seed</label>
+                        <input
+                            type="number"
+                            className="form-control"
+                            id="seed"
+                            value={nodeParameters.seed}
+                            onChange={(e) => {
+                                onChange('seed', e.currentTarget.value);
+                            }}
+                        />
+                        <small className="form-text text-muted">
+                           See https://docs.langchain4j.dev/integrations/language-models/mistral-ai/
+                        </small>
+                    </div>
                     <div className="form-row">
-                        <div className="form-group col-6">
-                            <label htmlFor="topK">Top K</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                id="topK"
-                                min="1"
-                                value={nodeParameters.topK}
-                                onChange={(e) => {
-                                    onChange('topK', e.currentTarget.value);
-                                }}
-                            />
-                            <small className="form-text text-muted">
-                            </small>
-                        </div>
                         <div className="form-group col-6">
                             <label htmlFor="topP">Top P</label>
                             <input
@@ -203,23 +165,25 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                 }}
                             />
                             <small className="form-text text-muted">
+                                https://platform.openai.com/docs/api-reference/chat
                             </small>
                         </div>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="maxOutputTokens">Max Output Tokens</label>
-                        <input
-                            type="number"
-                            className="form-control"
-                            id="maxOutputTokens"
-                            min="1"
-                            value={nodeParameters.maxOutputTokens}
-                            onChange={(e) => {
-                                onChange('maxOutputTokens', e.currentTarget.value);
-                            }}
-                        />
-                        <small className="form-text text-muted">
-                        </small>
+                        <div className="form-group col-6">
+                            <label htmlFor="maxTokens">Max Tokens</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="maxTokens"
+                                min="1"
+                                value={nodeParameters.maxTokens}
+                                onChange={(e) => {
+                                    onChange('maxTokens', e.currentTarget.value);
+                                }}
+                            />
+                            <small className="form-text text-muted">
+                                Limits the maximum number of tokens in the output. See https://platform.openai.com/docs/api-reference/chat.
+                            </small>
+                        </div>
                     </div>
                 </div>
             </Tab>
@@ -254,6 +218,24 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                         <small className="form-text text-muted">
                             Instructions given to the model to set up its behavior.
                         </small>
+                    </div>
+                    <div className="form-group">
+                        <div className="custom-control custom-checkbox custom-control-outside">
+                            <label>
+                                <input
+                                    className="custom-control-input"
+                                    defaultChecked={nodeParameters.safePrompt}
+                                    id="safePrompt"
+                                    name="safePrompt"
+                                    type="checkbox"
+                                    value={nodeParameters.safePrompt}
+                                    onChange={(e) => {
+                                        onChange('safePrompt', e.currentTarget.checked);
+                                    }}
+                                />
+                                <span class="custom-control-label">Safe prompt. See https://docs.langchain4j.dev/integrations/language-models/mistral-ai/</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </Tab>
@@ -315,79 +297,53 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
             <Tab id={'advancedSettings'} label={'Advanced'}>
                 <div>
                     <div className="form-group">
-                        <label htmlFor="responseSchema">Response Schema</label>
-                        <textarea
-                            className="form-control"
-                            id="responseSchema"
-                            rows="3"
-                            onChange={(e) => {
-                                onChange('responseSchema', JSON.parse(e.currentTarget.value));
-                            }}
-                            value={JSON.stringify(nodeParameters.responseSchema, undefined, 2)}
-                        />
-                        <small className="form-text text-muted">
-                            Response schema as JSON.
-                        </small>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="safetySettings">Safety Settings</label>
-                        <textarea
-                            className="form-control"
-                            id="safetySettings"
-                            rows="3"
-                            onChange={(e) => {
-                                onChange('safetySettings', JSON.parse(e.currentTarget.value));
-                            }}
-                            value={JSON.stringify(nodeParameters.safetySettings, undefined, 2)}
-                        />
-                        <small className="form-text text-muted">
-                        </small>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="allowedFunctionNames">Allowed Function Names</label>
+                        <label htmlFor="responseFormat">Response format</label>
                         <input
                             type="text"
                             className="form-control"
-                            id="allowedFunctionNames"
-                            value={nodeParameters.allowedFunctionNames}
+                            id="responseFormat"
+                            value={nodeParameters.responseFormat}
                             onChange={(e) => {
-                                onChange('allowedFunctionNames', e.currentTarget.value);
+                                onChange('responseFormat', e.currentTarget.value);
                             }}
                         />
                         <small className="form-text text-muted">
-                            Allowed function names.
+                            See https://platform.openai.com/docs/api-reference/chat
                         </small>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="vertexSearchDatastore">Vertex Search Data Store</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="vertexSearchDatastore"
-                            value={nodeParameters.vertexSearchDatastore}
-                            onChange={(e) => {
-                                onChange('vertexSearchDatastore', e.currentTarget.value);
-                            }}
-                        />
-                        <small className="form-text text-muted">
-
-                        </small>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="maxRetries">Max Retries</label>
-                        <input
-                            type="number"
-                            className="form-control"
-                            id="maxRetries"
-                            min="0"
-                            value={nodeParameters.maxRetries}
-                            onChange={(e) => {
-                                onChange('maxRetries', e.currentTarget.value);
-                            }}
-                        />
-                        <small className="form-text text-muted">
-                            The maximum number of retries in case of API call failure.
-                        </small>
+                    <div className="form-row">
+                        <div className="form-group col-6">
+                            <label htmlFor="timeout">Timeout</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="timeout"
+                                min="0"
+                                value={nodeParameters.timeout}
+                                onChange={(e) => {
+                                    onChange('timeout', e.currentTarget.value);
+                                }}
+                            />
+                            <small className="form-text text-muted">
+                                Timeout in seconds.
+                            </small>
+                        </div>
+                        <div className="form-group col-6">
+                            <label htmlFor="maxRetries">Max Retries</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="maxRetries"
+                                min="0"
+                                value={nodeParameters.maxRetries}
+                                onChange={(e) => {
+                                    onChange('maxRetries', e.currentTarget.value);
+                                }}
+                            />
+                            <small className="form-text text-muted">
+                                The maximum number of retries in case of API call failure.
+                            </small>
+                        </div>
                     </div>
                     <div className="form-group">
                         <div className="custom-control custom-checkbox custom-control-outside">
@@ -429,4 +385,4 @@ const GeminiChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
     );
 };
 
-export default GeminiChatModelNodeConfigureForm;
+export default OpenAIChatModelNodeConfigureForm;
