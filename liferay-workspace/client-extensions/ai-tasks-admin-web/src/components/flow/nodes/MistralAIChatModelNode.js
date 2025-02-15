@@ -4,15 +4,28 @@
 
 import React, { memo } from 'react';
 import { Handle } from '@xyflow/react';
+import { useNodeMenu } from '../../../contexts/NodeMenuContext';
+import Icon from '../../ui/Icon';
 
-const MistralAIChatModelNode = ({ data }) => {
+const MistralAIChatModelNode = ({ id, data }) => {
   const { label, parameters } = data;
+  const { toggleDropdown } = useNodeMenu();
 
   return (
     <div className="mistralai-chat-model-node">
       <Handle type="target" position="left" />
       <div className={'node-header-container'}>
-        <h3>{label}</h3>
+        <div className={'d-flex flex-row justify-content-between'}>
+          <h3 className={'node-header-label'}>{label}</h3>
+          <button
+            className={'btn btn-monospaced btn-secondary btn-xs ml-4'}
+            onClick={(event) => {
+              toggleDropdown(event, id);
+            }}
+          >
+            <Icon name={'ellipsis-v'} />
+          </button>
+        </div>
         <span className="label label-info">
           <span className="label-item label-item-expand">MistralAI Chat Model</span>
         </span>
