@@ -7,7 +7,7 @@ import React from 'react';
 import { Tab, Tabs } from '../../ui/Tabs';
 
 const OpenAIChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
-    const rangeWidth = (nodeParameters.temperature / 2) * 100;
+    const rangeWidth = nodeParameters.temperature * 100;
     return (
         <Tabs>
             <Tab id={'generalSettings'} label={'General Settings'}>
@@ -233,7 +233,7 @@ const OpenAIChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                         onChange('safePrompt', e.currentTarget.checked);
                                     }}
                                 />
-                                <span class="custom-control-label">Safe prompt. See https://docs.langchain4j.dev/integrations/language-models/mistral-ai/</span>
+                                <span className="custom-control-label">Safe prompt. See https://docs.langchain4j.dev/integrations/language-models/mistral-ai/</span>
                             </label>
                         </div>
                     </div>
@@ -359,7 +359,7 @@ const OpenAIChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                         onChange('logRequests', e.currentTarget.checked);
                                     }}
                                 />
-                                <span class="custom-control-label">Log Requests in the console.</span>
+                                <span className="custom-control-label">Log Requests in the console.</span>
                             </label>
                         </div>
                         <div className="custom-control custom-checkbox custom-control-outside">
@@ -375,7 +375,7 @@ const OpenAIChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                                         onChange('logResponses', e.currentTarget.checked);
                                     }}
                                 />
-                                <span class="custom-control-label">Log Responses in the console.</span>
+                                <span className="custom-control-label">Log Responses in the console.</span>
                             </label>
                         </div>
                     </div>
