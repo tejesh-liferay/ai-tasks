@@ -58,7 +58,7 @@
   }
 
   .chat-preview-area {
-    padding: 2rem .5rem;
+    padding: 0 .5rem 2rem 0.5rem;
     height: 90%;
     overflow: auto;
     transition: opacity 0.15s ease;
@@ -67,7 +67,8 @@
       .message {
         border-radius: 1rem;
         padding: 1rem 1.35rem;
-        margin-bottom: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 0;
         max-width: 80%;
         word-wrap: break-word;
 
@@ -79,11 +80,6 @@
         &.system-message {
           background: var(--gray-200);
         }
-      }
-
-      .message-metadata {
-        color: var(--gray-500);
-        font-size: .8rem;
       }
     }
   }

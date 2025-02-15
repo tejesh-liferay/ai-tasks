@@ -20,7 +20,7 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
     addMessage(userInput, 'USER');
     setUserInput('');
     const response = await executeTask(selectedTask.externalReferenceCode, userInput);
-    addMessage(response.output.text || response.output.error, 'AI');
+    addMessage(response.output.text || response.output.error, 'AI', response.debugInfo['1'] || {});
   };
 
   return (
@@ -58,7 +58,7 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
       <div className="container">
         <div className="chat-preview-area d-flex flex-column">
           {history.map((message, index) => (
-            <ChatMessage key={index} role={message.role}>
+            <ChatMessage key={index} role={message.role} debug={message.debug}>
               <Remark>{message.text}</Remark>
             </ChatMessage>
           ))}

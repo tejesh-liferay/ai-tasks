@@ -15,8 +15,8 @@ function useChatHistory(taskId) {
     localStorage.setItem(chatKey, JSON.stringify(history));
   }, [chatKey, history]);
 
-  const addMessage = (text, role) => {
-    const newMessage = { text, role };
+  const addMessage = (text, role, debug) => {
+    const newMessage = { text, role, debug };
     setHistory((prevHistory) => [...prevHistory, newMessage]);
   };
 
