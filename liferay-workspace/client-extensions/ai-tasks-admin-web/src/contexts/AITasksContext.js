@@ -28,6 +28,8 @@ const AITasksContext = createContext({
   taskExecuting: false,
   loading: false,
   error: null,
+  handleFlowConfigurationChange: (newConfig) => {},
+  updateGraph: (newNodes, newEdges) => {}
 });
 
 const useAITasksContext = () => useContext(AITasksContext);
@@ -143,7 +145,7 @@ const AITasksProvider = ({ children }) => {
         setError(error.message);
         Toast.open('danger', 'Error', error);
       } finally {
-        fetchTasks();
+        await fetchTasks();
       }
     }
   };
@@ -161,6 +163,54 @@ const AITasksProvider = ({ children }) => {
     } finally {
       setTaskExecuting(false);
     }
+  };
+
+  const handleFlowConfigurationChange = async (newConfig) => {
+    const updatedTask = {
+      ...selectedTask,
+      configuration: { ...newConfig },
+    };
+    await updateTask(updatedTask);
+  };
+
+  const updateGraph = async (newNodes, newEdges) => {
+    const filteredNodes = newNodes.filter((newNode) => newNode.id !== 'entryPoint');
+    const updatedNodes = filteredNodes.map((newNode) => {
+      return {
+        id: newNode.id,
+        label: newNode.label || newNode.data.label,
+        type: newNode.type,
+        condition: newNode.condition || null,
+        parameters: newNode.parameters || newNode.data.parameters,
+        uiConfiguration: newNode.uiConfiguration || newNode.data.uiConfiguration,
+      };
+    });
+    const updatedEdges = newEdges
+        .filter((newEdge) => newEdge.id !== 'entryPointEdge')
+        .map((edge) => {
+          return {
+            id: edge.id,
+            source: edge.source,
+            target: edge.target,
+          };
+        });
+
+    const updatedNodesIds = updatedNodes.map((updatedNode) => {
+      return updatedNode.id;
+    });
+
+    let startNodeId = '';
+
+    if (updatedNodesIds.includes(selectedTask.configuration.startNodeId)) {
+      startNodeId = selectedTask.configuration.startNodeId;
+    }
+
+    await handleFlowConfigurationChange({
+      ...selectedTask.configuration,
+      nodes: updatedNodes,
+      edges: updatedEdges,
+      startNodeId,
+    });
   };
 
   return (
@@ -184,6 +234,8 @@ const AITasksProvider = ({ children }) => {
         taskExecuting,
         loading,
         error,
+        handleFlowConfigurationChange,
+        updateGraph
       }}
     >
       {children}

@@ -41,14 +41,6 @@ const AITaskEdit = () => {
     updateTask(updatedTask);
   };
 
-  const handleFlowConfigurationChange = (newConfig) => {
-    const updatedTask = {
-      ...selectedTask,
-      configuration: { ...newConfig },
-    };
-    updateTask(updatedTask);
-  };
-
   const handleInputOnChange = (e, key) => {
     let value = e.target.value;
     if (key === 'externalReferenceCode') {
@@ -165,7 +157,7 @@ const AITaskEdit = () => {
           <Tab id={'flowEditor'} label={'Flow Editor'} className={'px-0 py-0'}>
             <div>
               <DnDProvider>
-                <AITaskFlowEditor onConfigChange={handleFlowConfigurationChange} />
+                <AITaskFlowEditor />
               </DnDProvider>
             </div>
           </Tab>
