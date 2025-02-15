@@ -1,10 +1,10 @@
+ext {
+	langchain4jVersion = "1.0.0-beta1"
+}
+
 buildService {
 	apiDir = "../ai-tasks-api/src/main/java"
 	testDir = "../ai-tasks-test/src/testIntegration/java"
-}
-
-ext {
-	langchain4jVersion = "1.0.0-beta1"
 }
 
 dependencies {
@@ -51,8 +51,8 @@ dependencies {
 	compileInclude group: "dev.langchain4j", name: "langchain4j-anthropic", version: "${langchain4jVersion}"
 	compileInclude group: "dev.langchain4j", name: "langchain4j-core", version: "${langchain4jVersion}"
 	compileInclude group: "dev.langchain4j", name: "langchain4j-hugging-face", version: "${langchain4jVersion}"
-	compileInclude group: "dev.langchain4j", name: "langchain4j-ollama", version: "${langchain4jVersion}"
 	compileInclude group: "dev.langchain4j", name: "langchain4j-mistral-ai", version: "${langchain4jVersion}"
+	compileInclude group: "dev.langchain4j", name: "langchain4j-ollama", version: "${langchain4jVersion}"
 	compileInclude group: "dev.langchain4j", name: "langchain4j-open-ai", version: "${langchain4jVersion}"
 	compileInclude group: "dev.langchain4j", name: "langchain4j-vertex-ai", version: "${langchain4jVersion}"
 	compileInclude group: "dev.langchain4j", name: "langchain4j-vertex-ai-gemini", version: "${langchain4jVersion}"

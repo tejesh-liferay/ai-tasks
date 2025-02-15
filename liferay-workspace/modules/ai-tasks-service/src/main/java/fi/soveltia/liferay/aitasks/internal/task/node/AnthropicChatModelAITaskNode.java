@@ -2,23 +2,24 @@ package fi.soveltia.liferay.aitasks.internal.task.node;
 
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
+
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
+
 import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
-import org.osgi.service.component.annotations.Component;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Petteri Karttunen
  */
 @Component(
-	property = "ai.task.node.type=anthropicChatModel", service = AITaskNode.class
+	property = "ai.task.node.type=anthropicChatModel",
+	service = AITaskNode.class
 )
 public class AnthropicChatModelAITaskNode
 	extends BaseChatModelAITaskNode implements AITaskNode {
@@ -30,15 +31,18 @@ public class AnthropicChatModelAITaskNode
 
 	protected ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
 		AnthropicChatModel.AnthropicChatModelBuilder builder =
-				AnthropicChatModel.builder();
+			AnthropicChatModel.builder();
 
 		SetterUtil.setNotBlankString(
 			builder::apiKey, jsonObject.getString("apiKey"));
 		SetterUtil.setNotBlankString(
 			builder::baseUrl, jsonObject.getString("baseUrl"));
-		SetterUtil.setNotBlankString(builder::beta, jsonObject.getString("beta"));
-		SetterUtil.setNotNullBoolean(builder::cacheSystemMessages, jsonObject, "cacheSystemMessages");
-		SetterUtil.setNotNullBoolean(builder::cacheTools, jsonObject, "cacheTools");
+		SetterUtil.setNotBlankString(
+			builder::beta, jsonObject.getString("beta"));
+		SetterUtil.setNotNullBoolean(
+			builder::cacheSystemMessages, jsonObject, "cacheSystemMessages");
+		SetterUtil.setNotNullBoolean(
+			builder::cacheTools, jsonObject, "cacheTools");
 
 		if (jsonObject.has("chatModelListeners")) {
 			builder.listeners(
@@ -75,4 +79,5 @@ public class AnthropicChatModelAITaskNode
 
 		return builder.build();
 	}
+
 }

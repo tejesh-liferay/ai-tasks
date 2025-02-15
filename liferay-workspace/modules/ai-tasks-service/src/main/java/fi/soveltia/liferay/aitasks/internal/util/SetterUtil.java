@@ -2,6 +2,7 @@
 package fi.soveltia.liferay.aitasks.internal.util;
 
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.function.Consumer;
@@ -11,23 +12,25 @@ import java.util.function.Consumer;
  */
 public class SetterUtil {
 
-	public static void setNotNullBoolean(
-			Consumer<Boolean> consumer, JSONObject jsonObject, String key) {
-
-		if (jsonObject.has(key)) {
-			consumer.accept(jsonObject.getBoolean(key));
-		}
-	}
-
 	public static void setNotBlankString(
 		Consumer<String> consumer, String value) {
 
 		if (!Validator.isBlank(value)) {
 			if (value.startsWith("env:")) {
-				value = System.getenv(value.substring(4));
+				String[] valueParts = value.split(":");
+
+				value = System.getenv(StringUtil.trim(valueParts[1]));
 			}
 
 			consumer.accept(value);
+		}
+	}
+
+	public static void setNotNullBoolean(
+		Consumer<Boolean> consumer, JSONObject jsonObject, String key) {
+
+		if (jsonObject.has(key)) {
+			consumer.accept(jsonObject.getBoolean(key));
 		}
 	}
 
