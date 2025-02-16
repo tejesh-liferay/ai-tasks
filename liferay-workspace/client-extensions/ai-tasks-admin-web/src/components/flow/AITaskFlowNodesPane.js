@@ -6,20 +6,13 @@ import React from 'react';
 import Icon from '../ui/Icon';
 import { useDnD } from '../../contexts/DnDContext';
 import {
-ANTHROPIC_CHAT_MODEL,
-GEMINI_CHAT_MODEL,
-GOOGLE_IMAGEN,
-HUGGING_FACE_CHAT_MODEL,
-LIFERAY_SEARCH,
-MISTRALAI_CHAT_MODEL,
-OLLAMA_CHAT_MODEL,
-OPENAI_CHAT_MODEL,
-OPENAI_IMAGE_MODEL,
-WEBHOOK,
+  getImageGenerationNodes,
+  getTextGenerationNodes,
+  getUtilityNodes,
 } from '../../constants/AITasksNodeTypesConstants';
 
 const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
-  const [type, setType] = useDnD();
+  const [_, setType] = useDnD();
 
   const onDragStart = (event, nodeType) => {
     setType(nodeType);
@@ -49,136 +42,60 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
       </div>
       <div className="container">
         <div className="flow-nodes-pane-area d-flex flex-column">
-          <div
-            className={'anthropic-chat-model-node'}
-            onDragStart={(event) => onDragStart(event, ANTHROPIC_CHAT_MODEL)}
-            draggable
-          >
-            <div
-              className={
-                'node-header-container d-flex flex-row align-items-center justify-content-center'
-              }
-            >
-              <h4>Anthropic Chat Model</h4>
-            </div>
-          </div>
-          <div
-            className={'gemini-chat-model-node'}
-            onDragStart={(event) => onDragStart(event, GEMINI_CHAT_MODEL)}
-            draggable
-          >
-            <div
-              className={
-                'node-header-container d-flex flex-row align-items-center justify-content-center'
-              }
-            >
-              <h4>Gemini Chat Model</h4>
-            </div>
-          </div>
-          <div
-            className={'google-imagen-node'}
-            onDragStart={(event) => onDragStart(event, GOOGLE_IMAGEN)}
-            draggable
-          >
-            <div
-              className={
-                'node-header-container d-flex flex-row align-items-center justify-content-center'
-              }
-            >
-              <h4>Google Imagen</h4>
-            </div>
-          </div>
-          <div
-            className={'hugging-face-chat-model-node'}
-            onDragStart={(event) => onDragStart(event, HUGGING_FACE_CHAT_MODEL)}
-            draggable
-          >
-            <div
-              className={
-                'node-header-container d-flex flex-row align-items-center justify-content-center'
-              }
-            >
-              <h4>HuggingFace Chat Model</h4>
-            </div>
-          </div>
-          <div
-            className={'liferay-search-node'}
-            onDragStart={(event) => onDragStart(event, LIFERAY_SEARCH)}
-            draggable
-          >
-            <div
-              className={
-                'node-header-container d-flex flex-row align-items-center justify-content-center'
-              }
-            >
-              <h4>Liferay Search</h4>
-            </div>
-          </div>
-          <div
-            className={'mistralai-chat-model-node'}
-            onDragStart={(event) => onDragStart(event, MISTRALAI_CHAT_MODEL)}
-            draggable
-          >
-            <div
-              className={
-                'node-header-container d-flex flex-row align-items-center justify-content-center'
-              }
-            >
-              <h4>MistralAI Chat Model</h4>
-            </div>
-          </div>
-          <div
-            className={'ollama-chat-model-node'}
-            onDragStart={(event) => onDragStart(event, OLLAMA_CHAT_MODEL)}
-            draggable
-          >
-            <div
-              className={
-                'node-header-container d-flex flex-row align-items-center justify-content-center'
-              }
-            >
-              <h4>Ollama Chat Model</h4>
-            </div>
-          </div>
-          <div
-            className={'openai-chat-model-node'}
-            onDragStart={(event) => onDragStart(event, OPENAI_CHAT_MODEL)}
-            draggable
-          >
-            <div
-              className={
-                'node-header-container d-flex flex-row align-items-center justify-content-center'
-              }
-            >
-              <h4>OpenAI Chat Model</h4>
-            </div>
-          </div>
-          <div
-            className={'openai-image-model-node'}
-            onDragStart={(event) => onDragStart(event, OPENAI_IMAGE_MODEL)}
-            draggable
-          >
-            <div
-              className={
-                'node-header-container d-flex flex-row align-items-center justify-content-center'
-              }
-            >
-              <h4>OpenAI Image Model</h4>
-            </div>
-          </div>
-          <div
-            className={'webhook-node'}
-            onDragStart={(event) => onDragStart(event, WEBHOOK)}
-            draggable
-          >
-            <div
-              className={
-                'node-header-container d-flex flex-row align-items-center justify-content-center'
-              }
-            >
-              <h4>Webhook</h4>
-            </div>
-          </div>
+          <h3 className={'node-category-title'}>Text Generation</h3>
+          {getTextGenerationNodes.map((node) => {
+            return (
+              <div
+                className={'new-node'}
+                onDragStart={(event) => onDragStart(event, node.id)}
+                draggable
+              >
+                <div
+                  className={
+                    'node-header-container d-flex flex-row align-items-center justify-content-start'
+                  }
+                >
+                  <h4>{node.name}</h4>
+                </div>
+              </div>
+            );
+          })}
+          <h3 className={'node-category-title'}>Image Generation</h3>
+          {getImageGenerationNodes.map((node) => {
+            return (
+              <div
+                className={'new-node'}
+                onDragStart={(event) => onDragStart(event, node.id)}
+                draggable
+              >
+                <div
+                  className={
+                    'node-header-container d-flex flex-row align-items-center justify-content-start'
+                  }
+                >
+                  <h4>{node.name}</h4>
+                </div>
+              </div>
+            );
+          })}
+          <h3 className={'node-category-title'}>Utility</h3>
+          {getUtilityNodes.map((node) => {
+            return (
+              <div
+                className={'new-node'}
+                onDragStart={(event) => onDragStart(event, node.id)}
+                draggable
+              >
+                <div
+                  className={
+                    'node-header-container d-flex flex-row align-items-center justify-content-start'
+                  }
+                >
+                  <h4>{node.name}</h4>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
