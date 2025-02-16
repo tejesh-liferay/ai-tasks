@@ -30,17 +30,13 @@ const AITaskAdd = () => {
     externalReferenceCode: '',
   });
 
-  const handleConfigurationChange = async ({ newData }) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      configuration: { ...newData },
-    }));
-  };
-
   const handleChange = (event) => {
     let { name, value } = event.target;
     if (name === 'externalReferenceCode') {
       value = value.trim().replaceAll(' ', '');
+    }
+    if (name === 'enabled') {
+      value = JSON.parse(value);
     }
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -76,7 +72,6 @@ const AITaskAdd = () => {
         className={'container-fluid container-fluid-max-lg container-form-lg sheet sheet-xl mt-7'}
       >
         <form onSubmit={handleSubmit}>
-
           <div className={'form-group ' + (errors.title && errors.title.length > 0 && 'has-error')}>
             <label htmlFor="title">
               Title
@@ -100,7 +95,6 @@ const AITaskAdd = () => {
             )}
           </div>
 
-
           <div
             className={
               'form-group ' +
@@ -108,7 +102,7 @@ const AITaskAdd = () => {
                 errors.externalReferenceCode.length > 0 &&
                 'has-error')
             }
-            >
+          >
             <label htmlFor="externalReferenceCode">
               External Reference Code
               <Icon name={'asterisk'} className={'reference-mark'} />
@@ -130,34 +124,36 @@ const AITaskAdd = () => {
               </div>
             )}
           </div>
-
-        <div className="custom-control custom-checkbox custom-control-outside">
-            <label>
+          <div className="form-group">
+            <label htmlFor="description">Description</label>
+            <textarea
+              className="form-control"
+              id="description"
+              name="description"
+              rows="3"
+              onChange={handleChange}
+              value={formData.description}
+            />
+          </div>
+          <div className="form-group">
+            <label className="toggle-switch">
+              <span className="toggle-switch-label">Enabled</span>
+              <span className="toggle-switch-check-bar">
                 <input
-                  className="custom-control-input"
-                  checked={formData.enabled}
                   id="enabled"
                   name="enabled"
-                  onChange={handleChange}
+                  className="toggle-switch-check"
+                  role="switch"
                   type="checkbox"
                   value={formData.enabled}
+                  onChange={handleChange}
+                  defaultChecked={formData.enabled}
                 />
-                <span class="custom-control-label">Enabled</span>
-           </label>
-        </div>
-
-          <div className={'form-group'}>
-            <JsonEditor
-              data={formData.configuration}
-              rootName={'configuration'}
-              indent={2}
-              collapse={3}
-              collapseAnimationTime={150}
-              maxWidth={1200}
-              onEdit={handleConfigurationChange}
-              onAdd={handleConfigurationChange}
-              onDelete={handleConfigurationChange}
-            />
+                <span aria-hidden="true" className="toggle-switch-bar">
+                  <span className="toggle-switch-handle"></span>
+                </span>
+              </span>
+            </label>
           </div>
           <button className={'btn btn-primary'} type={'submit'}>
             Save
