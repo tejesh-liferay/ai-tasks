@@ -1,4 +1,6 @@
 **/*.iml
+**/*.ipr
+**/*.iws
 **/.ivy
 **/.classpath
 **/.project
