@@ -7,7 +7,6 @@ import React from 'react';
 import { Tab, Tabs } from '../../ui/Tabs';
 
 const WebhookNodeConfigureForm = ({ nodeParameters, onChange }) => {
-    const rangeWidth = (nodeParameters.temperature / 2) * 100;
     return (
         <Tabs>
             <Tab id={'generalSettings'} label={'General Settings'}>

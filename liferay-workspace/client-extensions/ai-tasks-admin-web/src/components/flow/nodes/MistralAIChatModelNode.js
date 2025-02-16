@@ -4,8 +4,9 @@
 
 import React, { memo } from 'react';
 import { Handle } from '@xyflow/react';
-import Icon from '../../ui/Icon';
+
 import { useNodeMenu } from '../../../contexts/NodeMenuContext';
+import Icon from '../../ui/Icon';
 
 const MistralAIChatModelNode = ({ id, data }) => {
   const { label, parameters } = data;
@@ -15,7 +16,6 @@ const MistralAIChatModelNode = ({ id, data }) => {
     <div className="mistralai-chat-model-node">
       <Handle type="target" position="left" />
       <div className={'node-header-container'}>
-        <h3>{label}</h3>
         <div className={'d-flex flex-row justify-content-between'}>
           <h3 className={'node-header-label'}>{label}</h3>
           <button

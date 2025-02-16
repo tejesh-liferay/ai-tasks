@@ -3,7 +3,7 @@ import React from 'react';
 import { Tab, Tabs } from '../../ui/Tabs';
 
 const HuggingFaceChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
-    const rangeWidth = (nodeParameters.temperature / 2) * 100;
+    const rangeWidth = nodeParameters.temperature * 100;
     return (
         <Tabs>
             <Tab id={'generalSettings'} label={'General Settings'}>

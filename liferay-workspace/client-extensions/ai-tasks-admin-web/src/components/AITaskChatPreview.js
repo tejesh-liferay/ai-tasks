@@ -2,7 +2,7 @@
  * @author Louis-Guillaume Durand
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Icon from './ui/Icon';
 import { useAITasksContext } from '../contexts/AITasksContext';
@@ -14,14 +14,25 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
   const { selectedTask, executeTask, taskExecuting } = useAITasksContext();
   const [userInput, setUserInput] = useState('');
   const { history, addMessage, clearHistory } = useChatHistory(selectedTask.id);
+  const chatPreviewEndRef = useRef(null);
+  const scrollTimeoutRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     addMessage(userInput, 'USER');
     setUserInput('');
     const response = await executeTask(selectedTask.externalReferenceCode, userInput);
-    addMessage(response.output.text || response.output.error, 'AI');
+    addMessage(response.output.text || response.output.error, 'AI', response.debugInfo['1'] || {});
   };
+
+  useEffect(() => {
+    if (scrollTimeoutRef.current !== null) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+    scrollTimeoutRef.current = setTimeout(() => {
+      chatPreviewEndRef.current?.scrollIntoView();
+    }, 200);
+  }, [history, isOpen]);
 
   return (
     <div
@@ -58,7 +69,7 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
       <div className="container">
         <div className="chat-preview-area d-flex flex-column">
           {history.map((message, index) => (
-            <ChatMessage key={index} role={message.role}>
+            <ChatMessage key={index} role={message.role} debug={message.debug}>
               <Remark>{message.text}</Remark>
             </ChatMessage>
           ))}
@@ -71,6 +82,7 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
               </span>
             </ChatMessage>
           )}
+          <div ref={chatPreviewEndRef} className={'chat-preview-end mt-4'}></div>
         </div>
         <div className="mt-3">
           <form onSubmit={handleSubmit}>

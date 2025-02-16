@@ -19,8 +19,9 @@ import {
 } from './constants/AITasksRoutesConstants';
 
 import './styles/index.scss';
-import { ModalProvider, useModal } from './contexts/ModalContext';
+import { ModalProvider } from './contexts/ModalContext';
 import { NodeMenuProvider } from './contexts/NodeMenuContext';
+import { TooltipProvider } from './contexts/TooltipContext';
 
 const AITaskRouting = () => (
   <Routes>
@@ -35,11 +36,13 @@ const App = () => {
     <HashRouter>
       <AITasksProvider>
         <ModalProvider>
-          <NodeMenuProvider>
-            <ReactFlowProvider>
-              <AITaskRouting />
-            </ReactFlowProvider>
-          </NodeMenuProvider>
+          <TooltipProvider>
+            <NodeMenuProvider>
+              <ReactFlowProvider>
+                <AITaskRouting />
+              </ReactFlowProvider>
+            </NodeMenuProvider>
+          </TooltipProvider>
         </ModalProvider>
       </AITasksProvider>
     </HashRouter>
