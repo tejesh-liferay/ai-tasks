@@ -25,13 +25,14 @@
   }
 
   .flow-nodes-pane-area {
-    /* gap: 1rem; */
-    padding: 2rem .5rem;
-    /* height: 75vh; */
+    padding: .5rem;
     overflow: auto;
     transition: opacity 0.15s ease;
     .node-header-container {
-        padding: 0.5 rem;
+        padding: .5rem;
+    }
+    h4 {
+      margin: 0;
     }
   }
 }
