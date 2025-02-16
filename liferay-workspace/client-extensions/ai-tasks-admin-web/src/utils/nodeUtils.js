@@ -134,8 +134,6 @@ export const getDefaultParameters = (nodeType) => {
     }
     if (nodeType === WEBHOOK) {
         return {
-            body: '',
-            headers: '',
             method: 'POST',
             taskContextOutputParameterName: 'webhookResponse',
             url: ''
