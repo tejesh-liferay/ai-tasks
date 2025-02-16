@@ -75,6 +75,47 @@
   }
 }
 
+.anthropic-chat-model-node {
+  @extend %node-base;
+}
+
+.gemini-chat-model-node {
+  @extend %node-base;
+}
+
+.google-imagen-node {
+  @extend %node-base;
+}
+
+.hugging-face-chat-model-node {
+  @extend %node-base;
+}
+
+.mistralai-chat-model-node {
+  @extend %node-base;
+}
+
+.liferay-search-node {
+  @extend %node-base;
+}
+
+.ollama-chat-model-node {
+  @extend %node-base;
+}
+
+.openai-chat-model-node {
+  @extend %node-base;
+}
+
+.openai-image-model-node {
+  @extend %node-base;
+}
+
+.webhook-node {
+  @extend %node-base;
+}
+
+
 .start-node {
   @extend %node-base;
   border-style: dashed;
