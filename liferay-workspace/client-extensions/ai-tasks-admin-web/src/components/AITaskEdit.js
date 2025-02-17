@@ -17,12 +17,15 @@ import { Tab, Tabs } from './ui/Tabs';
 import AITaskFlowEditor from './flow/AITaskFlowEditor';
 import { ROUTE_TASK_LIST } from '../constants/AITasksRoutesConstants';
 import { DnDProvider } from '../contexts/DnDContext';
+import { useModal } from '../contexts/ModalContext';
+import AITaskEditModal, { AITaskEditModalFooter } from './AITaskEditModal';
 
 const AITaskEdit = () => {
   const { fetchTask, selectedTask, setSelectedTask, updateTask, loading, error } =
     useAITasksContext();
   const [isChatPreviewOpen, setIsChatPreviewOpen] = useState(false);
   const { id } = useParams();
+  const { setIsModalOpen, setModalTitle, setModalContent, setModalFooter } = useModal();
 
   const fetchCurrentTask = useCallback(async () => {
     const task = await fetchTask(id);
@@ -41,14 +44,14 @@ const AITaskEdit = () => {
     updateTask(updatedTask);
   };
 
-  const handleInputOnChange = (e, key) => {
-    let value = e.target.value;
-    if (key === 'externalReferenceCode') {
+  const handleInputOnChange = (e) => {
+    let { name, value } = e.target;
+    if (name === 'externalReferenceCode') {
       value = value.trim().replaceAll(' ', '');
     }
     const updatedTask = {
       ...selectedTask,
-      [key]: value,
+      [name]: value,
     };
 
     setSelectedTask(updatedTask);
@@ -62,6 +65,14 @@ const AITaskEdit = () => {
     ) {
       updateTask(selectedTask);
     }
+  };
+
+  const openModal = (e) => {
+    e.preventDefault();
+    setModalTitle(`Edit Title and Description`);
+    setModalContent(() => <AITaskEditModal />);
+    setModalFooter(() => <AITaskEditModalFooter />);
+    setIsModalOpen(true);
   };
 
   if (loading) {
@@ -87,26 +98,15 @@ const AITaskEdit = () => {
           <Icon name={'angle-left'} />
         </NavLink>
         <div slot="left" className={'border-right ml-sm-2 mr-3 pr-3'}>
-          <Label type={'info'} className={'ml-2 mt-2 mb-2'}>
+          <Label type={'info'} className={'my-2'}>
             {'version ' + selectedTask.version}
           </Label>
-          <input
-            id={'title'}
-            className={'h1 form-control form-control-inline px-2 py-0'}
-            type={'text'}
-            value={selectedTask.title}
-            onChange={(e) => {
-              handleInputOnChange(e, 'title');
-            }}
-            onBlur={(e) => {
-              handleBasicInfoChanges();
-            }}
-            onKeyDown={(e) => {
-              if (e.code === 'Enter') {
-                handleBasicInfoChanges();
-              }
-            }}
-          />
+          <div style={{ maxWidth: '300px' }}>
+            <button className={'btn btn-unstyled text-truncate'} onClick={openModal}>
+              <p className={'h3'}>{selectedTask.title}</p>
+              <i>{selectedTask.description}</i>
+            </button>
+          </div>
         </div>
         <div slot="center">
           <div>
@@ -122,13 +122,12 @@ const AITaskEdit = () => {
               ERC:
             </label>
             <input
-              id={'erc'}
+              id={'externalReferenceCode'}
+              name={'externalReferenceCode'}
               className={'form-control form-control-inline px-2 py-0 ml-2'}
               type={'text'}
               value={selectedTask.externalReferenceCode}
-              onChange={(e) => {
-                handleInputOnChange(e, 'externalReferenceCode');
-              }}
+              onChange={handleInputOnChange}
               onBlur={(e) => {
                 handleBasicInfoChanges();
               }}

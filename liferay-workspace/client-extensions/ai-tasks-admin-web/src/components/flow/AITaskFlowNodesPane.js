@@ -43,9 +43,10 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
       <div className="container">
         <div className="flow-nodes-pane-area d-flex flex-column">
           <h3 className={'node-category-title'}>Text Generation</h3>
-          {getTextGenerationNodes.map((node) => {
+          {getTextGenerationNodes.map((node, index) => {
             return (
               <div
+                key={index}
                 className={'new-node'}
                 onDragStart={(event) => onDragStart(event, node.id)}
                 draggable
@@ -61,9 +62,10 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
             );
           })}
           <h3 className={'node-category-title'}>Image Generation</h3>
-          {getImageGenerationNodes.map((node) => {
+          {getImageGenerationNodes.map((node, index) => {
             return (
               <div
+                key={index}
                 className={'new-node'}
                 onDragStart={(event) => onDragStart(event, node.id)}
                 draggable
@@ -79,9 +81,10 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
             );
           })}
           <h3 className={'node-category-title'}>Utility</h3>
-          {getUtilityNodes.map((node) => {
+          {getUtilityNodes.map((node, index) => {
             return (
               <div
+                key={index}
                 className={'new-node'}
                 onDragStart={(event) => onDragStart(event, node.id)}
                 draggable
