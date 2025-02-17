@@ -136,7 +136,7 @@ const AITaskList = () => {
             <tbody>
               {tasks.map((task) => (
                 <tr key={task.id}>
-                  <td>
+                  <td style={{ maxWidth: '250px'}}>
                     <div className="table-title">
                       <NavLink to={ROUTE_TASK_EDIT + '/' + task.id}>{task.title}</NavLink>
                     </div>
