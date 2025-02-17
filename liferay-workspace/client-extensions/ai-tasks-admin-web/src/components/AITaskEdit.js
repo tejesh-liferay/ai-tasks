@@ -107,23 +107,6 @@ const AITaskEdit = () => {
               <i>{selectedTask.description}</i>
             </button>
           </div>
-          {/*<input*/}
-          {/*  id={'title'}*/}
-          {/*  className={'h1 form-control form-control-inline px-2 py-0'}*/}
-          {/*  type={'text'}*/}
-          {/*  value={selectedTask.title}*/}
-          {/*  onChange={(e) => {*/}
-          {/*    handleInputOnChange(e, 'title');*/}
-          {/*  }}*/}
-          {/*  onBlur={(e) => {*/}
-          {/*    handleBasicInfoChanges();*/}
-          {/*  }}*/}
-          {/*  onKeyDown={(e) => {*/}
-          {/*    if (e.code === 'Enter') {*/}
-          {/*      handleBasicInfoChanges();*/}
-          {/*    }*/}
-          {/*  }}*/}
-          {/*/>*/}
         </div>
         <div slot="center">
           <div>
