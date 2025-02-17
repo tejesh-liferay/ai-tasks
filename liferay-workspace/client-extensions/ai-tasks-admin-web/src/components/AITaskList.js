@@ -1,18 +1,17 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import LoadingIndicator from './ui/LoadingIndicator';
-import Alert from './ui/Alert';
-import Icon from './ui/Icon';
-import NavigationBar from './ui/NavigationBar';
-import EmptyState from './ui/EmptyState';
 import { ROUTE_TASK_ADD, ROUTE_TASK_EDIT } from '../constants/AITasksRoutesConstants';
 import { useAITasksContext } from '../contexts/AITasksContext';
 import { getFormattedUTC } from '../utils/dateUtils';
+import Alert from './ui/Alert';
+import EmptyState from './ui/EmptyState';
+import Icon from './ui/Icon';
+import LoadingIndicator from './ui/LoadingIndicator';
+import NavigationBar from './ui/NavigationBar';
 import Toast from './ui/Toast';
 
 const AITaskList = () => {
@@ -136,7 +135,7 @@ const AITaskList = () => {
             <tbody>
               {tasks.map((task) => (
                 <tr key={task.id}>
-                  <td style={{ maxWidth: '250px'}}>
+                  <td style={{ maxWidth: '250px' }}>
                     <div className="table-title">
                       <NavLink to={ROUTE_TASK_EDIT + '/' + task.id}>{task.title}</NavLink>
                     </div>

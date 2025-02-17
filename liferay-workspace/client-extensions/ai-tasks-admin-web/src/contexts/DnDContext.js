@@ -1,7 +1,6 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React, { createContext, useContext, useState } from 'react';
 
 const DnDContext = createContext([null, (_) => {}]);

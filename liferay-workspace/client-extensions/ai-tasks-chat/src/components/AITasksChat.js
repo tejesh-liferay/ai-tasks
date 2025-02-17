@@ -1,5 +1,6 @@
 import React from 'react';
 import ChatBot from 'react-chatbotify';
+
 import LiferayService from '../services/LiferayService';
 
 const AITasksChat = () => {

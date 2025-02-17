@@ -1,7 +1,6 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React from 'react';
 
 import { useModal } from '../../contexts/ModalContext';

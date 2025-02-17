@@ -1,13 +1,12 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React, { createContext, useContext, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Toast from '../components/ui/Toast';
-import LiferayService from '../services/LiferayService';
 import { ROUTE_TASK_EDIT } from '../constants/AITasksRoutesConstants';
+import LiferayService from '../services/LiferayService';
 
 const AITasksContext = createContext({
   tasks: [],
@@ -29,7 +28,7 @@ const AITasksContext = createContext({
   loading: false,
   error: null,
   handleFlowConfigurationChange: (newConfig) => {},
-  updateGraph: (newNodes, newEdges) => {}
+  updateGraph: (newNodes, newEdges) => {},
 });
 
 const useAITasksContext = () => useContext(AITasksContext);
@@ -186,14 +185,14 @@ const AITasksProvider = ({ children }) => {
       };
     });
     const updatedEdges = newEdges
-        .filter((newEdge) => newEdge.id !== 'entryPointEdge')
-        .map((edge) => {
-          return {
-            id: edge.id,
-            source: edge.source,
-            target: edge.target,
-          };
-        });
+      .filter((newEdge) => newEdge.id !== 'entryPointEdge')
+      .map((edge) => {
+        return {
+          id: edge.id,
+          source: edge.source,
+          target: edge.target,
+        };
+      });
 
     const updatedNodesIds = updatedNodes.map((updatedNode) => {
       return updatedNode.id;
@@ -235,7 +234,7 @@ const AITasksProvider = ({ children }) => {
         loading,
         error,
         handleFlowConfigurationChange,
-        updateGraph
+        updateGraph,
       }}
     >
       {children}

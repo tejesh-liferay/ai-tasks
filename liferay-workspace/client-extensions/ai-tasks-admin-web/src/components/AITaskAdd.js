@@ -1,15 +1,16 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React, { useState } from 'react';
-import { useAITasksContext } from '../contexts/AITasksContext';
+import { NavLink } from 'react-router-dom';
+
 import { JsonEditor } from 'json-edit-react';
 import { v4 as uuidv4 } from 'uuid';
-import NavigationBar from './ui/NavigationBar';
-import Icon from './ui/Icon';
-import { NavLink } from 'react-router-dom';
+
 import { ROUTE_TASK_LIST } from '../constants/AITasksRoutesConstants';
+import { useAITasksContext } from '../contexts/AITasksContext';
+import Icon from './ui/Icon';
+import NavigationBar from './ui/NavigationBar';
 
 const AITaskAdd = () => {
   const { addTask } = useAITasksContext();

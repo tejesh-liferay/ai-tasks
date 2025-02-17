@@ -1,15 +1,15 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React from 'react';
-import Icon from '../ui/Icon';
-import { useDnD } from '../../contexts/DnDContext';
+
 import {
   getImageGenerationNodes,
   getTextGenerationNodes,
   getUtilityNodes,
 } from '../../constants/AITasksNodeTypesConstants';
+import { useDnD } from '../../contexts/DnDContext';
+import Icon from '../ui/Icon';
 
 const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
   const [_, setType] = useDnD();

@@ -1,14 +1,13 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React, { useEffect, useRef, useState } from 'react';
+import { Remark } from 'react-remark';
 
-import Icon from './ui/Icon';
 import { useAITasksContext } from '../contexts/AITasksContext';
 import useChatHistory from '../hooks/useChatHistory';
 import ChatMessage from './ui/ChatMessage';
-import { Remark } from 'react-remark';
+import Icon from './ui/Icon';
 
 const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
   const { selectedTask, executeTask, taskExecuting } = useAITasksContext();

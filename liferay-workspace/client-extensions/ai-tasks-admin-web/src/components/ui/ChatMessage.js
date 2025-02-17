@@ -1,10 +1,9 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
-import Icon from './Icon';
-import useClickOutside from '../../hooks/useClickOutside';
 import { useTooltip } from '../../contexts/TooltipContext';
+import useClickOutside from '../../hooks/useClickOutside';
+import Icon from './Icon';
 
 const ChatMessage = ({ role, debug, children }) => {
   const { isTooltipOpen, setIsTooltipOpen, setTooltipPosition, setTooltipContent } = useTooltip();

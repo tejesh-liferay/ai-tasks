@@ -2,11 +2,12 @@
  * @author Louis-Guillaume Durand
  * @author Petteri Karttunen
  */
-
 import React, { memo } from 'react';
+
 import { Handle } from '@xyflow/react';
-import Icon from '../../ui/Icon';
+
 import { useNodeMenu } from '../../../contexts/NodeMenuContext';
+import Icon from '../../ui/Icon';
 
 const LiferaySearchNode = ({ id, data }) => {
   const { label, parameters } = data;

@@ -1,12 +1,13 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React, { useCallback } from 'react';
+
 import { useReactFlow } from '@xyflow/react';
-import Icon from '../ui/Icon';
+
 import { useAITasksContext } from '../../contexts/AITasksContext';
 import { useNodeMenu } from '../../contexts/NodeMenuContext';
+import Icon from '../ui/Icon';
 
 const AITaskFlowContextMenu = ({
   id,

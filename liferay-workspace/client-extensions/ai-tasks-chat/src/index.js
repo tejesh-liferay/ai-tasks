@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+
 import AITasksChat from './components/AITasksChat';
 
 const App = () => <AITasksChat />;

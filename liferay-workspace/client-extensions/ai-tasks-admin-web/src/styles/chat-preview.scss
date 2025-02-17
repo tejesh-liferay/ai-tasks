@@ -17,7 +17,7 @@
   }
 
   .sidebar-header {
-    border-bottom: 1px solid var(--gray-300)
+    border-bottom: 1px solid var(--gray-300);
   }
 
   .container {
@@ -27,7 +27,6 @@
   .chat-input-wrapper {
     border-radius: 5rem;
     border: 1px solid var(--gray-500);
-
 
     textarea.form-control {
       background: transparent;
@@ -43,11 +42,11 @@
       }
     }
 
-    button.btn.btn-secondary[type="submit"] {
+    button.btn.btn-secondary[type='submit'] {
       border: none;
       border-radius: 20rem;
       padding: 1.15rem;
-      margin: .25rem;
+      margin: 0.25rem;
       background: var(--primary);
       color: var(--light);
     }
@@ -58,7 +57,7 @@
   }
 
   .chat-preview-area {
-    padding: 0 .5rem 2rem 0.5rem;
+    padding: 0 0.5rem 2rem 0.5rem;
     height: 90%;
     overflow: auto;
     transition: opacity 0.15s ease;
