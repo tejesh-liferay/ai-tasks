@@ -14,10 +14,14 @@ jobs:
         uses: actions/setup-node@v4
       - name: Format AI Tasks Admin Web
         working-directory: ./liferay-workspace/client-extensions/ai-tasks-admin-web
-        run: npm run format
+        run: |
+          npm install
+          npm run format
       - name: Format AI Tasks Chat
         working-directory: ./liferay-workspace/client-extensions/ai-tasks-chat
-        run: npm run format
+        run: |
+          npm install
+          npm run format
       - name: Commit Format Changes
         working-directory: ./liferay-workspace/client-extensions
         run: |
