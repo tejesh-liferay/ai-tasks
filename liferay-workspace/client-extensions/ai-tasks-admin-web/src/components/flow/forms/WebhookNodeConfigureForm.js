@@ -1,11 +1,22 @@
 /**
  * @author Petteri Karttunen
+ * @author Louis-Guillaume Durand
  */
 import React from 'react';
+
+import { JsonEditor } from 'json-edit-react';
 
 import { Tab, Tabs } from '../../ui/Tabs';
 
 const WebhookNodeConfigureForm = ({ nodeParameters, onChange }) => {
+  const handleBodyChange = ({ newData }) => {
+    onChange('body', newData);
+  };
+
+  const handleHeadersChange = ({ newData }) => {
+    onChange('headers', newData);
+  };
+
   return (
     <Tabs>
       <Tab id={'generalSettings'} label={'General Settings'}>
@@ -48,27 +59,29 @@ const WebhookNodeConfigureForm = ({ nodeParameters, onChange }) => {
         <div>
           <div className="form-group">
             <label htmlFor="body">Body JSON</label>
-            <textarea
-              className="form-control"
-              id="body"
-              rows="3"
-              onChange={(e) => {
-                onChange('body', JSON.parse(e.currentTarget.value));
-              }}
-              value={JSON.stringify(nodeParameters.body, undefined, 2)}
+            <JsonEditor
+              data={nodeParameters.body || {}}
+              indent={2}
+              collapse={2}
+              collapseAnimationTime={150}
+              maxWidth={'100%'}
+              onEdit={handleBodyChange}
+              onAdd={handleBodyChange}
+              onDelete={handleBodyChange}
             />
             <small className="form-text text-muted">Enter the body payload as JSON.</small>
           </div>
           <div className="form-group">
             <label htmlFor="headers">Headers JSON</label>
-            <textarea
-              className="form-control"
-              id="headers"
-              rows="3"
-              onChange={(e) => {
-                onChange('headers', JSON.parse(e.currentTarget.value));
-              }}
-              value={JSON.stringify(nodeParameters.headers, undefined, 2)}
+            <JsonEditor
+              data={nodeParameters.headers || {}}
+              indent={2}
+              collapse={2}
+              collapseAnimationTime={150}
+              maxWidth={'100%'}
+              onEdit={handleHeadersChange}
+              onAdd={handleHeadersChange}
+              onDelete={handleHeadersChange}
             />
             <small className="form-text text-muted">Enter the headers as JSON.</small>
           </div>
