@@ -2,7 +2,6 @@
  * @author Louis-Guillaume Durand
  * @author Petteri Karttunen
  */
-
 import React from 'react';
 
 import { Tab, Tabs } from '../../ui/Tabs';

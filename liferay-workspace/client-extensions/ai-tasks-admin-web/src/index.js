@@ -1,27 +1,25 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React from 'react';
-
 import { createRoot } from 'react-dom/client';
 import { HashRouter, Route, Routes } from 'react-router-dom';
+
 import { ReactFlowProvider } from '@xyflow/react';
 
-import { AITasksProvider } from './contexts/AITasksContext';
-import AITaskList from './components/AITaskList';
 import AITaskAdd from './components/AITaskAdd';
 import AITaskEdit from './components/AITaskEdit';
+import AITaskList from './components/AITaskList';
 import {
   ROUTE_TASK_ADD,
   ROUTE_TASK_EDIT,
   ROUTE_TASK_LIST,
 } from './constants/AITasksRoutesConstants';
-
-import './styles/index.scss';
+import { AITasksProvider } from './contexts/AITasksContext';
 import { ModalProvider } from './contexts/ModalContext';
 import { NodeMenuProvider } from './contexts/NodeMenuContext';
 import { TooltipProvider } from './contexts/TooltipContext';
+import './styles/index.scss';
 
 const AITaskRouting = () => (
   <Routes>

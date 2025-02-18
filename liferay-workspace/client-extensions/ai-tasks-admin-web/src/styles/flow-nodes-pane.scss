@@ -17,7 +17,7 @@
   }
 
   .sidebar-header {
-    border-bottom: 1px solid var(--gray-300)
+    border-bottom: 1px solid var(--gray-300);
   }
 
   .sidebar-header {
@@ -25,11 +25,11 @@
   }
 
   .flow-nodes-pane-area {
-    padding: .5rem;
+    padding: 0.5rem;
     overflow: auto;
     transition: opacity 0.15s ease;
     .node-header-container {
-        padding: .5rem;
+      padding: 0.5rem;
     }
     h4 {
       margin: 0;

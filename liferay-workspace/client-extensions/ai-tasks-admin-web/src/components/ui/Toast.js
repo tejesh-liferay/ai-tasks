@@ -11,7 +11,7 @@ const Toast = {
         type: type,
       });
     }
-  }
-}
+  },
+};
 
 export default Toast;

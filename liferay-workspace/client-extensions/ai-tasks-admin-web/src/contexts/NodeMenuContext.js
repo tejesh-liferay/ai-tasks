@@ -1,9 +1,9 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React, { createContext, useContext, useState } from 'react';
-import {useAITasksContext} from "./AITasksContext";
+
+import { useAITasksContext } from './AITasksContext';
 
 const NodeMenuContext = createContext({
   isMenuOpen: false,
@@ -24,7 +24,7 @@ export const NodeMenuProvider = ({ children }) => {
       top: event.target.getBoundingClientRect().top,
       left: event.target.getBoundingClientRect().left,
     });
-    if(newMenuState) {
+    if (newMenuState) {
       const currentNode = selectedTask.configuration.nodes.find((node) => node.id === id);
       setSelectedNode(currentNode);
     }

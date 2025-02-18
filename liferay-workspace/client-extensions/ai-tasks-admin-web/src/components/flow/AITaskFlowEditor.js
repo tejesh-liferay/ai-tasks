@@ -2,42 +2,26 @@
  * @author Louis-Guillaume Durand
  * @author Petteri Karttunen
  */
-
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+
+import { adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
+import { v4 as uuidv4 } from 'uuid';
+
 import {
-  addEdge,
   Background,
   BackgroundVariant,
   Controls,
   MiniMap,
   Panel,
   ReactFlow,
+  addEdge,
   useEdgesState,
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
-import AnthropicChatModelNode from './nodes/AnthropicChatModelNode';
-import EntryPointNode from './nodes/EntryPointNode';
-import GeminiChatModelNode from './nodes/GeminiChatModelNode';
-import GoogleImagenNode from './nodes/GoogleImagenNode';
-import HuggingFaceChatModelNode from './nodes/HuggingFaceChatModelNode';
-import LiferaySearchNode from './nodes/LiferaySearchNode';
-import MistralAIChatModelNode from './nodes/MistralAIChatModelNode';
-import OllamaChatModelNode from './nodes/OllamaChatModelNode';
-import OpenAIChatModelNode from './nodes/OpenAIChatModelNode';
-import OpenAIImageModelNode from './nodes/OpenAIImageModelNode';
-import WebhookNode from './nodes/WebhookNode';
-import AITaskFlowContextMenu from './AITaskFlowContextMenu';
-import { useAITasksContext } from '../../contexts/AITasksContext';
-import AITaskFlowNodesPane from './AITaskFlowNodesPane';
-import { useDnD } from '../../contexts/DnDContext';
-import { adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
-import AITaskFlowNodeConfigure from './AITaskFlowNodeConfigure';
-import ModalFooterButtonGroup from '../ui/ModalFooterButtonGroup';
-import { useModal } from '../../contexts/ModalContext';
-import { toCamelCase } from '../../utils/stringUtils';
+import { AI_TASK_FLOW_EDGE } from '../../constants/AITasksEdgeTypesConstants';
 import {
   ANTHROPIC_CHAT_MODEL,
   ENTRY_POINT_NODE,
@@ -51,14 +35,31 @@ import {
   OPENAI_IMAGE_MODEL,
   WEBHOOK,
 } from '../../constants/AITasksNodeTypesConstants';
+import { useAITasksContext } from '../../contexts/AITasksContext';
+import { useDnD } from '../../contexts/DnDContext';
+import { useModal } from '../../contexts/ModalContext';
+import { useNodeMenu } from '../../contexts/NodeMenuContext';
 import { getDefaultParameters } from '../../utils/nodeUtils';
-import { v4 as uuidv4 } from 'uuid';
+import { toCamelCase } from '../../utils/stringUtils';
+import Alert from '../ui/Alert';
+import ModalFooterButtonGroup from '../ui/ModalFooterButtonGroup';
+import AITaskFlowContextMenu from './AITaskFlowContextMenu';
+import AITaskFlowNodeConfigure from './AITaskFlowNodeConfigure';
 import AITaskFlowNodeRename from './AITaskFlowNodeRename';
 import AITaskFlowNodeSetCondition from './AITaskFlowNodeSetCondition';
+import AITaskFlowNodesPane from './AITaskFlowNodesPane';
 import AITaskFlowEdge from './edges/AITaskFlowEdge';
-import { AI_TASK_FLOW_EDGE } from '../../constants/AITasksEdgeTypesConstants';
-import Alert from '../ui/Alert';
-import { useNodeMenu } from '../../contexts/NodeMenuContext';
+import AnthropicChatModelNode from './nodes/AnthropicChatModelNode';
+import EntryPointNode from './nodes/EntryPointNode';
+import GeminiChatModelNode from './nodes/GeminiChatModelNode';
+import GoogleImagenNode from './nodes/GoogleImagenNode';
+import HuggingFaceChatModelNode from './nodes/HuggingFaceChatModelNode';
+import LiferaySearchNode from './nodes/LiferaySearchNode';
+import MistralAIChatModelNode from './nodes/MistralAIChatModelNode';
+import OllamaChatModelNode from './nodes/OllamaChatModelNode';
+import OpenAIChatModelNode from './nodes/OpenAIChatModelNode';
+import OpenAIImageModelNode from './nodes/OpenAIImageModelNode';
+import WebhookNode from './nodes/WebhookNode';
 
 const AITaskFlowEditor = () => {
   const {

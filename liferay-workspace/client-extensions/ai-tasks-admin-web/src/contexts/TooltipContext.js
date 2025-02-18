@@ -1,7 +1,6 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React, { createContext, useContext, useState } from 'react';
 
 const TooltipContext = createContext({
@@ -35,13 +34,11 @@ export const TooltipProvider = ({ children }) => {
     >
       {children}
       <div
-        className={
-          'tooltip clay-tooltip-' + tooltipPositionClass + (isTooltipOpen ? ' show' : '')
-        }
+        className={'tooltip clay-tooltip-' + tooltipPositionClass + (isTooltipOpen ? ' show' : '')}
         role="tooltip"
         style={{
-          height: isTooltipOpen ? "100%" : 0,
-          width: isTooltipOpen ? "100%" : 0,
+          height: isTooltipOpen ? '100%' : 0,
+          width: isTooltipOpen ? '100%' : 0,
           top: isTooltipOpen ? tooltipPosition.top : 0,
           left: isTooltipOpen ? tooltipPosition.left : 0,
           right: isTooltipOpen ? tooltipPosition.right : 0,

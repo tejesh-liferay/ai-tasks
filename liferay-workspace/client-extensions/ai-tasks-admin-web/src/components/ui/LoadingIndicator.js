@@ -4,11 +4,11 @@
 
 const LoadingIndicator = () => {
   return (
-      <span
-          aria-hidden="true"
-          className="loading-animation-squares loading-animation-primary loading-animation-md"
-      ></span>
-  )
-}
+    <span
+      aria-hidden="true"
+      className="loading-animation-squares loading-animation-primary loading-animation-md"
+    ></span>
+  );
+};
 
 export default LoadingIndicator;

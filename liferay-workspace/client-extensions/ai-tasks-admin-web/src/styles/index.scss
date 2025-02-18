@@ -1,10 +1,10 @@
-@use "sass:meta";
+@use 'sass:meta';
 
 ai-tasks-admin-web {
-  @include meta.load-css("chat-preview");
-  @include meta.load-css("navigation-bar");
-  @include meta.load-css("flow-editor");
-  @include meta.load-css("flow-nodes-pane");
+  @include meta.load-css('chat-preview');
+  @include meta.load-css('navigation-bar');
+  @include meta.load-css('flow-editor');
+  @include meta.load-css('flow-nodes-pane');
 
   .loading-dots {
     display: inline-block;

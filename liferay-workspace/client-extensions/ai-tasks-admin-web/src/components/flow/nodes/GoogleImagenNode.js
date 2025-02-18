@@ -1,15 +1,16 @@
 /**
  * @author Petteri Karttunen
  */
-
 import React, { memo } from 'react';
+
 import { Handle } from '@xyflow/react';
+
+import { useNodeMenu } from '../../../contexts/NodeMenuContext';
 import Icon from '../../ui/Icon';
-import {useNodeMenu} from "../../../contexts/NodeMenuContext";
 
 const GoogleImagenNode = ({ id, data }) => {
   const { label, parameters } = data;
-    const { toggleDropdown } = useNodeMenu();
+  const { toggleDropdown } = useNodeMenu();
 
   return (
     <div className="google-imagen-node">

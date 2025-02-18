@@ -1,8 +1,7 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
-import React, { useState, Children, cloneElement } from 'react';
+import React, { Children, cloneElement, useState } from 'react';
 
 const Tab = ({ id, label, className, children }) => {
   return { id, label, className, children };

@@ -1,24 +1,24 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React, { useCallback, useEffect, useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
+
 import { JsonEditor } from 'json-edit-react';
 
-import LoadingIndicator from './ui/LoadingIndicator';
-import Icon from './ui/Icon';
-import Alert from './ui/Alert';
-import Label from './ui/Label';
-import { useAITasksContext } from '../contexts/AITasksContext';
-import NavigationBar from './ui/NavigationBar';
-import AITaskChatPreview from './AITaskChatPreview';
-import { Tab, Tabs } from './ui/Tabs';
-import AITaskFlowEditor from './flow/AITaskFlowEditor';
 import { ROUTE_TASK_LIST } from '../constants/AITasksRoutesConstants';
+import { useAITasksContext } from '../contexts/AITasksContext';
 import { DnDProvider } from '../contexts/DnDContext';
 import { useModal } from '../contexts/ModalContext';
+import AITaskChatPreview from './AITaskChatPreview';
 import AITaskEditModal, { AITaskEditModalFooter } from './AITaskEditModal';
+import AITaskFlowEditor from './flow/AITaskFlowEditor';
+import Alert from './ui/Alert';
+import Icon from './ui/Icon';
+import Label from './ui/Label';
+import LoadingIndicator from './ui/LoadingIndicator';
+import NavigationBar from './ui/NavigationBar';
+import { Tab, Tabs } from './ui/Tabs';
 
 const AITaskEdit = () => {
   const { fetchTask, selectedTask, setSelectedTask, updateTask, loading, error } =

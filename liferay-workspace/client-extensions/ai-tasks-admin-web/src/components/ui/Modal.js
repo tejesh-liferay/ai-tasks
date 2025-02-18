@@ -1,11 +1,10 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
 import React from 'react';
 
-import Icon from './Icon';
 import { useModal } from '../../contexts/ModalContext';
+import Icon from './Icon';
 
 const Modal = ({ title, content, footer }) => {
   const { isModalOpen, setIsModalOpen } = useModal();

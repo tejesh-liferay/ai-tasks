@@ -1,8 +1,7 @@
 /**
  * @author Louis-Guillaume Durand
  */
-
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function useChatHistory(taskId) {
   const chatKey = `${taskId}-chat-preview-history`;
