@@ -1,12 +1,20 @@
 /**
  * @author Petteri Karttunen
+ * @author Louis-Guillaume Durand
  */
 import React from 'react';
+
+import { JsonEditor } from 'json-edit-react';
 
 import { Tab, Tabs } from '../../ui/Tabs';
 
 const OllamaChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
   const rangeWidth = nodeParameters.temperature * 100;
+
+  const handleToolsChange = ({ newData }) => {
+    onChange('tools', newData);
+  };
+
   return (
     <Tabs>
       <Tab id={'generalSettings'} label={'General Settings'}>
@@ -271,14 +279,15 @@ const OllamaChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
         <div>
           <div className="form-group">
             <label htmlFor="tools">Tools</label>
-            <textarea
-              className="form-control"
-              id="tools"
-              rows="20"
-              value={JSON.stringify(nodeParameters.tools, undefined, 2)}
-              onChange={(e) => {
-                onChange('tools', JSON.parse(e.currentTarget.value));
-              }}
+            <JsonEditor
+              data={nodeParameters.tools || {}}
+              indent={2}
+              collapse={2}
+              collapseAnimationTime={150}
+              maxWidth={'100%'}
+              onEdit={handleToolsChange}
+              onAdd={handleToolsChange}
+              onDelete={handleToolsChange}
             />
             <small className="form-text text-muted">Tools configuration as JSON.</small>
           </div>

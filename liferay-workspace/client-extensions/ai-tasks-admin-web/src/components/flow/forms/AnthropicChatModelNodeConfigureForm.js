@@ -1,12 +1,20 @@
 /**
  * @author Petteri Karttunen
+ * @author Louis-Guillaume Durand
  */
 import React from 'react';
+
+import { JsonEditor } from 'json-edit-react';
 
 import { Tab, Tabs } from '../../ui/Tabs';
 
 const AnthropicChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
-  const rangeWidth = (nodeParameters.temperature / 2) * 100;
+  const rangeWidth = nodeParameters.temperature * 100;
+
+  const handleToolsChange = ({ newData }) => {
+    onChange('tools', newData);
+  };
+
   return (
     <Tabs>
       <Tab id={'generalSettings'} label={'General Settings'}>
@@ -272,14 +280,15 @@ const AnthropicChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
         <div>
           <div className="form-group">
             <label htmlFor="tools">Tools</label>
-            <textarea
-              className="form-control"
-              id="tools"
-              rows="20"
-              value={JSON.stringify(nodeParameters.tools, undefined, 2)}
-              onChange={(e) => {
-                onChange('tools', JSON.parse(e.currentTarget.value));
-              }}
+            <JsonEditor
+              data={nodeParameters.tools || {}}
+              indent={2}
+              collapse={2}
+              collapseAnimationTime={150}
+              maxWidth={'100%'}
+              onEdit={handleToolsChange}
+              onAdd={handleToolsChange}
+              onDelete={handleToolsChange}
             />
             <small className="form-text text-muted">Tools configuration as JSON.</small>
           </div>
@@ -338,7 +347,7 @@ const AnthropicChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                     onChange('cacheSystemMessages', e.currentTarget.checked);
                   }}
                 />
-                <span class="custom-control-label">Cache system messages.</span>
+                <span className="custom-control-label">Cache system messages.</span>
               </label>
             </div>
             <div className="custom-control custom-checkbox custom-control-outside">
@@ -354,7 +363,7 @@ const AnthropicChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
                     onChange('cacheTools', e.currentTarget.checked);
                   }}
                 />
-                <span class="custom-control-label">Cache tools.</span>
+                <span className="custom-control-label">Cache tools.</span>
               </label>
             </div>
           </div>
