@@ -46,7 +46,7 @@ const AITasksProvider = ({ children }) => {
   const fetchTasks = async () => {
     try {
       const data = await LiferayService.get(
-        `/o/ai-tasks/v1.0/ai-tasks?fields=id,title,externalReferenceCode,version`,
+        `/o/ai-tasks/v1.0/ai-tasks?fields=id,title,externalReferenceCode,version,enabled`,
       );
       return data.items;
     } catch (error) {
