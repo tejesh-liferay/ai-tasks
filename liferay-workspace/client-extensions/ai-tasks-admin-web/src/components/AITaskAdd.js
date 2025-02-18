@@ -4,7 +4,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { JsonEditor } from 'json-edit-react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ROUTE_TASK_LIST } from '../constants/AITasksRoutesConstants';
@@ -37,7 +36,7 @@ const AITaskAdd = () => {
       value = value.trim().replaceAll(' ', '');
     }
     if (name === 'enabled') {
-      value = JSON.parse(value);
+      value = !formData.enabled;
     }
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -138,7 +137,9 @@ const AITaskAdd = () => {
           </div>
           <div className="form-group">
             <label className="toggle-switch">
-              <span className="toggle-switch-label">Enabled</span>
+              <span className="toggle-switch-label">
+                {formData.enabled ? 'Enabled' : 'Disabled'}
+              </span>
               <span className="toggle-switch-check-bar">
                 <input
                   id="enabled"

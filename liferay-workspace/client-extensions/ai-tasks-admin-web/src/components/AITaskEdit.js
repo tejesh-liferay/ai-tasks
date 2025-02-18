@@ -49,6 +49,9 @@ const AITaskEdit = () => {
     if (name === 'externalReferenceCode') {
       value = value.trim().replaceAll(' ', '');
     }
+    if (name === 'enabled') {
+      value = JSON.parse(value);
+    }
     const updatedTask = {
       ...selectedTask,
       [name]: value,
@@ -61,7 +64,8 @@ const AITaskEdit = () => {
     const currentSavedTask = await fetchTask(selectedTask.id);
     if (
       currentSavedTask.title !== selectedTask.title ||
-      currentSavedTask.externalReferenceCode !== selectedTask.externalReferenceCode
+      currentSavedTask.externalReferenceCode !== selectedTask.externalReferenceCode ||
+      currentSavedTask.enabled !== selectedTask.enabled
     ) {
       updateTask(selectedTask);
     }
@@ -128,7 +132,7 @@ const AITaskEdit = () => {
               type={'text'}
               value={selectedTask.externalReferenceCode}
               onChange={handleInputOnChange}
-              onBlur={(e) => {
+              onBlur={() => {
                 handleBasicInfoChanges();
               }}
               onKeyDown={(e) => {
@@ -140,15 +144,49 @@ const AITaskEdit = () => {
           </div>
         </div>
         <div slot="right">
-          <button
-            className={'btn btn-secondary'}
-            onClick={(e) => {
-              e.preventDefault();
-              setIsChatPreviewOpen(!isChatPreviewOpen);
-            }}
-          >
-            {(isChatPreviewOpen ? 'Close' : 'Open') + ' Chat Preview'}
-          </button>
+          <div className="form-group-autofit mb-0 mt-3">
+            <div className="form-group-item">
+              <label className="toggle-switch">
+                <span className="toggle-switch-label">
+                  {selectedTask.enabled ? 'Enabled' : 'Disabled'}
+                </span>
+                <span className="toggle-switch-check-bar">
+                  <input
+                    id="enabled"
+                    name="enabled"
+                    className="toggle-switch-check"
+                    role="switch"
+                    type="checkbox"
+                    value={selectedTask.enabled}
+                    defaultChecked={selectedTask.enabled}
+                    onChange={() => {
+                      console.log(!selectedTask.enabled);
+                      const updatedTask = {
+                        ...selectedTask,
+                        enabled: !selectedTask.enabled,
+                      };
+                      setSelectedTask(updatedTask);
+                      updateTask(updatedTask);
+                    }}
+                  />
+                  <span aria-hidden="true" className="toggle-switch-bar">
+                    <span className="toggle-switch-handle"></span>
+                  </span>
+                </span>
+              </label>
+            </div>
+            <div className="form-group-item">
+              <button
+                className={'btn btn-sm btn-secondary'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsChatPreviewOpen(!isChatPreviewOpen);
+                }}
+              >
+                {(isChatPreviewOpen ? 'Close' : 'Open') + ' Chat Preview'}
+              </button>
+            </div>
+          </div>
         </div>
       </NavigationBar>
       <div className={'sheet sheet-xl mt-6 px-0'}>

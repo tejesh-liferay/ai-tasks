@@ -10,6 +10,7 @@ import { getFormattedUTC } from '../utils/dateUtils';
 import Alert from './ui/Alert';
 import EmptyState from './ui/EmptyState';
 import Icon from './ui/Icon';
+import Label from './ui/Label';
 import LoadingIndicator from './ui/LoadingIndicator';
 import NavigationBar from './ui/NavigationBar';
 import Toast from './ui/Toast';
@@ -128,6 +129,7 @@ const AITaskList = () => {
                 <th>Title</th>
                 <th>ID</th>
                 <th>Endpoint</th>
+                <th>Status</th>
                 <th>Version</th>
                 <th>Actions</th>
               </tr>
@@ -143,6 +145,13 @@ const AITaskList = () => {
                   <td>{task.id}</td>
                   <td>
                     <code>{'/o/ai-tasks/v1.0/generate/' + task.externalReferenceCode}</code>
+                  </td>
+                  <td>
+                    {task.enabled ? (
+                      <Label type={'success'}>Enabled</Label>
+                    ) : (
+                      <Label type={'warning'}>Disabled</Label>
+                    )}
                   </td>
                   <td>{task.version}</td>
                   <td>
