@@ -13,6 +13,7 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
   const { selectedTask, executeTask, taskExecuting } = useAITasksContext();
   const [userInput, setUserInput] = useState('');
   const { history, addMessage, clearHistory } = useChatHistory(selectedTask.id);
+  const [visibleThoughts, setVisibleThoughts] = useState([]);
   const chatPreviewEndRef = useRef(null);
   const scrollTimeoutRef = useRef(null);
 
@@ -21,7 +22,12 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
     addMessage(userInput, 'USER');
     setUserInput('');
     const response = await executeTask(selectedTask.externalReferenceCode, userInput);
-    addMessage(response.output.text || response.output.error, 'AI', response.debugInfo['1'] || {});
+    addMessage(
+      response.output.text || response.output.error,
+      'AI',
+      response.debugInfo['1'] || {},
+      response.output.think || '',
+    );
   };
 
   useEffect(() => {
@@ -31,6 +37,8 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
     scrollTimeoutRef.current = setTimeout(() => {
       chatPreviewEndRef.current?.scrollIntoView();
     }, 200);
+
+    setVisibleThoughts([]);
   }, [history, isOpen]);
 
   return (
@@ -70,6 +78,33 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
           {history.map((message, index) => (
             <ChatMessage key={index} role={message.role} debug={message.debug}>
               <Remark>{message.text}</Remark>
+              {message.think && (
+                <>
+                  <hr />
+                  <button
+                    className={'btn btn-sm btn-default w-100 text-left'}
+                    onClick={() => {
+                      if (visibleThoughts.includes(index)) {
+                        setVisibleThoughts(visibleThoughts.filter((i) => i !== index));
+                      } else {
+                        setVisibleThoughts([...visibleThoughts, index]);
+                      }
+                    }}
+                  >
+                    <Icon
+                      name={visibleThoughts.includes(index) ? 'angle-up' : 'angle-down'}
+                      className={'mr-2'}
+                    />
+                    Thoughts
+                  </button>
+                  <i
+                    className={'px-2 py-2'}
+                    style={{ display: visibleThoughts.includes(index) ? 'block' : 'none' }}
+                  >
+                    <Remark>{message.think}</Remark>
+                  </i>
+                </>
+              )}
             </ChatMessage>
           ))}
           {taskExecuting && (
