@@ -77,6 +77,7 @@ dependencies {
 	compileInclude group: "org.eclipse.collections", name: "eclipse-collections-api", version: "11.1.0"
 	compileInclude group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "1.9.24"
 	compileInclude group: "org.json", name: "json", version: "20231013"
+	compileInclude group: "org.jsoup", name: "jsoup", version: "1.18.3"
 	compileInclude group: "org.lz4", name: "lz4-java", version: "1.8.0"
 	compileInclude group: "org.mapdb", name: "elsa", version: "3.0.0-M5"
 	compileInclude group: "org.mapdb", name: "mapdb", version: "3.1.0"
