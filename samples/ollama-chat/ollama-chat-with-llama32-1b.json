@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "title_i18n": {
+    "en_US": "Ollama Chat with llama3.2:1b"
+  },
+  "configuration": {
+    "startNodeId": "1",
+    "debug": true,
+    "nodes": [
+      {
+        "uiConfiguration": {
+          "position": {
+            "x": -1434.536959619175,
+            "y": -226.91885319448753
+          }
+        },
+        "id": "1",
+        "label": "Ollama Chat Model",
+        "type": "ollamaChatModel",
+        "parameters": {
+          "modelName": "llama3.2:1b",
+          "baseUrl": "http://localhost:11434",
+          "memoryMaxMessages": 50,
+          "temperature": 0.7,
+          "useChatMemory": true,
+          "inputParameters": {
+            "text": {
+              "type": "text"
+            }
+          },
+          "promptTemplate": "{{input.text}}",
+          "outputParameterName": "text"
+        }
+      }
+    ],
+    "edges": []
+  },
+  "description_i18n": {
+    "en_US": "A chat demo task relying on local llama3.2:1b on Ollama"
+  },
+  "enabled": true,
+  "externalReferenceCode": "ollama-chat-llama32-1b"
+}

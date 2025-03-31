@@ -12,7 +12,7 @@ A simple AI Task task using local Ollama with llama3.2:1b chat model.
 ## Installation
 
 1. Run the llama3.2:1b model in Ollama
-1. Import the [AI Task](./ollama-chat.json)
+1. Import the [AI Task](./ollama-chat-with-llama32-1b.json)
 
 
 ## Usage Example through REST API
