@@ -5,7 +5,7 @@
 ## Table of Contents  
 - [About](#about)
 - [Features](#features)
-- [How To Use It? (The TL;DR Version)](#how-to-use-it---the-tl-dr-version-)
+- [How To Use It](#how-to-use-it)
 - [Examples](#examples)
 - [Installation](#installation)
 - [Configuration](#configuration)
@@ -42,7 +42,7 @@ AI Tasks backend is built on [LangChain4J](https://docs.langchain4j.dev/) and su
 * Create **RAG chatbots** grounded to local Liferay semantic search or for example to Google Search
 * **Integrate Liferay OOTB workflows with AI**
 
-## How To Use It? (The TL;DR Version)
+## How To Use It
 
 1. Create an AI Task, for example a simple LLM chat using the visual designer
 1. From the provided test chatbot, a Liferay display template, client extension, your own frontend or from anywhere, consume the AI Task through its `generate` REST endpoint:
