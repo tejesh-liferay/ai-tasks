@@ -13,12 +13,13 @@ import dev.langchain4j.service.Result;
 import fi.soveltia.liferay.aitasks.task.context.AITaskContext;
 import fi.soveltia.liferay.aitasks.task.context.AITaskContextParameter;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeResponse;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 /**
  * @author Petteri Karttunen
@@ -61,11 +62,16 @@ public abstract class BaseAITaskNode {
 
 		if (value instanceof String) {
 			value = StringUtil.trim((String)value);
-			Document document = Jsoup.parse((String) value);
+
+			Document document = Jsoup.parse((String)value);
+
 			Elements thinkElement = document.select("think");
-			if(thinkElement.size() == 1) {
-				think = thinkElement.get(0).text();
-                value = ((String) value).split("</think>")[1];
+
+			if (thinkElement.size() == 1) {
+				think = thinkElement.get(
+					0
+				).text();
+				value = ((String)value).split("</think>")[1];
 			}
 		}
 
@@ -79,7 +85,9 @@ public abstract class BaseAITaskNode {
 				debugInfo,
 				HashMapBuilder.put(
 					jsonObject.getString("outputParameterName", "text"), value
-				).put("think", think).build());
+				).put(
+					"think", think
+				).build());
 		}
 
 		aiTaskContext.addAITaskContextParameter(

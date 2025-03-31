@@ -71,6 +71,8 @@ public class OpenAIChatModelAITaskNode
 			builder::modelName, jsonObject.getString("modelName"));
 		SetterUtil.setNotBlankString(
 			builder::organizationId, jsonObject.getString("organizationId"));
+		SetterUtil.setNotNullBoolean(
+			builder::parallelToolCalls, jsonObject, "parallelToolCalls");
 		SetterUtil.setNotNullDouble(
 			builder::presencePenalty, jsonObject, "presencePenalty");
 		SetterUtil.setNotBlankString(

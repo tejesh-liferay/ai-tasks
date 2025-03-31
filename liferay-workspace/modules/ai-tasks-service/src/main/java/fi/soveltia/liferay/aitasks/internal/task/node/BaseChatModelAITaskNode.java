@@ -6,7 +6,6 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
@@ -15,25 +14,22 @@ import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.rag.DefaultRetrievalAugmentor;
 import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
-import dev.langchain4j.rag.content.retriever.WebSearchContentRetriever;
 import dev.langchain4j.rag.query.router.DefaultQueryRouter;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.Result;
-import dev.langchain4j.web.search.google.customsearch.GoogleCustomWebSearchEngine;
+import dev.langchain4j.service.tool.ToolProvider;
 
 import fi.soveltia.liferay.aitasks.configuration.AITasksConfigurationProvider;
 import fi.soveltia.liferay.aitasks.internal.task.ai.services.AIChatAssistant;
 import fi.soveltia.liferay.aitasks.internal.task.chat.memory.ChatMemoryStoreProvider;
 import fi.soveltia.liferay.aitasks.internal.task.chat.model.listener.ChatModelListenerProvider;
 import fi.soveltia.liferay.aitasks.internal.task.tool.AIToolsProvider;
+import fi.soveltia.liferay.aitasks.internal.task.util.ToolProviderUtil;
 import fi.soveltia.liferay.aitasks.internal.util.PromptUtil;
-import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
 import fi.soveltia.liferay.aitasks.internal.web.cache.ChatModelAITaskNodeWebCacheItem;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
 import fi.soveltia.liferay.aitasks.task.context.AITaskContext;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeResponse;
-
-import java.time.Duration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -116,6 +112,12 @@ public abstract class BaseChatModelAITaskNode
 			builder.systemMessageProvider(memoryId -> systemMessage);
 		}
 
+		ToolProvider toolProvider = getToolProvider(jsonObject);
+
+		if (toolProvider != null) {
+			builder.toolProvider(toolProvider);
+		}
+
 		ListUtil.isNotEmptyForEach(
 			getTools(jsonObject), tool -> builder.tools(tool));
 
@@ -149,6 +151,17 @@ public abstract class BaseChatModelAITaskNode
 			aiTaskContext.getUserId(), StringPool.POUND,
 			aiTaskContext.getAITaskExternalReferenceCode(), StringPool.POUND,
 			id);
+	}
+
+	protected ToolProvider getToolProvider(JSONObject jsonObject) {
+		JSONObject toolProviderJSONObject = jsonObject.getJSONObject(
+			"toolProvider");
+
+		if (toolProviderJSONObject == null) {
+			return null;
+		}
+
+		return ToolProviderUtil.getToolProvider(toolProviderJSONObject);
 	}
 
 	protected List<Object> getTools(JSONObject jsonObject) {
@@ -202,6 +215,7 @@ public abstract class BaseChatModelAITaskNode
 	@Reference
 	protected ChatModelListenerProvider chatModelListenerProvider;
 
+	/*
 	private ContentRetriever _createGoogleCustomWebSearchContentRetriever(
 		JSONObject jsonObject) {
 
@@ -240,6 +254,7 @@ public abstract class BaseChatModelAITaskNode
 		).build();
 	}
 
+	 */
 	private Map<String, Object> _getDebugInfo(
 		boolean debug, Result<?> result, String systemMessage,
 		String userMessage) {
@@ -264,15 +279,8 @@ public abstract class BaseChatModelAITaskNode
 
 		for (String key : jsonObject.keySet()) {
 
-			// Currently Custom Google engine only
+			// TODO
 
-			if (!StringUtil.equals("google-custom", key)) {
-				continue;
-			}
-
-			contentRetrievers.add(
-				_createGoogleCustomWebSearchContentRetriever(
-					jsonObject.getJSONObject(key)));
 		}
 
 		if (contentRetrievers.isEmpty()) {
