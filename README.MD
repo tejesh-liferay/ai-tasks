@@ -3,21 +3,20 @@
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://app.gitter.im/#/room/#peerkar/ai-tasks:gitter.im)
 
 ## Table of Contents  
-- [AI Tasks](#ai-tasks)
-- [TL;DR](#tl-dr)
+- [About](#about)
 - [Features](#features)
 - [How To Use It? (The TL;DR Version)](#how-to-use-it---the-tl-dr-version-)
 - [Examples](#examples)
 - [Installation](#installation)
 - [Configuration](#configuration)
-- [Extending](#extending-ai-tasks)
+- [Extending](#extending)
 - [Good to Remember](#good-to-remember)
 - [Known Issues](#known-issues)
 - [Team](#team)
 - [License](#license)
 - [Disclaimer](#disclaimer)
 
-## TL;DR 
+## About
 AI Tasks is an LLM integrated, low-code workflow orchestration tool for  Liferay. It can be used standalone, for example for Liferay chatbots and chat interfaces but also integrated to Liferay workflows and to external worfklow orchestrators and vice versa. It lets to visually define AI workflows which are then exposed through a REST endpoint. Liferay integration enables governing access, permissions and auditing with the standard Liferay tools as well as easy integration to existing or new Liferay features, to leverage AI.
 
 AI Tasks backend is built on [LangChain4J](https://docs.langchain4j.dev/) and supports the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) for creating standard creating integrations to external and internal services. 
@@ -140,7 +139,7 @@ Import a  [sample](./samples) or create your own task and either test it:
 
 See the [configuration reference](CONFIGURATION.MD).
 
-## Extending AI TAsks
+## Extending
 
 Currently there are 3 extension points:
 * Nodes
