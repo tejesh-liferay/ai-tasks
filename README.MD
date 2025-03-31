@@ -2,6 +2,21 @@
 
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://app.gitter.im/#/room/#peerkar/ai-tasks:gitter.im)
 
+## Table of Contents  
+- [AI Tasks](#ai-tasks)
+- [TL;DR](#tl-dr)
+- [Features](#features)
+- [How To Use It? (The TL;DR Version)](#how-to-use-it---the-tl-dr-version-)
+- [Examples](#examples)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Extending](#extending-ai-tasks)
+- [Good to Remember](#good-to-remember)
+- [Known Issues](#known-issues)
+- [Team](#team)
+- [License](#license)
+- [Disclaimer](#disclaimer)
+
 ## TL;DR 
 AI Tasks is an LLM integrated, low-code workflow orchestration tool for  Liferay. It can be used standalone, for example for Liferay chatbots and chat interfaces but also integrated to Liferay workflows and to external worfklow orchestrators and vice versa. It lets to visually define AI workflows which are then exposed through a REST endpoint. Liferay integration enables governing access, permissions and auditing with the standard Liferay tools as well as easy integration to existing or new Liferay features, to leverage AI.
 
@@ -28,7 +43,7 @@ AI Tasks backend is built on [LangChain4J](https://docs.langchain4j.dev/) and su
 * Create **RAG chatbots** grounded to local Liferay semantic search or for example to Google Search
 * **Integrate Liferay OOTB workflows with AI**
 
-### How To Use It? (The TL;DR Version)
+## How To Use It? (The TL;DR Version)
 
 1. Create an AI Task, for example a simple LLM chat using the visual designer
 1. From the provided test chatbot, a Liferay display template, client extension, your own frontend or from anywhere, consume the AI Task through its `generate` REST endpoint:
