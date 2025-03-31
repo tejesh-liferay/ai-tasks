@@ -20,4 +20,17 @@ A task using OpenAI chat model and relying on MySQL MCP server as the tool provi
 1. Configure the credentials and other properties in the AI Task
 1. Test with the AI Tasks Admin preview
 
+## Usage Example through REST API
+
+```
+curl -X 'POST' \
+  'http://localhost:8080/o/ai-tasks/v1.0/generate/mysql-mcp-server-with-openai' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -u 'test@liferay.com:test' \
+  -d '{
+  "input": {"text": "How many tables are there in my database?"}
+}'
+```
+
 

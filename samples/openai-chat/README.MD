@@ -15,3 +15,15 @@ A simple AI Task task using OpenAI chat model.
 1. Import the [AI Task](./openai-chat.json)
 
 
+## Usage Example through REST API
+
+```
+curl -X 'POST' \
+  'http://localhost:8080/o/ai-tasks/v1.0/generate/openai-chat' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -u 'test@liferay.com:test' \
+  -d '{
+  "input": {"text": "Please tell me about Liferay"}
+}'
+```
