@@ -1,6 +1,6 @@
 # MySQL MCP Server With OpenAI
 
-A task using OpenAI chat model and relying on MySQL MCP server as the tool provider. Allows to ask questions about the configure MySQL database.
+A task using OpenAI chat model and relying on MySQL MCP server as the tool provider. Allows to ask questions about the configured MySQL database, like about the Liferay portal database.
 
 ![MySQL MCP Server With OpenAI](mysql-mcp-server-with-openai.png "MySQL MCP Server With OpenAI")
 
