@@ -11,6 +11,10 @@ import { Tab, Tabs } from '../../ui/Tabs';
 const HuggingFaceChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => {
   const rangeWidth = nodeParameters.temperature * 100;
 
+  const handleToolProviderChange = ({ newData }) => {
+    onChange('toolProvider', newData);
+  };
+
   const handleToolsChange = ({ newData }) => {
     onChange('tools', newData);
   };
@@ -222,6 +226,20 @@ const HuggingFaceChatModelNodeConfigureForm = ({ nodeParameters, onChange }) => 
               onDelete={handleToolsChange}
             />
             <small className="form-text text-muted">Tools configuration as JSON.</small>
+          </div>
+          <div className="form-group">
+            <label htmlFor="toolProvider">Tool Provider</label>
+            <JsonEditor
+              data={nodeParameters.toolProvider || {}}
+              indent={2}
+              collapse={2}
+              collapseAnimationTime={150}
+              maxWidth={'100%'}
+              onEdit={handleToolProviderChange}
+              onAdd={handleToolProviderChange}
+              onDelete={handleToolProviderChange}
+            />
+            <small className="form-text text-muted">Tool provider configuration as JSON.</small>
           </div>
         </div>
       </Tab>
