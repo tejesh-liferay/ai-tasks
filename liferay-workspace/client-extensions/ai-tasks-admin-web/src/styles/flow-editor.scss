@@ -1,6 +1,6 @@
 .flow-container {
+  height: calc(100vh - 161px);
   width: 100%;
-  height: 83vh;
 
   .context-menu {
     position: absolute;
@@ -14,11 +14,16 @@
   }
 
   .react-flow__controls {
-    bottom: 170px !important;
+    bottom: 180px !important;
+  }
+
+  .react-flow__edgelabel-renderer {
+    button {
+    }
   }
 
   .react-flow__minimap {
-    border: 4px solid var(--gray-500);
+    border: 1px solid var(--gray-500);
     border-radius: 8px;
   }
 }
@@ -41,22 +46,28 @@
     background: #f7f8f9;
     border-radius: 0.25rem 0.25rem 0 0;
     min-width: 12rem;
-    padding: 1rem;
+    padding: 0.7rem;
 
     .node-header-label {
+      font-size: 0.8rem;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
+      margin: 0;
       max-width: 15rem;
+    }
+
+    .label-info {
+      font-size: 0.6rem;
     }
   }
 
   .node-details-container {
+    font-size: 0.6rem;
     padding: 1rem;
 
     .detail-label {
       text-transform: uppercase;
-      font-size: 0.8rem;
       font-weight: 700;
       color: var(--gray-600);
     }
@@ -96,6 +107,35 @@
   @extend %node-base;
 }
 
+.input-trigger-node {
+  @extend %node-base;
+}
+
+// Image Node Style
+.image-node {
+  @extend %node-base;
+  border-color: #a1d5c5; // green
+  .node-header-container {
+    background-color: #edf6f3; // Light green header
+  }
+}
+
+.trigger-node {
+  @extend %node-base;
+}
+
+.llm-node {
+  @extend %node-base;
+  border-color: #a3b4ff; // Light blue
+  .node-header-container {
+    background-color: #f0f2ff; // Light blue header
+  }
+}
+
+.utility-node {
+  @extend %node-base;
+}
+
 .mistralai-chat-model-node {
   @extend %node-base;
 }
@@ -120,15 +160,7 @@
   @extend %node-base;
 }
 
-.start-node {
-  @extend %node-base;
-  border-style: dashed;
-}
-
 .new-node {
-  border: 1px solid #ddd;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
   transition:
     border-color 0.3s ease,
     box-shadow 0.3s ease,
@@ -143,6 +175,6 @@
 }
 
 .node-category-title {
-  color: var(--primary);
+  /* color: var(--primary) */
   margin-top: 1rem;
 }

@@ -18,7 +18,7 @@ const AITaskAdd = () => {
     description: '',
     externalReferenceCode: uuidv4(),
     configuration: {
-      debug: true,
+      trace: true,
       edges: [],
       nodes: [],
     },

@@ -1,5 +1,6 @@
 /**
  * @author Louis-Guillaume Durand
+ * @author Petteri Karttunen
  */
 import React, { createContext, useContext, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +21,8 @@ const AITasksContext = createContext({
   addTask: (task) => {},
   duplicateTask: (task) => {},
   importTask: (task) => {},
+  clearMemory: (externalReferenceCode) => {},
+  memoryClearing: false,
   exportTask: (taskId) => {},
   updateTask: (updatedTask) => {},
   deleteTask: (task) => {},
@@ -40,6 +43,7 @@ const AITasksProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [taskExecuting, setTaskExecuting] = useState(false);
   const [error, setError] = useState(null);
+  const [memoryClearing, setMemoryClearing] = useState(false);
   const navigate = useNavigate();
   const successUpdateTimeoutRef = useRef(null);
 
@@ -149,6 +153,20 @@ const AITasksProvider = ({ children }) => {
     }
   };
 
+  const clearMemory = async (externalReferenceCode) => {
+    setMemoryClearing(true);
+    try {
+      await LiferayService.post(
+        `/o/ai-tasks/v1.0/ai-tasks/by-external-reference-code/${externalReferenceCode}/clear-memory`,
+      );
+      Toast.open('success', 'Success', 'Chat memory for this task has been cleared');
+    } catch (error) {
+      Toast.open('danger', 'Error', error);
+    } finally {
+      setMemoryClearing(false);
+    }
+  };
+
   const executeTask = async (externalReferenceCode, userInput) => {
     try {
       setTaskExecuting(true);
@@ -173,8 +191,7 @@ const AITasksProvider = ({ children }) => {
   };
 
   const updateGraph = async (newNodes, newEdges) => {
-    const filteredNodes = newNodes.filter((newNode) => newNode.id !== 'entryPoint');
-    const updatedNodes = filteredNodes.map((newNode) => {
+    const updatedNodes = newNodes.map((newNode) => {
       return {
         id: newNode.id,
         label: newNode.label || newNode.data.label,
@@ -184,31 +201,22 @@ const AITasksProvider = ({ children }) => {
         uiConfiguration: newNode.uiConfiguration || newNode.data.uiConfiguration,
       };
     });
-    const updatedEdges = newEdges
-      .filter((newEdge) => newEdge.id !== 'entryPointEdge')
-      .map((edge) => {
-        return {
-          id: edge.id,
-          source: edge.source,
-          target: edge.target,
-        };
-      });
+    const updatedEdges = newEdges.map((edge) => {
+      return {
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+      };
+    });
 
     const updatedNodesIds = updatedNodes.map((updatedNode) => {
       return updatedNode.id;
     });
 
-    let startNodeId = '';
-
-    if (updatedNodesIds.includes(selectedTask.configuration.startNodeId)) {
-      startNodeId = selectedTask.configuration.startNodeId;
-    }
-
     await handleFlowConfigurationChange({
       ...selectedTask.configuration,
       nodes: updatedNodes,
       edges: updatedEdges,
-      startNodeId,
     });
   };
 
@@ -226,6 +234,9 @@ const AITasksProvider = ({ children }) => {
         addTask,
         duplicateTask,
         importTask,
+        clearMemory,
+        memoryClearing,
+
         exportTask,
         updateTask,
         deleteTask,

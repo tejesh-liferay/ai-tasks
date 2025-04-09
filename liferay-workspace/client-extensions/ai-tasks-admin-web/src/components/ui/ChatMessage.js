@@ -1,20 +1,32 @@
 /**
  * @author Louis-Guillaume Durand
+ * @author Petteri Karttunen
  */
+import React, { useState } from 'react';
+
 import { useTooltip } from '../../contexts/TooltipContext';
 import useClickOutside from '../../hooks/useClickOutside';
 import Icon from './Icon';
 
-const ChatMessage = ({ role, debug, children }) => {
+const ChatMessage = ({ role, executionTrace, children }) => {
   const { isTooltipOpen, setIsTooltipOpen, setTooltipPosition, setTooltipContent } = useTooltip();
 
   const handleClickOutside = () => {
     setIsTooltipOpen(false);
   };
 
+  const prettyPrintJson = (json) => {
+    try {
+      return JSON.stringify(json, null, 2); // The '2' adds 2 spaces for indentation
+    } catch (error) {
+      console.error('Error pretty-printing JSON:', error);
+      return 'Invalid JSON';
+    }
+  };
+
   const buttonRef = useClickOutside(handleClickOutside);
 
-  const handleDebugDisplay = (e) => {
+  const handleExecutionTraceDisplay = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setTooltipPosition({
@@ -25,13 +37,18 @@ const ChatMessage = ({ role, debug, children }) => {
     });
     setTooltipContent(
       <div className={'d-flex flex-column'}>
-        <div>Execution: {debug.executionTime}</div>
-        <div>Input Tokens: {debug.inputTokenCount}</div>
-        <div>Output Tokens: {debug.outputTokenCount}</div>
-        <div>Total Tokens: {debug.totalTokenCount}</div>
+        <div>Execution: {executionTrace.executionTime}</div>
+        <div>Input Tokens: {executionTrace.tokenUsage.inputTokenCount}</div>
+        <div>Output Tokens: {executionTrace.tokenUsage.outputTokenCount}</div>
+        <div>Total Tokens: {executionTrace.tokenUsage.totalTokenCount}</div>
       </div>,
     );
     setIsTooltipOpen(!isTooltipOpen);
+  };
+
+  const [isTraceVisible, setIsTraceVisible] = useState(false);
+  const handleTraceVisibilityToggle = () => {
+    setIsTraceVisible(!isTraceVisible);
   };
 
   return (
@@ -45,17 +62,21 @@ const ChatMessage = ({ role, debug, children }) => {
           {children}
         </div>
       </div>
-      {debug && (
-        <>
+      {executionTrace && (
+        <div className="d-flex flex-column">
           <button
-            ref={buttonRef}
-            className={'btn btn-default btn-sm px-2 py-0'}
-            style={{ width: '2rem' }}
-            onClick={handleDebugDisplay}
+            className={'btn btn-xs btn-default w-100 text-left'}
+            onClick={handleTraceVisibilityToggle}
           >
-            <Icon name={'info-circle-open'} />
+            <Icon name={isTraceVisible ? 'angle-up' : 'angle-down'} className={'mr-2'} />
+            Execution Details
           </button>
-        </>
+          <div className={'px-2 py-2'} style={{ display: isTraceVisible ? 'block' : 'none' }}>
+            <div className={'trace-details d-flex flex-column'}>
+              <pre>{prettyPrintJson(executionTrace)}</pre>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

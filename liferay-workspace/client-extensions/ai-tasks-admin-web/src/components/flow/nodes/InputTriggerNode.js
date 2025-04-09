@@ -1,24 +1,17 @@
 /**
  * @author Louis-Guillaume Durand
+ * @author Petteri Karttunen
  */
 import React, { memo } from 'react';
 
-import { Handle } from '@xyflow/react';
+import BaseNode from './BaseNode';
 
-const InputTrigger = ({ data }) => {
-  const { label } = data;
+const InputTriggerNode = memo(({ data, id, type }) => {
+  const { label, parameters } = data;
+
   return (
-    <div className="start-node">
-      <div
-        className={
-          'node-header-container d-flex flex-row align-items-center justify-content-center'
-        }
-      >
-        <h3>{label}</h3>
-      </div>
-      <Handle type="source" position="right" />
-    </div>
+    <BaseNode className="trigger-node" hasTargetHandle="false" id={id} label={label} type={type} />
   );
-};
+});
 
-export default memo(InputTrigger);
+export default InputTriggerNode;

@@ -1,5 +1,6 @@
 /**
  * @author Louis-Guillaume Durand
+ * @author Petteri Karttunen
  */
 import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
@@ -81,38 +82,40 @@ const AITaskList = () => {
 
   return (
     <>
-      <NavigationBar>
-        <li slot="right" className={'nav-item'}>
-          <input
-            id={'uploadAITask'}
-            type={'file'}
-            accept=".json"
-            hidden
-            onChange={handleFileChange}
-          />
-          <button
-            className={'btn btn-sm btn-secondary'}
-            onClick={(e) => {
-              e.preventDefault();
-              document.querySelector('#uploadAITask').click();
-            }}
-          >
-            <Icon name={'upload'} /> Import File
-          </button>
-        </li>
-        <li slot="right" className={'nav-item'}>
-          <NavLink to={ROUTE_TASK_ADD}>
+      <div class="ai-tasks-navbar-root">
+        <NavigationBar ulClassName="tbar-nav d-flex justify-content-end">
+          <li className="tbar-item">
+            <input
+              id={'uploadAITask'}
+              type={'file'}
+              accept=".json"
+              hidden
+              onChange={handleFileChange}
+            />
             <button
-              className={
-                'btn btn-primary dropdown-toggle nav-btn nav-btn-monospaced navbar-breakpoint-down-d-none'
-              }
+              className={'btn btn-sm btn-secondary'}
+              onClick={(e) => {
+                e.preventDefault();
+                document.querySelector('#uploadAITask').click();
+              }}
             >
-              <Icon name={'plus'} />
+              <Icon name={'upload'} /> Import File
             </button>
-          </NavLink>
-        </li>
-      </NavigationBar>
-      <div className={'container container-fluid-max-xl container-view mt-6'}>
+          </li>
+          <li className={'tbar-item'}>
+            <NavLink to={ROUTE_TASK_ADD}>
+              <button
+                className={
+                  'btn btn-primary dropdown-toggle nav-btn nav-btn-monospaced navbar-breakpoint-down-d-none'
+                }
+              >
+                <Icon name={'plus'} />
+              </button>
+            </NavLink>
+          </li>
+        </NavigationBar>
+      </div>
+      <div className={'container container-fluid-max-xl container-view py-5'}>
         {tasks === undefined || tasks.length === 0 ? (
           <EmptyState
             image={'empty'}
@@ -123,7 +126,7 @@ const AITaskList = () => {
             }
           />
         ) : (
-          <table className="table table-striped">
+          <table className="table table-striped table-hover">
             <thead>
               <tr>
                 <th>Title</th>
@@ -142,9 +145,21 @@ const AITaskList = () => {
                       <NavLink to={ROUTE_TASK_EDIT + '/' + task.id}>{task.title}</NavLink>
                     </div>
                   </td>
-                  <td>{task.id}</td>
                   <td>
-                    <code>{'/o/ai-tasks/v1.0/generate/' + task.externalReferenceCode}</code>
+                    <NavLink
+                      className="table-list-link text-truncate-inline"
+                      to={ROUTE_TASK_EDIT + '/' + task.id}
+                    >
+                      {task.id}
+                    </NavLink>
+                  </td>
+                  <td>
+                    <NavLink
+                      className="table-list-link text-truncate-inline"
+                      to={ROUTE_TASK_EDIT + '/' + task.id}
+                    >
+                      {'/o/ai-tasks/v1.0/generate/' + task.externalReferenceCode}
+                    </NavLink>
                   </td>
                   <td>
                     {task.enabled ? (

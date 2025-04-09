@@ -5,6 +5,7 @@ import React, { useCallback } from 'react';
 
 import { useReactFlow } from '@xyflow/react';
 
+import { INPUT_TRIGGER } from '../../constants/AITasksNodeTypesConstants';
 import { useAITasksContext } from '../../contexts/AITasksContext';
 import { useNodeMenu } from '../../contexts/NodeMenuContext';
 import Icon from '../ui/Icon';
@@ -20,6 +21,7 @@ const AITaskFlowContextMenu = ({
   const { setNodes, setEdges, getNodes, getEdges } = useReactFlow();
   const { selectedNode, selectedTask } = useAITasksContext();
   const { isMenuOpen, menuPosition, setIsMenuOpen } = useNodeMenu();
+  const isInputTrigger = selectedNode?.type === INPUT_TRIGGER;
 
   const deleteNode = useCallback(
     (e) => {
@@ -53,13 +55,15 @@ const AITaskFlowContextMenu = ({
             <span className={'ml-2'}>Rename</span>
           </a>
         </li>
-        <li>
-          <a className="dropdown-item" onClick={onConfigure}>
-            <Icon name="control-panel" />
-            <span className={'ml-2'}>Configure</span>
-          </a>
-        </li>
-        {selectedNode?.id !== selectedTask.configuration.startNodeId && (
+        {!isInputTrigger && (
+          <li>
+            <a className="dropdown-item" onClick={onConfigure}>
+              <Icon name="control-panel" />
+              <span className={'ml-2'}>Configure</span>
+            </a>
+          </li>
+        )}
+        {!isInputTrigger && selectedNode?.id !== selectedTask.configuration.startNodeId && (
           <li>
             <a className="dropdown-item" onClick={onSetCondition}>
               <Icon name="merge" />

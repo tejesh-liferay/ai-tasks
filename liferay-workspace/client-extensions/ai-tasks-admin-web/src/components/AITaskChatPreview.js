@@ -1,16 +1,20 @@
 /**
  * @author Louis-Guillaume Durand
+ * @author Petteri Karttunen
  */
 import React, { useEffect, useRef, useState } from 'react';
 import { Remark } from 'react-remark';
 
+import Toast from '../components/ui/Toast';
 import { useAITasksContext } from '../contexts/AITasksContext';
 import useChatHistory from '../hooks/useChatHistory';
+import LiferayService from '../services/LiferayService';
 import ChatMessage from './ui/ChatMessage';
 import Icon from './ui/Icon';
 
 const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
-  const { selectedTask, executeTask, taskExecuting } = useAITasksContext();
+  const { clearMemory, executeTask, memoryClearing, selectedTask, taskExecuting } =
+    useAITasksContext();
   const [userInput, setUserInput] = useState('');
   const { history, addMessage, clearHistory } = useChatHistory(selectedTask.id);
   const [visibleThoughts, setVisibleThoughts] = useState([]);
@@ -25,7 +29,7 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
     addMessage(
       response.output.text || response.output.error,
       'AI',
-      response.debugInfo['1'] || {},
+      response.executionTrace || {},
       response.output.think || '',
     );
   };
@@ -44,39 +48,35 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
   return (
     <div
       className={
-        'chat-preview contextual-sidebar sidebar-light sidebar-sm contextual-sidebar-visible' +
+        'chat-preview contextual-sidebar sidebar-light sidebar-lg contextual-sidebar-visible' +
         (isOpen ? ' chat-preview-open' : ' chat-preview-close')
       }
     >
       <div className="sidebar-header">
-        <div className="component-title">
-          <span className="d-flex flex-row justify-content-between text-truncate-inline">
-            <span className="text-truncate">Chat Preview</span>
-            <button
-              className={'btn btn-default'}
-              onClick={(e) => {
-                e.preventDefault();
-                setIsOpen(false);
-              }}
-            >
-              <Icon name={'times'} />
-            </button>
-          </span>
-          <button
-            className={'btn btn-secondary btn-sm'}
-            onClick={(e) => {
-              e.preventDefault();
-              clearHistory();
-            }}
-          >
-            <Icon name={'trash'} /> Clear History
-          </button>
-        </div>
+        <button
+          className={'btn btn-secondary btn-sm mr-2 my-2'}
+          onClick={(e) => {
+            e.preventDefault();
+            clearHistory();
+          }}
+        >
+          <Icon name={'trash'} /> Clear History
+        </button>
+        <button
+          className={'btn btn-secondary btn-sm'}
+          onClick={(e) => {
+            e.preventDefault();
+            clearMemory(selectedTask.externalReferenceCode);
+          }}
+          disabled={memoryClearing}
+        >
+          <Icon name={'trash'} /> Clear Memory
+        </button>
       </div>
-      <div className="container">
+      <div className="messages container">
         <div className="chat-preview-area d-flex flex-column">
           {history.map((message, index) => (
-            <ChatMessage key={index} role={message.role} debug={message.debug}>
+            <ChatMessage key={index} role={message.role} executionTrace={message.executionTrace}>
               <Remark>{message.text}</Remark>
               {message.think && (
                 <>
@@ -118,31 +118,28 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
           )}
           <div ref={chatPreviewEndRef} className={'chat-preview-end mt-4'}></div>
         </div>
-        <div className="mt-3">
-          <form onSubmit={handleSubmit}>
-            <div className="chat-input-wrapper form-group d-flex flex-row">
-              <textarea
-                className="form-control"
-                id="userMessage"
-                name="userMessage"
-                placeholder="Your message here..."
-                value={userInput}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setUserInput(e.target.value);
-                }}
-                onKeyDown={(e) => {
-                  if ((e.key === e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-                    handleSubmit(e);
-                  }
-                }}
-              ></textarea>
-              <button className="btn btn-secondary" type="submit">
-                <Icon name={'stars'} />
-              </button>
-            </div>
-          </form>
-        </div>
+      </div>
+      <div className="prompt px-4 py-3">
+        <form onSubmit={handleSubmit}>
+          <div className="chat-input-wrapper form-group d-flex flex-row">
+            <textarea
+              className="form-control"
+              id="userMessage"
+              name="userMessage"
+              placeholder="Your message here..."
+              value={userInput}
+              onChange={(e) => {
+                e.preventDefault();
+                setUserInput(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit(e);
+                }
+              }}
+            ></textarea>
+          </div>
+        </form>
       </div>
     </div>
   );

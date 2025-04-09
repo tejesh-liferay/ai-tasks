@@ -1,4 +1,14 @@
-.ai-tasks-navbar {
-  top: 56px;
-  min-height: 73px;
+.ai-tasks-navbar-root {
+  position: fixed;
+  width: 100%;
+  z-index: 971;
+
+  .ai-tasks-navbar {
+    top: 56px;
+    min-height: 73px;
+  }
+
+  #externalReferenceCode {
+    border: 0 none;
+  }
 }

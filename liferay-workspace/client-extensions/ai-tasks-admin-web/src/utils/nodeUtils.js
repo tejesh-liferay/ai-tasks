@@ -3,7 +3,6 @@
  */
 import {
   ANTHROPIC_CHAT_MODEL,
-  ENTRY_POINT_NODE,
   GEMINI_CHAT_MODEL,
   GOOGLE_IMAGEN,
   HUGGING_FACE_CHAT_MODEL,
@@ -38,7 +37,7 @@ export const getDefaultParameters = (nodeType) => {
       maxOutputTokens: 350,
       outputParameterName: 'text',
       promptTemplate: '{{input.text}}',
-      project: '',
+      project: 'env:GCLOUD_PROJECT',
       systemMessage: '',
       temperature: 0.7,
       timeout: 20,
@@ -55,16 +54,17 @@ export const getDefaultParameters = (nodeType) => {
       modelName: 'imagegeneration@005',
       outputParameterName: 'image',
       promptTemplate: '{{input.text}}',
-      project: '',
+      project: 'env:GCLOUD_PROJECT',
       publisher: 'google',
       sampleImageSize: 1536,
     };
   }
   if (nodeType === HUGGING_FACE_CHAT_MODEL) {
     return {
-      accessToken: '',
+      accessToken: 'env:HUGGING_FACE_ACCESS_TOKEN',
       baseUrl: '',
       maxNewTokens: '',
+      memoryMaxMessages: 20,
       modelName: '',
       outputParameterName: 'text',
       returnFullText: true,
@@ -100,7 +100,7 @@ export const getDefaultParameters = (nodeType) => {
     return {
       baseUrl: 'http://localhost:11434',
       memoryMaxMessages: 20,
-      modelName: 'llama3.2',
+      modelName: 'llama3.2:1b',
       outputParameterName: 'text',
       promptTemplate: '{{input.text}}',
       systemMessage: '',
@@ -110,7 +110,7 @@ export const getDefaultParameters = (nodeType) => {
   }
   if (nodeType === OPENAI_CHAT_MODEL) {
     return {
-      apiKey: '',
+      apiKey: 'env:OPENAI_API_KEY',
       baseUrl: 'https://api.openai.com/v1/',
       memoryMaxMessages: 20,
       modelName: 'gpt-4o-mini',
