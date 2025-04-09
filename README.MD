@@ -5,6 +5,7 @@
 ## Table of Contents  
 - [About](#about)
 - [Features](#features)
+- [Quick Start](#quick-start)
 - [How To Use It](#how-to-use-it)
 - [Examples](#examples)
 - [Installation](#installation)
@@ -21,7 +22,7 @@ AI Tasks is an LLM integrated, low-code workflow orchestration tool for  Liferay
 
 AI Tasks backend is built on [LangChain4J](https://docs.langchain4j.dev/) and supports the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) for creating standardized integrations to external and internal services. 
 
-![AI Tasks admin](./ai-tasks-admin.png)
+![AI Tasks admin](./images/ai-tasks-admin.png)
 
 ## Features
 
@@ -34,13 +35,17 @@ AI Tasks backend is built on [LangChain4J](https://docs.langchain4j.dev/) and su
 * **Open Source**: Extend and customize the task node types and function callback to your needs
 
 ### Example Use Cases
-* Create **chatbots** on Liferay
-* Integrate chatbots to external or internal services with the help of [MCP](https://modelcontextprotocol.io/introduction)
+* Create Liferay **chatbots**
+* Integrate Liferay chatbots to external or internal services with the help of [MCP](https://modelcontextprotocol.io/introduction)
 * Add AI **translation** capabilities to Liferay pages, display templates or applications
 * Add AI **summarization** capabilities to Liferay pages, display templates or applications
 * Add **image & content generation** capabilities to Liferay pages, display templates or applications
 * Create **RAG chatbots** grounded to local Liferay semantic search or for example to Google Search
 * **Integrate Liferay OOTB workflows with AI**
+
+## Quick Start
+
+See the quick start tutorial  [here](./QUICKSTART.MD).
 
 ## How To Use It
 
@@ -62,21 +67,24 @@ curl -X 'POST' \
 }'
 ```
 
-If everything was set up correctly, the response, with debug on, should look something like this:
+If everything was set up correctly, the response, with `trace` enabled, should look something like this:
 
 ```
 {
-  "debugInfo": {
-    "1": {
+  "executionTrace": {
+    "llmNodeid": {
       "userMessage": "Please tell me a joke",
       "executionTime": "1921ms",
-      "inputTokenCount": 21,
-      "systemMessage": "You are a polite assistant and try to help people as good as you can.",
-      "finishReason": "STOP",
-      "totalTokenCount": 72,
-      "outputTokenCount": 51
+      "systemMessage": "",
+      "tokenUsage": {
+        "inputTokenCount": 21,
+        "totalTokenCount": 72,
+        "outputTokenCount": 51
+      },
+      "finishReason": "STOP",    
+      "content": "Why did the golfer wear two pants? Because he's afraid he might get a \"Hole-in-one.\" \n\nThis is a classic punny joke!  Let me know if you'd like to hear another one. 😊"
     }
-  },
+  }
   "output": {
     "text": "Why did the golfer wear two pants? Because he's afraid he might get a \"Hole-in-one.\" \n\nThis is a classic punny joke!  Let me know if you'd like to hear another one. 😊"
   },

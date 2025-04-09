@@ -4,14 +4,25 @@
     "en_US": "MySQL MCP Server With OpenAI"
   },
   "configuration": {
-    "startNodeId": "yellowGeographicalBedbug",
-    "debug": true,
+    "trace": true,
     "nodes": [
       {
         "uiConfiguration": {
           "position": {
-            "x": 230.7474775262251,
-            "y": -154.0006503166021
+            "x": -117.61428833007814,
+            "y": -304.2476247151693
+          }
+        },
+        "id": "whiteModestSkunk",
+        "label": "Input Trigger",
+        "type": "inputTrigger",
+        "parameters": {}
+      },
+      {
+        "uiConfiguration": {
+          "position": {
+            "x": 188.74747752622517,
+            "y": -334.0006503166021
           }
         },
         "id": "yellowGeographicalBedbug",
@@ -28,16 +39,16 @@
                 {
                   "transport": {
                     "environment": {
-                      "ALLOW_INSERT_OPERATION": "false",
-                      "ALLOW_UPDATE_OPERATION": "false",
-                      "ALLOW_DELETE_OPERATION": "false",
-                      "MYSQL_DB": "lportal",
-                      "MYSQL_HOST": "127.0.0.1",
-                      "MYSQL_PASS": "test",
+                      "PATH": "/home/petteri/.nvm/versions/node/v20.13.1/bin/node:/usr/bin:/bin",
+                      "MYSQL_PASS": "liferay",
                       "MYSQL_PORT": "3306",
                       "MYSQL_USER": "test",
-                      "NODE_PATH": "/home/petteri/.nvm/versions/node/v20.13.1/lib/node_modules",
-                      "PATH": "/home/petteri/.nvm/versions/node/v20.13.1/bin/node:/usr/bin:/bin"
+                      "MYSQL_DB": "lportal",
+                      "ALLOW_INSERT_OPERATION": "false",
+                      "ALLOW_UPDATE_OPERATION": "false",
+                      "MYSQL_HOST": "127.0.0.1",
+                      "ALLOW_DELETE_OPERATION": "false",
+                      "NODE_PATH": "/home/petteri/.nvm/versions/node/v20.13.1/lib/node_modules"
                     },
                     "logEvents": true,
                     "type": "stdio",
@@ -60,7 +71,13 @@
         }
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "ed0e4a37-9be0-4fa9-9893-94af13368522",
+        "source": "whiteModestSkunk",
+        "target": "yellowGeographicalBedbug"
+      }
+    ]
   },
   "description_i18n": {
     "en_US": "A demo task relying on OpenAI and MySQL MCP server as the tool provider"

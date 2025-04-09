@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "title_i18n": {
+    "en_US": "Create Blogs With Images"
+  },
+  "configuration": {
+    "trace": true,
+    "nodes": [
+      {
+        "uiConfiguration": {
+          "position": {
+            "x": -117.61428833007814,
+            "y": -304.2476247151693
+          }
+        },
+        "id": "whiteModestSkunk",
+        "label": "Input Trigger",
+        "type": "inputTrigger",
+        "parameters": {}
+      },
+      {
+        "uiConfiguration": {
+          "position": {
+            "x": 160.69659757757637,
+            "y": -335.18999285445216
+          }
+        },
+        "id": "brownFox",
+        "label": "Gemini Chat Model",
+        "type": "geminiChatModel",
+        "parameters": {
+          "topK": "3",
+          "systemMessage": "Your task is to create a blog entry for the topic given by the user. It should be not longer than 1000 characters long. Ask whether to create a cover image and only create it if asked.",
+          "memoryMaxMessages": 50,
+          "project": "env:GCLOUD_PROJECT_NAME",
+          "inputParameters": {
+            "text": {
+              "type": "text"
+            }
+          },
+          "topP": 1,
+          "maxOutputTokens": 1000,
+          "tools": {
+            "blog": {
+              "imageGenerator": {
+                "modelName": "dall-e-2",
+                "maxRetries": 1,
+                "apiKey": "env:OPENAI_API_KEY",
+                "responseFormat": "b64_json",
+                "type": "openAIImageModel"
+              }
+            }
+          },
+          "outputParameterName": "text",
+          "modelName": "gemini-1.5-pro",
+          "temperature": 0.5,
+          "location": "us-central1",
+          "model": "gemini-1.5-pro",
+          "useChatMemory": true,
+          "promptTemplate": "{{input.text}}"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "ed0e4a37-9be0-4fa9-9893-94af13368522",
+        "source": "whiteModestSkunk",
+        "target": "brownFox"
+      }
+    ]
+  },
+  "description_i18n": {
+    "en_US": "AI Tasks for creating blog entries with images. Relies on VertexAI and OpenAI."
+  },
+  "enabled": true,
+  "externalReferenceCode": "create-blogs-with-images"
+}

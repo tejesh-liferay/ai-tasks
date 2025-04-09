@@ -17,7 +17,7 @@ A task using OpenAI chat model and relying on MySQL MCP server as the tool provi
 1. Set up the [MCP MySQL server](https://github.com/benborla/mcp-server-mysql). See the instructions on the project page.
 1. Set up your OPENAI_API_KEY environment variable. For IntelliJ see [this](https://www.jetbrains.com/help/objc/add-environment-variables-and-program-arguments.html)
 1. Import the [AI Task](./mysql-mcp-server-with-openai.json)
-1. Configure the credentials and other properties in the AI Task
+1. Configure the credentials and other properties according to your environment in the OpenAI Chat Model `Tool Provider` configuration
 1. Test with the AI Tasks Admin preview
 
 ## Usage Example through REST API
