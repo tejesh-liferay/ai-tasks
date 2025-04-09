@@ -41,7 +41,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Petteri Karttunen
  */
 @Component(
-	property = "ai.task.node.type=liferaySearch", service = AITaskNode.class
+	property = "ai.task.node.type=LiferaySearchAITaskNode", service = AITaskNode.class
 )
 public class LiferaySearchAITaskNode
 	extends BaseAITaskNode implements AITaskNode {

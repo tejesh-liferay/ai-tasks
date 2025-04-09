@@ -90,7 +90,7 @@ public class MyUserAccountAITaskTool implements AITaskTool {
 				}
 
 				if (!Validator.isBlank(lastName)) {
-					user.setFirstName(lastName);
+					user.setLastName(lastName);
 				}
 
 				return UserLocalServiceUtil.updateUser(user);
