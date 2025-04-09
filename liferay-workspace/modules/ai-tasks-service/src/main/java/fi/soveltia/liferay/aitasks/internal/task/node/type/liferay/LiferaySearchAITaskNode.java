@@ -1,5 +1,5 @@
 
-package fi.soveltia.liferay.aitasks.internal.task.node;
+package fi.soveltia.liferay.aitasks.internal.task.node.liferay;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -19,6 +19,7 @@ import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.searcher.SearchResponse;
 import com.liferay.portal.search.searcher.Searcher;
 
+import fi.soveltia.liferay.aitasks.internal.task.node.BaseAITaskNode;
 import fi.soveltia.liferay.aitasks.internal.task.util.TaskContextUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
 import fi.soveltia.liferay.aitasks.task.context.AITaskContext;

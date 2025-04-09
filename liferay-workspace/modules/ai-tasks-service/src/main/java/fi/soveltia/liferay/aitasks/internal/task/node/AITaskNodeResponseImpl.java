@@ -1,5 +1,5 @@
 
-package fi.soveltia.liferay.aitasks.internal.task.node;
+package fi.soveltia.liferay.aitasks.internal.task;
 
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeResponse;
 

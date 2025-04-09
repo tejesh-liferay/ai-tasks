@@ -1,10 +1,11 @@
-package fi.soveltia.liferay.aitasks.internal.task.node;
+package fi.soveltia.liferay.aitasks.internal.task.node.google;
 
 import com.liferay.portal.kernel.json.JSONObject;
 
 import dev.langchain4j.model.vertexai.VertexAiImageModel;
 
-import fi.soveltia.liferay.aitasks.internal.task.util.ImageModelUtil;
+import fi.soveltia.liferay.aitasks.internal.task.node.BaseImageModelAITaskNode;
+import fi.soveltia.liferay.aitasks.internal.task.node.util.ImageModelUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
 

@@ -1,11 +1,12 @@
 
-package fi.soveltia.liferay.aitasks.internal.task.node;
+package fi.soveltia.liferay.aitasks.internal.task.node.huggingface;
 
 import com.liferay.portal.kernel.json.JSONObject;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.huggingface.HuggingFaceChatModel;
 
+import fi.soveltia.liferay.aitasks.internal.task.node.BaseChatModelAITaskNode;
 import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;

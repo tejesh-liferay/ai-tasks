@@ -1,11 +1,11 @@
-package fi.soveltia.liferay.aitasks.internal.task.node;
+package fi.soveltia.liferay.aitasks.internal.task.node.mistral;
 
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.json.JSONUtil;
 
-import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.mistralai.MistralAiChatModel;
 
+import fi.soveltia.liferay.aitasks.internal.task.node.BaseChatModelAITaskNode;
 import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
@@ -18,37 +18,24 @@ import org.osgi.service.component.annotations.Component;
  * @author Petteri Karttunen
  */
 @Component(
-	property = "ai.task.node.type=anthropicChatModel",
-	service = AITaskNode.class
+	property = "ai.task.node.type=mistralIChatModel", service = AITaskNode.class
 )
-public class AnthropicChatModelAITaskNode
+public class MistralAIChatModelAITaskNode
 	extends BaseChatModelAITaskNode implements AITaskNode {
 
 	@Override
 	public AITaskNodeInformation getAITaskNodeInformation() {
-		return new AITaskNodeInformation("anthropicChatModel", "input");
+		return new AITaskNodeInformation("mistralAIChatModel", "input");
 	}
 
 	protected ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
-		AnthropicChatModel.AnthropicChatModelBuilder builder =
-			AnthropicChatModel.builder();
+		MistralAiChatModel.MistralAiChatModelBuilder builder =
+			MistralAiChatModel.builder();
 
 		SetterUtil.setNotBlankString(
 			builder::apiKey, jsonObject.getString("apiKey"));
 		SetterUtil.setNotBlankString(
 			builder::baseUrl, jsonObject.getString("baseUrl"));
-		SetterUtil.setNotBlankString(
-			builder::beta, jsonObject.getString("beta"));
-		SetterUtil.setNotNullBoolean(
-			builder::cacheSystemMessages, jsonObject, "cacheSystemMessages");
-		SetterUtil.setNotNullBoolean(
-			builder::cacheTools, jsonObject, "cacheTools");
-
-		if (jsonObject.has("chatModelListeners")) {
-			builder.listeners(
-				getChatModelListeners(
-					jsonObject.getJSONArray("chatModelListeners")));
-		}
 
 		builder.logRequests(jsonObject.getBoolean("logRequests"));
 		builder.logResponses(jsonObject.getBoolean("logResponses"));
@@ -59,11 +46,11 @@ public class AnthropicChatModelAITaskNode
 			builder::maxTokens, jsonObject, "maxTokens");
 		SetterUtil.setNotBlankString(
 			builder::modelName, jsonObject.getString("modelName"));
-
-		if (jsonObject.has("stop")) {
-			builder.stopSequences(
-				JSONUtil.toStringList(jsonObject.getJSONArray("stop")));
-		}
+		SetterUtil.setNotNullInteger(builder::randomSeed, jsonObject, "seed");
+		SetterUtil.setNotBlankString(
+			builder::responseFormat, jsonObject.getString("responseFormat"));
+		SetterUtil.setNotNullBoolean(
+			builder::safePrompt, jsonObject, "safePrompt");
 
 		SetterUtil.setNotNullDouble(
 			builder::temperature, jsonObject, "temperature");
@@ -72,10 +59,7 @@ public class AnthropicChatModelAITaskNode
 			builder.timeout(Duration.ofSeconds(jsonObject.getInt("timeout")));
 		}
 
-		SetterUtil.setNotNullInteger(builder::topK, jsonObject, "topK");
 		SetterUtil.setNotNullDouble(builder::topP, jsonObject, "topP");
-		SetterUtil.setNotBlankString(
-			builder::version, jsonObject.getString("version"));
 
 		return builder.build();
 	}

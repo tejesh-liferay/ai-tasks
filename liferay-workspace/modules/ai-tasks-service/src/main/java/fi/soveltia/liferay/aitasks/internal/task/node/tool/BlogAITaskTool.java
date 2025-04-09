@@ -2,16 +2,21 @@ package fi.soveltia.liferay.aitasks.internal.task.tool;
 
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.BlogsEntryService;
+import com.liferay.headless.delivery.dto.v1_0.BlogPosting;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.servlet.taglib.ui.ImageSelector;
 import com.liferay.portal.kernel.util.Validator;
 
+import com.liferay.portal.vulcan.dto.converter.DTOConverter;
+import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
+import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 
@@ -20,6 +25,7 @@ import fi.soveltia.liferay.aitasks.spi.task.tool.AITaskTool;
 
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.Locale;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -42,7 +48,7 @@ public class BlogAITaskTool implements AITaskTool {
 		}
 
 		@Tool("Creates a new blogs entry")
-		public BlogsEntry createBlogsEntry(
+		public BlogPosting createBlogsEntry(
 				@P("The content for the blogs entry") String content,
 				@P("Create a cover image for the blogs entry?") Boolean
 					createCoverImage,
@@ -64,20 +70,30 @@ public class BlogAITaskTool implements AITaskTool {
 
 				Calendar calendar = Calendar.getInstance();
 
-				return blogsEntryService.addEntry(
+				return _toBlogPosting(blogsEntryService.addEntry(
 					title, subtitle, _createDescription(content), content,
 					calendar.get(Calendar.MONTH),
 					calendar.get(Calendar.DAY_OF_MONTH),
 					calendar.get(Calendar.YEAR),
 					calendar.get(Calendar.HOUR_OF_DAY),
 					calendar.get(Calendar.MINUTE), true, true, new String[0],
-					null, coverImageSelector, null, serviceContext);
+					null, coverImageSelector, null, serviceContext), serviceContext.getLocale(),
+						serviceContext.fetchUser());
 			}
 			catch (Exception exception) {
 				log.error(exception);
 
 				throw exception;
 			}
+		}
+
+		private BlogPosting _toBlogPosting(BlogsEntry blogsEntry, Locale locale, User user) throws Exception {
+			return blogPostingDTOConverter.toDTO(
+					new DefaultDTOConverterContext(
+							true, null,
+							dtoConverterRegistry, blogsEntry.getEntryId(),
+							locale, null,
+							user));
 		}
 
 		private String _createDescription(String content) {
@@ -95,20 +111,26 @@ public class BlogAITaskTool implements AITaskTool {
 				return null;
 			}
 
-			String imageBase64 = ImageModelUtil.generateImage(
-				jsonObject, title, jsonObject.getString("type"));
+			try {
+				String imageBase64 = ImageModelUtil.generateImage(
+						jsonObject, title, jsonObject.getString("type"));
 
-			if (Validator.isBlank(imageBase64)) {
-				return null;
+				if (Validator.isBlank(imageBase64)) {
+					return null;
+				}
+
+				return new ImageSelector(
+						Base64.getDecoder(
+						).decode(
+								imageBase64
+						),
+						StringBundler.concat(_sanitizeFileName(title), ".png"),
+						"image/png", StringPool.BLANK);
+			} catch (Exception exception) {
+				log.error("Failed to create image.", exception);
 			}
 
-			return new ImageSelector(
-				Base64.getDecoder(
-				).decode(
-					imageBase64
-				),
-				StringBundler.concat(_sanitizeFileName(title), ".png"),
-				"image/png", StringPool.BLANK);
+			return null;
 		}
 
 		private String _sanitizeFileName(String inputName) {
@@ -140,5 +162,13 @@ public class BlogAITaskTool implements AITaskTool {
 
 	@Reference
 	protected BlogsEntryService blogsEntryService;
+
+	@Reference(
+			target = "(component.name=com.liferay.headless.delivery.internal.dto.v1_0.converter.BlogPostingDTOConverter)"
+	)
+	protected DTOConverter<BlogsEntry, BlogPosting> blogPostingDTOConverter;
+
+	@Reference
+	protected DTOConverterRegistry dtoConverterRegistry;
 
 }

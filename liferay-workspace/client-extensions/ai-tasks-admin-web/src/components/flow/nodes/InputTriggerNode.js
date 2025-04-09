@@ -5,7 +5,7 @@ import React, { memo } from 'react';
 
 import { Handle } from '@xyflow/react';
 
-const EntryPointNode = ({ data }) => {
+const InputTrigger = ({ data }) => {
   const { label } = data;
   return (
     <div className="start-node">
@@ -21,4 +21,4 @@ const EntryPointNode = ({ data }) => {
   );
 };
 
-export default memo(EntryPointNode);
+export default memo(InputTrigger);
