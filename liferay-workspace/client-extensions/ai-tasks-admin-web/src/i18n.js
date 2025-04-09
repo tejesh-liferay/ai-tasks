@@ -70,7 +70,7 @@ const resources = {
       'language-placeholder': '',
       'liferay-search-node-description':
         "The Liferay Search Node allows you to leverage Liferay's  search capabilities within an AI Task flow. This node executes a search query, against a pre-configured Liferay Search Blueprint if defined, and returns the results. You can use this node to ground LLM responses by outputting the results into the task context and inserting them as the context for an LLM node. This is useful for building Retrieval Augmented Generation (RAG) pipelines.",
-      liferaySearchAITaskNode: 'Liferay Search',
+      liferaySearch: 'Liferay Search',
       'location-help': '',
       'location-label': 'Location',
       'location-placeholder': '',
