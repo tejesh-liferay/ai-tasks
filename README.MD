@@ -6,8 +6,8 @@
 - [About](#about)
 - [Features](#features)
 - [Quick Start](#quick-start)
+- [Samples](#samples)
 - [How To Use It](#how-to-use-it)
-- [Examples](#examples)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Extending](#extending)
@@ -46,6 +46,10 @@ AI Tasks backend is built on [LangChain4J](https://docs.langchain4j.dev/) and su
 ## Quick Start
 
 See the quick start tutorial  [here](QUICKSTART.MD).
+
+## Samples
+Several sample AI Tasks are provided in the [samples](./samples) folder.
+
 
 ## How To Use It
 
@@ -91,9 +95,6 @@ If everything was set up correctly, the response, with `trace` enabled, should l
   "took": "1921ms"
 }
 ```
-
-## Examples
-Sample AI Tasks are provided in the [samples](./samples) folder.
 
 
 ## Installation
@@ -195,5 +196,3 @@ This software is licensed under LGPL v.3.
 
 ## Disclaimer
 This software is provided “as is”, without warranty of any kind. 
-
-Always take care of setting quotas to external LLM providers.
