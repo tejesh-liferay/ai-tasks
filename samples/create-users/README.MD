@@ -1,8 +1,8 @@
-# Create USers
+# Create Users
 
 Creates portal users.
 
-![Create Users](create-users.png "reate Users")
+![Create Users](create-users.png "Create Users")
 
 ## Requirements
 
