@@ -1,5 +1,5 @@
 
-package fi.soveltia.liferay.aitasks.internal.task.node.liferay;
+package fi.soveltia.liferay.aitasks.internal.task.node.type.liferay;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -24,7 +24,6 @@ import fi.soveltia.liferay.aitasks.internal.task.util.TaskContextUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
 import fi.soveltia.liferay.aitasks.task.context.AITaskContext;
 import fi.soveltia.liferay.aitasks.task.context.AITaskContextParameter;
-import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeResponse;
 
 import java.util.ArrayList;
@@ -49,25 +48,23 @@ public class LiferaySearchAITaskNode
 
 	@Override
 	public AITaskNodeResponse execute(
-		AITaskContext aiTaskContext, boolean debug, String id,
-		Map<String, Object> input, JSONObject jsonObject) {
+		AITaskContext aiTaskContext, JSONObject jsonObject, String nodeId,
+		boolean trace) {
 
 		SearchResponse searchResponse = _searcher.search(
 			_getSearchRequest(
 				jsonObject,
-				_createSearchContext(aiTaskContext, input, jsonObject),
+				_createSearchContext(
+					aiTaskContext,
+					(Map<String, Object>)aiTaskContext.getInput(), jsonObject),
 				jsonObject.getInt("topK", 3)));
 
 		return toAITaskNodeResponse(
-			aiTaskContext, debug,
-			_getDebugInfo(debug, searchResponse.getSearchHits()), jsonObject,
+			aiTaskContext,
+			_getExecutionTrace(searchResponse.getSearchHits(), trace),
+			jsonObject, trace,
 			_getTexts(
 				aiTaskContext, jsonObject, searchResponse.getSearchHits()));
-	}
-
-	@Override
-	public AITaskNodeInformation getAITaskNodeInformation() {
-		return new AITaskNodeInformation("localDocumentRetrieval", "input");
 	}
 
 	@Override
@@ -127,10 +124,10 @@ public class LiferaySearchAITaskNode
 		return searchContext;
 	}
 
-	private Map<String, Object> _getDebugInfo(
-		boolean debug, SearchHits searchHits) {
+	private Map<String, Object> _getExecutionTrace(
+		SearchHits searchHits, boolean trace) {
 
-		if (!debug) {
+		if (!trace) {
 			return null;
 		}
 

@@ -9,7 +9,7 @@ import java.net.URI;
 /**
  * @author Petteri Karttunen
  */
-public class ImageModelUtil {
+public class ImageUtil {
 
 	public static String generateImage(ImageModel imageModel, String text) {
 		Response<Image> response = imageModel.generate(text);

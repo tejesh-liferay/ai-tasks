@@ -14,7 +14,7 @@ import java.util.Map;
 public class TaskContextUtil {
 
 	public static String replacePlaceHolderVariables(
-		AITaskContext aiTaskContext, String s) {
+		AITaskContext aiTaskContext, String value) {
 
 		Map<String, AITaskContextParameter> aiTaskContextParameters =
 			aiTaskContext.getAITaskContextParameters();
@@ -24,12 +24,13 @@ public class TaskContextUtil {
 
 			AITaskContextParameter aiTaskContextParameter = entry.getValue();
 
-			s = StringUtil.replace(
-				s, StringBundler.concat("{{taskContext.", entry.getKey(), "}}"),
+			value = StringUtil.replace(
+				value,
+				StringBundler.concat("{{taskContext.", entry.getKey(), "}}"),
 				aiTaskContextParameter.getStringValue());
 		}
 
-		return s;
+		return value;
 	}
 
 }

@@ -1,4 +1,4 @@
-package fi.soveltia.liferay.aitasks.internal.task.tool;
+package fi.soveltia.liferay.aitasks.internal.task.node.tool;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -28,21 +28,21 @@ import org.osgi.service.component.annotations.Reference;
 public class UserAITaskTool implements AITaskTool {
 
 	@Override
-	public Object getExecutor(JSONObject configurationJSONObject) {
+	public Object getExecutor(JSONObject jsonObject) {
 		return new Executor();
 	}
 
 	public class Executor {
 
 		@Tool("Creates a new user")
-		public User createUser(
+		public String createUser(
 				@P("The email address of the user") String emailAddress,
 				@P("The first name of the user") String firstName,
 				@P("The last name of the user") String lastName)
 			throws PortalException {
 
 			try {
-				return UserServiceUtil.addUser(
+				User user = UserServiceUtil.addUser(
 					CompanyThreadLocal.getCompanyId(), true, StringPool.BLANK,
 					StringPool.BLANK, true, StringUtil.randomString(),
 					emailAddress, 0L, StringPool.BLANK,
@@ -51,6 +51,8 @@ public class UserAITaskTool implements AITaskTool {
 					"Tester", new long[0], new long[0], new long[0],
 					new long[0], false,
 					ServiceContextThreadLocal.getServiceContext());
+
+				return user.toString();
 			}
 			catch (PortalException portalException) {
 				log.error(portalException);

@@ -10,7 +10,7 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface AITaskNodeResponse {
 
-	public Map<String, Object> getDebugInfo();
+	public Map<String, Object> getExecutionTrace();
 
 	public Map<String, Object> getOutput();
 

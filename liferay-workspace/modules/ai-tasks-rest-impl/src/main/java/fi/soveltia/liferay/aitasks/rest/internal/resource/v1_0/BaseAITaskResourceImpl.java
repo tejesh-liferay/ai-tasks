@@ -277,7 +277,6 @@ public abstract class BaseAITaskResourceImpl
 			@javax.ws.rs.PathParam("externalReferenceCode")
 			String externalReferenceCode,
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.validation.constraints.NotNull
 			@javax.ws.rs.QueryParam("nodeId")
 			String nodeId)
 		throws Exception {

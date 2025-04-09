@@ -1,17 +1,14 @@
-package fi.soveltia.liferay.aitasks.internal.task.node.openai;
+package fi.soveltia.liferay.aitasks.internal.task.node.type.openai;
 
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.json.JSONUtil;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 
 import fi.soveltia.liferay.aitasks.internal.task.node.BaseChatModelAITaskNode;
+import fi.soveltia.liferay.aitasks.internal.task.node.type.ChatModelAITaskNode;
 import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
-import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
-
-import java.time.Duration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,14 +22,10 @@ import org.osgi.service.component.annotations.Component;
 	property = "ai.task.node.type=openAIChatModel", service = AITaskNode.class
 )
 public class OpenAIChatModelAITaskNode
-	extends BaseChatModelAITaskNode implements AITaskNode {
+	extends BaseChatModelAITaskNode implements ChatModelAITaskNode {
 
 	@Override
-	public AITaskNodeInformation getAITaskNodeInformation() {
-		return new AITaskNodeInformation("openAIChatModel", "input");
-	}
-
-	protected ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
+	public ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
 		OpenAiChatModel.OpenAiChatModelBuilder builder =
 			OpenAiChatModel.builder();
 
@@ -40,13 +33,8 @@ public class OpenAIChatModelAITaskNode
 			builder::apiKey, jsonObject.getString("apiKey"));
 		SetterUtil.setNotBlankString(
 			builder::baseUrl, jsonObject.getString("baseUrl"));
-
-		if (jsonObject.has("customHeaders")) {
-			builder.customHeaders(
-				JSONUtil.toStringMap(
-					jsonObject.getJSONObject("customHeaders")));
-		}
-
+		SetterUtil.setNotNullJSONObjectAsStringMap(
+			builder::customHeaders, jsonObject, "customHeaders");
 		SetterUtil.setNotNullDouble(
 			builder::frequencyPenalty, jsonObject, "frequencyPenalty");
 
@@ -61,9 +49,10 @@ public class OpenAIChatModelAITaskNode
 				_toLogitBias(jsonObject.getJSONObject("logitBias")));
 		}
 
-		builder.logRequests(jsonObject.getBoolean("logRequests"));
-		builder.logResponses(jsonObject.getBoolean("logResponses"));
-
+		SetterUtil.setNotNullBoolean(
+			builder::logRequests, jsonObject, "logRequests");
+		SetterUtil.setNotNullBoolean(
+			builder::logRequests, jsonObject, "logResponses");
 		SetterUtil.setNotNullInteger(
 			builder::maxRetries, jsonObject, "maxRetries");
 		SetterUtil.setNotNullInteger(
@@ -79,19 +68,12 @@ public class OpenAIChatModelAITaskNode
 		SetterUtil.setNotBlankString(
 			builder::responseFormat, jsonObject.getString("responseFormat"));
 		SetterUtil.setNotNullInteger(builder::seed, jsonObject, "seed");
-
-		if (jsonObject.has("stop")) {
-			builder.stop(
-				JSONUtil.toStringList(jsonObject.getJSONArray("stop")));
-		}
-
+		SetterUtil.setNotNullJSONArrayAsStringList(
+			builder::stop, jsonObject, "stop");
 		SetterUtil.setNotNullDouble(
 			builder::temperature, jsonObject, "temperature");
-
-		if (jsonObject.has("timeout")) {
-			builder.timeout(Duration.ofSeconds(jsonObject.getInt("timeout")));
-		}
-
+		SetterUtil.setNotNullDurationOfSeconds(
+			builder::timeout, jsonObject, "timeout");
 		SetterUtil.setNotNullDouble(builder::topP, jsonObject, "topP");
 		SetterUtil.setNotBlankString(
 			builder::user, jsonObject.getString("user"));

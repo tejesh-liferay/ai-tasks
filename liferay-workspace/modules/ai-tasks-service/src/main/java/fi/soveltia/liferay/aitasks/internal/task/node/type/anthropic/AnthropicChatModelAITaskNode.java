@@ -1,17 +1,15 @@
-package fi.soveltia.liferay.aitasks.internal.task.node.anthropic;
+package fi.soveltia.liferay.aitasks.internal.task.node.type.anthropic;
 
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.json.JSONUtil;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 
 import fi.soveltia.liferay.aitasks.internal.task.node.BaseChatModelAITaskNode;
+import fi.soveltia.liferay.aitasks.internal.task.node.type.ChatModelAITaskNode;
 import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
-import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
-
-import java.time.Duration;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -23,14 +21,10 @@ import org.osgi.service.component.annotations.Component;
 	service = AITaskNode.class
 )
 public class AnthropicChatModelAITaskNode
-	extends BaseChatModelAITaskNode implements AITaskNode {
+	extends BaseChatModelAITaskNode implements ChatModelAITaskNode {
 
 	@Override
-	public AITaskNodeInformation getAITaskNodeInformation() {
-		return new AITaskNodeInformation("anthropicChatModel", "input");
-	}
-
-	protected ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
+	public ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
 		AnthropicChatModel.AnthropicChatModelBuilder builder =
 			AnthropicChatModel.builder();
 
@@ -45,34 +39,30 @@ public class AnthropicChatModelAITaskNode
 		SetterUtil.setNotNullBoolean(
 			builder::cacheTools, jsonObject, "cacheTools");
 
-		if (jsonObject.has("chatModelListeners")) {
+		JSONArray chatModelListenersJSONArray = jsonObject.getJSONArray(
+			"chatModelListeners");
+
+		if (chatModelListenersJSONArray != null) {
 			builder.listeners(
-				getChatModelListeners(
-					jsonObject.getJSONArray("chatModelListeners")));
+				getChatModelListeners(chatModelListenersJSONArray));
 		}
 
-		builder.logRequests(jsonObject.getBoolean("logRequests"));
-		builder.logResponses(jsonObject.getBoolean("logResponses"));
-
+		SetterUtil.setNotNullBoolean(
+			builder::logRequests, jsonObject, "logRequests");
+		SetterUtil.setNotNullBoolean(
+			builder::logRequests, jsonObject, "logResponses");
 		SetterUtil.setNotNullInteger(
 			builder::maxRetries, jsonObject, "maxRetries");
 		SetterUtil.setNotNullInteger(
 			builder::maxTokens, jsonObject, "maxTokens");
 		SetterUtil.setNotBlankString(
 			builder::modelName, jsonObject.getString("modelName"));
-
-		if (jsonObject.has("stop")) {
-			builder.stopSequences(
-				JSONUtil.toStringList(jsonObject.getJSONArray("stop")));
-		}
-
+		SetterUtil.setNotNullJSONArrayAsStringList(
+			builder::stopSequences, jsonObject, "stopSequences");
 		SetterUtil.setNotNullDouble(
 			builder::temperature, jsonObject, "temperature");
-
-		if (jsonObject.has("timeout")) {
-			builder.timeout(Duration.ofSeconds(jsonObject.getInt("timeout")));
-		}
-
+		SetterUtil.setNotNullDurationOfSeconds(
+			builder::timeout, jsonObject, "timeout");
 		SetterUtil.setNotNullInteger(builder::topK, jsonObject, "topK");
 		SetterUtil.setNotNullDouble(builder::topP, jsonObject, "topP");
 		SetterUtil.setNotBlankString(

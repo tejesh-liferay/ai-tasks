@@ -1,4 +1,4 @@
-package fi.soveltia.liferay.aitasks.internal.util;
+package fi.soveltia.liferay.aitasks.internal.task.node.util;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -33,8 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 public class PromptUtil {
 
 	public static String getSystemMessage(
-		AITaskContext aiTaskContext, Map<String, Object> input,
-		JSONObject jsonObject) {
+		AITaskContext aiTaskContext, JSONObject jsonObject) {
 
 		PromptTemplate promptTemplate = _getPromptTemplate(
 			"systemMessage", jsonObject);
@@ -44,14 +43,17 @@ public class PromptUtil {
 		}
 
 		Prompt prompt = _applyPromptTemplateVariables(
-			aiTaskContext, input, promptTemplate);
+			aiTaskContext, (Map<String, Object>)aiTaskContext.getInput(),
+			promptTemplate);
 
 		return prompt.text();
 	}
 
 	public static String getUserMessage(
-		AITaskContext aiTaskContext, Map<String, Object> input,
-		JSONObject jsonObject) {
+		AITaskContext aiTaskContext, JSONObject jsonObject) {
+
+		Map<String, Object> input =
+			(Map<String, Object>)aiTaskContext.getInput();
 
 		JSONObject inputParametersJSONObject = jsonObject.getJSONObject(
 			"inputParameters");
@@ -113,8 +115,10 @@ public class PromptUtil {
 	}
 
 	public static String getUserMessageString(
-		AITaskContext aiTaskContext, Map<String, Object> input,
-		JSONObject jsonObject) {
+		AITaskContext aiTaskContext, JSONObject jsonObject) {
+
+		Map<String, Object> input =
+			(Map<String, Object>)aiTaskContext.getInput();
 
 		PromptTemplate promptTemplate = _getPromptTemplate(
 			"promptTemplate", jsonObject);

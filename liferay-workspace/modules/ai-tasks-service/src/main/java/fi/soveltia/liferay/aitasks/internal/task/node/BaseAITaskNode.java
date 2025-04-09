@@ -3,22 +3,28 @@ package fi.soveltia.liferay.aitasks.internal.task.node;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.CamelCaseUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import dev.langchain4j.model.output.FinishReason;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.service.Result;
+import dev.langchain4j.service.TokenStream;
+import dev.langchain4j.service.tool.ToolExecution;
 
 import fi.soveltia.liferay.aitasks.task.context.AITaskContext;
 import fi.soveltia.liferay.aitasks.task.context.AITaskContextParameter;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeResponse;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
@@ -26,32 +32,57 @@ import org.jsoup.select.Elements;
  */
 public abstract class BaseAITaskNode {
 
-	protected Map<String, Object> getCommonDebugInfo(
+	protected Map<String, Object> getExecutionTrace(
 		FinishReason finishReason, TokenUsage tokenUsage) {
 
-		Map<String, Object> debugInfo = new HashMap<>();
+		Map<String, Object> executionTrace = new HashMap<>();
 
 		if (finishReason != null) {
-			debugInfo.put("finishReason", finishReason.name());
+			executionTrace.put("finishReason", finishReason.name());
 		}
 
 		if (tokenUsage != null) {
-			debugInfo.put("inputTokenCount", tokenUsage.inputTokenCount());
-			debugInfo.put("outputTokenCount", tokenUsage.outputTokenCount());
-			debugInfo.put("totalTokenCount", tokenUsage.totalTokenCount());
+			executionTrace.put(
+				"tokenUsage",
+				HashMapBuilder.put(
+					"inputTokenCount", tokenUsage.inputTokenCount()
+				).put(
+					"outputTokenCount", tokenUsage.outputTokenCount()
+				).put(
+					"totalTokenCount", tokenUsage.totalTokenCount()
+				).build());
 		}
 
-		return debugInfo;
+		return executionTrace;
+	}
+
+	protected Map<String, Object> getExecutionTrace(Result<?> result) {
+		if (result == null) {
+			return null;
+		}
+
+		Map<String, Object> executionTrace = new HashMap<>();
+
+		executionTrace.put("content", result.content());
+
+		List<ToolExecution> toolExecutions = result.toolExecutions();
+
+		if (ListUtil.isNotEmpty(toolExecutions)) {
+			executionTrace.put("toolExecutions", _stringify(toolExecutions));
+		}
+
+		executionTrace.putAll(
+			getExecutionTrace(result.finishReason(), result.tokenUsage()));
+
+		return executionTrace;
 	}
 
 	protected AITaskNodeResponse toAITaskNodeResponse(
-		AITaskContext aiTaskContext, boolean debug,
-		Map<String, Object> debugInfo, JSONObject jsonObject, Object value) {
-
-		Object think = null;
+		AITaskContext aiTaskContext, Map<String, Object> executionTrace,
+		JSONObject jsonObject, boolean trace, Object value) {
 
 		if (value == null) {
-			return new AITaskNodeResponseImpl(debugInfo, null);
+			return new AITaskNodeResponseImpl(executionTrace, null);
 		}
 
 		if (value instanceof Result) {
@@ -60,18 +91,17 @@ public abstract class BaseAITaskNode {
 			value = result.content();
 		}
 
+		Map<String, Object> output = new HashMap<>();
+
 		if (value instanceof String) {
-			value = StringUtil.trim((String)value);
+			String stringValue = StringUtil.trim((String)value);
 
-			Document document = Jsoup.parse((String)value);
+			String think = _getThink(stringValue);
 
-			Elements thinkElement = document.select("think");
+			if (think != null) {
+				output.put("think", think);
 
-			if (thinkElement.size() == 1) {
-				think = thinkElement.get(
-					0
-				).text();
-				value = ((String)value).split("</think>")[1];
+				value = stringValue.split("</think>")[1];
 			}
 		}
 
@@ -81,13 +111,14 @@ public abstract class BaseAITaskNode {
 		if ((aiTaskContext == null) ||
 			Validator.isBlank(taskContextOutputParameterName)) {
 
-			return new AITaskNodeResponseImpl(
-				debugInfo,
-				HashMapBuilder.put(
-					jsonObject.getString("outputParameterName", "text"), value
-				).put(
-					"think", think
-				).build());
+			String outputParameterName = jsonObject.getString(
+				"outputParameterName");
+
+			if (!Validator.isBlank(outputParameterName)) {
+				output.put(outputParameterName, value);
+			}
+
+			return new AITaskNodeResponseImpl(executionTrace, output);
 		}
 
 		aiTaskContext.addAITaskContextParameter(
@@ -97,14 +128,14 @@ public abstract class BaseAITaskNode {
 				toStringValue(value), value),
 			taskContextOutputParameterName);
 
-		if (debug) {
-			debugInfo.put(
+		if (trace) {
+			executionTrace.put(
 				"taskContextOutputParameterName",
 				taskContextOutputParameterName);
-			debugInfo.put("taskContextOutputParameterValue", value);
+			executionTrace.put("taskContextOutputParameterValue", value);
 		}
 
-		return new AITaskNodeResponseImpl(debugInfo, null);
+		return new AITaskNodeResponseImpl(executionTrace, null);
 	}
 
 	protected AITaskNodeResponse toExceptionAITaskNodeResponse(
@@ -117,6 +148,16 @@ public abstract class BaseAITaskNode {
 			null);
 	}
 
+	protected AITaskNodeResponse toStreamingAITaskNodeResponse(
+		JSONObject jsonObject, TokenStream tokenStream) {
+
+		return new AITaskNodeResponseImpl(
+			null,
+			HashMapBuilder.<String, Object>put(
+				jsonObject.getString("outputParameterName", "text"), tokenStream
+			).build());
+	}
+
 	protected String toStringValue(Object value) {
 		if (value == null) {
 			return null;
@@ -127,6 +168,30 @@ public abstract class BaseAITaskNode {
 		}
 
 		return String.valueOf(value);
+	}
+
+	private String _getThink(String value) {
+		Document document = Jsoup.parse(value);
+
+		Elements elements = document.select("think");
+
+		if (elements.size() == 1) {
+			Element element = elements.get(0);
+
+			return element.text();
+		}
+
+		return null;
+	}
+
+	private Object _stringify(List<ToolExecution> toolExecutions) {
+		List<String> list = new ArrayList<>();
+
+		for (ToolExecution toolExecution : toolExecutions) {
+			list.add(toolExecution.toString());
+		}
+
+		return list;
 	}
 
 }

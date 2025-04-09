@@ -18,8 +18,9 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 public interface AITasksConfiguration {
 
 	@Meta.AD(
-		deflt = "mapdb", name = "chat-memory-provider", optionLabels = "MapDB",
-		optionValues = "mapdb", required = false
+		deflt = "mapDb", name = "chat-memory-provider",
+		optionLabels = "InMemory,MapDB", optionValues = "inMemory,mapDb",
+		required = false
 	)
 	public String chatMemoryProvider();
 

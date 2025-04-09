@@ -1,5 +1,7 @@
-package fi.soveltia.liferay.aitasks.internal.task.tool;
+package fi.soveltia.liferay.aitasks.internal.task.node.tool;
 
+import com.liferay.blogs.model.BlogsEntry;
+import com.liferay.headless.delivery.dto.v1_0.BlogPosting;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -10,6 +12,7 @@ import com.liferay.portal.kernel.service.UserService;
 import com.liferay.portal.kernel.service.UserServiceUtil;
 import com.liferay.portal.kernel.util.Validator;
 
+import com.liferay.portal.vulcan.dto.converter.DTOConverter;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 
@@ -27,14 +30,14 @@ import org.osgi.service.component.annotations.Reference;
 public class MyUserAccountAITaskTool implements AITaskTool {
 
 	@Override
-	public Object getExecutor(JSONObject configurationJSONObject) {
+	public Object getExecutor(JSONObject jsonObject) {
 		return new Executor();
 	}
 
 	public class Executor {
 
 		@Tool("Updates my email address")
-		public User updateMyEmailAddress(
+		public String updateMyEmailAddress(
 				@P("The new email address of the user") String emailAddress)
 			throws PortalException {
 
@@ -42,7 +45,7 @@ public class MyUserAccountAITaskTool implements AITaskTool {
 		}
 
 		@Tool("Updates my first name")
-		public User updateMyFirstName(
+		public String updateMyFirstName(
 				@P("The new first name of the user") String firstName)
 			throws PortalException {
 
@@ -50,24 +53,24 @@ public class MyUserAccountAITaskTool implements AITaskTool {
 		}
 
 		@Tool("Updates my job title")
-		public User updateMyJobTitle(
+		public String updateMyJobTitle(
 				@P("The new job title of the user") String jobTitle)
 			throws PortalException {
 
-			return _updateUser(null, null, null, jobTitle);
+			return _updateUser(null, null, jobTitle, null);
 		}
 
 		@Tool("Updates my last name")
-		public User updateMyLastName(
+		public String updateMyLastName(
 				@P("The new last name of the user") String lastName)
 			throws PortalException {
 
-			return _updateUser(null, null, lastName, null);
+			return _updateUser(null, null, null, lastName);
 		}
 
-		private User _updateUser(
-				String emailAddress, String firstName, String lastName,
-				String jobTitle)
+		private String _updateUser(
+				String emailAddress, String firstName, String jobTitle,
+				String lastName)
 			throws PortalException {
 
 			try {
@@ -78,7 +81,7 @@ public class MyUserAccountAITaskTool implements AITaskTool {
 				}
 
 				if (!Validator.isBlank(emailAddress)) {
-					user.setFirstName(emailAddress);
+					user.setEmailAddress(emailAddress);
 				}
 
 				if (!Validator.isBlank(firstName)) {
@@ -86,14 +89,16 @@ public class MyUserAccountAITaskTool implements AITaskTool {
 				}
 
 				if (!Validator.isBlank(jobTitle)) {
-					user.setFirstName(jobTitle);
+					user.setJobTitle(jobTitle);
 				}
 
 				if (!Validator.isBlank(lastName)) {
-					user.setFirstName(lastName);
+					user.setLastName(lastName);
 				}
 
-				return UserLocalServiceUtil.updateUser(user);
+				user = UserLocalServiceUtil.updateUser(user);
+
+				return user.toString();
 			}
 			catch (PortalException portalException) {
 				log.error(portalException);
@@ -101,7 +106,6 @@ public class MyUserAccountAITaskTool implements AITaskTool {
 				throw portalException;
 			}
 		}
-
 	}
 
 	protected static final Log log = LogFactoryUtil.getLog(
@@ -109,5 +113,6 @@ public class MyUserAccountAITaskTool implements AITaskTool {
 
 	@Reference
 	protected UserService userService;
+
 
 }

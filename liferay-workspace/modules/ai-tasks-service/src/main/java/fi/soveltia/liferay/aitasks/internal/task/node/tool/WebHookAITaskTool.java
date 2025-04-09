@@ -1,4 +1,4 @@
-package fi.soveltia.liferay.aitasks.internal.task.tool;
+package fi.soveltia.liferay.aitasks.internal.task.node.tool;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONException;
@@ -49,10 +49,7 @@ public class WebHookAITaskTool implements AITaskTool {
 
 			Http.Options options = new Http.Options();
 
-			url = StringUtil.trim(url);
-
-			options.setLocation(url);
-
+			options.setLocation(StringUtil.trim(url));
 			options.setMethod(_getMethod());
 
 			_setBody(null, options);
@@ -116,25 +113,25 @@ public class WebHookAITaskTool implements AITaskTool {
 		}
 
 		private Http.Method _getMethod() {
-			String method = _jsonObject.getString("method");
+			String httpMethod = _jsonObject.getString("httpMethod");
 
-			if (Validator.isBlank("method")) {
+			if (Validator.isBlank(httpMethod)) {
 				return Http.Method.POST;
 			}
 
-			if (StringUtil.equalsIgnoreCase("post", method)) {
+			if (StringUtil.equalsIgnoreCase("post", httpMethod)) {
 				return Http.Method.DELETE;
 			}
-			else if (StringUtil.equalsIgnoreCase("get", method)) {
+			else if (StringUtil.equalsIgnoreCase("get", httpMethod)) {
 				return Http.Method.GET;
 			}
-			else if (StringUtil.equalsIgnoreCase("post", method)) {
+			else if (StringUtil.equalsIgnoreCase("post", httpMethod)) {
 				return Http.Method.HEAD;
 			}
-			else if (StringUtil.equalsIgnoreCase("patch", method)) {
+			else if (StringUtil.equalsIgnoreCase("patch", httpMethod)) {
 				return Http.Method.PATCH;
 			}
-			else if (StringUtil.equalsIgnoreCase("put", method)) {
+			else if (StringUtil.equalsIgnoreCase("put", httpMethod)) {
 				return Http.Method.PUT;
 			}
 
@@ -144,7 +141,8 @@ public class WebHookAITaskTool implements AITaskTool {
 		private void _setBody(String json, Http.Options options)
 			throws JSONException {
 
-			JSONObject bodyJSONObject = _jsonObject.getJSONObject("body");
+			JSONObject bodyJSONObject = _jsonObject.getJSONObject(
+				"requestBody");
 
 			JSONObject parameterJSONObject = null;
 
@@ -178,7 +176,8 @@ public class WebHookAITaskTool implements AITaskTool {
 		}
 
 		private void _setHeaders(Http.Options options) {
-			JSONObject headersJSONObject = _jsonObject.getJSONObject("headers");
+			JSONObject headersJSONObject = _jsonObject.getJSONObject(
+				"requestHeaders");
 
 			if (headersJSONObject == null) {
 				options.setHeaders(

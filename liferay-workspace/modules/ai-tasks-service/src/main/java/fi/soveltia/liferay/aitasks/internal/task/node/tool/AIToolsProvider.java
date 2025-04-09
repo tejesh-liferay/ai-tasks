@@ -1,4 +1,4 @@
-package fi.soveltia.liferay.aitasks.internal.task.tool;
+package fi.soveltia.liferay.aitasks.internal.task.node.tool;
 
 import com.liferay.portal.kernel.json.JSONObject;
 
@@ -7,6 +7,6 @@ import com.liferay.portal.kernel.json.JSONObject;
  */
 public interface AIToolsProvider {
 
-	public Object getTool(JSONObject configurationJSONObject, String key);
+	public Object getTool(JSONObject jsonObject, String key);
 
 }

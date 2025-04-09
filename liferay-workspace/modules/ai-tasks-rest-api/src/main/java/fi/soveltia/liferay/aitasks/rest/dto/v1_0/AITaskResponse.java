@@ -48,29 +48,29 @@ public class AITaskResponse implements Serializable {
 
 	@Schema
 	@Valid
-	public Object getDebugInfo() {
-		if (_debugInfoSupplier != null) {
-			debugInfo = _debugInfoSupplier.get();
+	public Object getExecutionTrace() {
+		if (_executionTraceSupplier != null) {
+			executionTrace = _executionTraceSupplier.get();
 
-			_debugInfoSupplier = null;
+			_executionTraceSupplier = null;
 		}
 
-		return debugInfo;
+		return executionTrace;
 	}
 
-	public void setDebugInfo(Object debugInfo) {
-		this.debugInfo = debugInfo;
+	public void setExecutionTrace(Object executionTrace) {
+		this.executionTrace = executionTrace;
 
-		_debugInfoSupplier = null;
+		_executionTraceSupplier = null;
 	}
 
 	@JsonIgnore
-	public void setDebugInfo(
-		UnsafeSupplier<Object, Exception> debugInfoUnsafeSupplier) {
+	public void setExecutionTrace(
+		UnsafeSupplier<Object, Exception> executionTraceUnsafeSupplier) {
 
-		_debugInfoSupplier = () -> {
+		_executionTraceSupplier = () -> {
 			try {
-				return debugInfoUnsafeSupplier.get();
+				return executionTraceUnsafeSupplier.get();
 			}
 			catch (RuntimeException runtimeException) {
 				throw runtimeException;
@@ -83,10 +83,10 @@ public class AITaskResponse implements Serializable {
 
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Object debugInfo;
+	protected Object executionTrace;
 
 	@JsonIgnore
-	private Supplier<Object> _debugInfoSupplier;
+	private Supplier<Object> _executionTraceSupplier;
 
 	@Schema
 	@Valid
@@ -196,26 +196,27 @@ public class AITaskResponse implements Serializable {
 
 		sb.append("{");
 
-		Object debugInfo = getDebugInfo();
+		Object executionTrace = getExecutionTrace();
 
-		if (debugInfo != null) {
+		if (executionTrace != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"debugInfo\": ");
+			sb.append("\"executionTrace\": ");
 
-			if (debugInfo instanceof Map) {
+			if (executionTrace instanceof Map) {
 				sb.append(
-					JSONFactoryUtil.createJSONObject((Map<?, ?>)debugInfo));
+					JSONFactoryUtil.createJSONObject(
+						(Map<?, ?>)executionTrace));
 			}
-			else if (debugInfo instanceof String) {
+			else if (executionTrace instanceof String) {
 				sb.append("\"");
-				sb.append(_escape((String)debugInfo));
+				sb.append(_escape((String)executionTrace));
 				sb.append("\"");
 			}
 			else {
-				sb.append(debugInfo);
+				sb.append(executionTrace);
 			}
 		}
 

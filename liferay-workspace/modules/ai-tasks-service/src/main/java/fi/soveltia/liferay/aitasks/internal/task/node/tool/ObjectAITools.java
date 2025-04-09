@@ -1,4 +1,4 @@
-package fi.soveltia.liferay.aitasks.internal.task.tool;
+package fi.soveltia.liferay.aitasks.internal.task.node.tool;
 
 import com.liferay.object.constants.ObjectDefinitionConstants;
 import com.liferay.object.constants.ObjectFieldConstants;
@@ -51,7 +51,7 @@ import org.osgi.service.component.annotations.Reference;
 public class ObjectAITools implements AITaskTool {
 
 	@Override
-	public Object getExecutor(JSONObject configurationJSONObject) {
+	public Object getExecutor(JSONObject jsonObject) {
 		return new Executor();
 	}
 

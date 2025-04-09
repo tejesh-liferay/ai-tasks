@@ -1,4 +1,4 @@
-package fi.soveltia.liferay.aitasks.internal.task.node.mistral;
+package fi.soveltia.liferay.aitasks.internal.task.node.type.mistral;
 
 import com.liferay.portal.kernel.json.JSONObject;
 
@@ -6,11 +6,9 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
 
 import fi.soveltia.liferay.aitasks.internal.task.node.BaseChatModelAITaskNode;
+import fi.soveltia.liferay.aitasks.internal.task.node.type.ChatModelAITaskNode;
 import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
-import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
-
-import java.time.Duration;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -21,14 +19,10 @@ import org.osgi.service.component.annotations.Component;
 	property = "ai.task.node.type=mistralIChatModel", service = AITaskNode.class
 )
 public class MistralAIChatModelAITaskNode
-	extends BaseChatModelAITaskNode implements AITaskNode {
+	extends BaseChatModelAITaskNode implements ChatModelAITaskNode {
 
 	@Override
-	public AITaskNodeInformation getAITaskNodeInformation() {
-		return new AITaskNodeInformation("mistralAIChatModel", "input");
-	}
-
-	protected ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
+	public ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
 		MistralAiChatModel.MistralAiChatModelBuilder builder =
 			MistralAiChatModel.builder();
 
@@ -36,10 +30,10 @@ public class MistralAIChatModelAITaskNode
 			builder::apiKey, jsonObject.getString("apiKey"));
 		SetterUtil.setNotBlankString(
 			builder::baseUrl, jsonObject.getString("baseUrl"));
-
-		builder.logRequests(jsonObject.getBoolean("logRequests"));
-		builder.logResponses(jsonObject.getBoolean("logResponses"));
-
+		SetterUtil.setNotNullBoolean(
+			builder::logRequests, jsonObject, "logRequests");
+		SetterUtil.setNotNullBoolean(
+			builder::logRequests, jsonObject, "logResponses");
 		SetterUtil.setNotNullInteger(
 			builder::maxRetries, jsonObject, "maxRetries");
 		SetterUtil.setNotNullInteger(
@@ -51,14 +45,10 @@ public class MistralAIChatModelAITaskNode
 			builder::responseFormat, jsonObject.getString("responseFormat"));
 		SetterUtil.setNotNullBoolean(
 			builder::safePrompt, jsonObject, "safePrompt");
-
 		SetterUtil.setNotNullDouble(
 			builder::temperature, jsonObject, "temperature");
-
-		if (jsonObject.has("timeout")) {
-			builder.timeout(Duration.ofSeconds(jsonObject.getInt("timeout")));
-		}
-
+		SetterUtil.setNotNullDurationOfSeconds(
+			builder::timeout, jsonObject, "timeout");
 		SetterUtil.setNotNullDouble(builder::topP, jsonObject, "topP");
 
 		return builder.build();

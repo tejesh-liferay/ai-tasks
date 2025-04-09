@@ -51,7 +51,7 @@ components:
             type: object
         AITaskResponse:
             properties:
-                debugInfo:
+                executionTrace:
                     type: object
                 output:
                     type: object
@@ -122,8 +122,6 @@ components:
             type: object
         Configuration:
             properties:
-                debug:
-                    type: boolean
                 edges:
                     items:
                         $ref: "#/components/schemas/Edge"
@@ -132,8 +130,8 @@ components:
                     items:
                         $ref: "#/components/schemas/Node"
                     type: array
-                startNodeId:
-                    type: string
+                trace:
+                    type: boolean
             type: object
         Edge:
             properties:
@@ -201,6 +199,39 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/AITaskResponse"
+            tags: ["AITaskResponse"]
+    "/stream/{externalReferenceCode}":
+        post:
+            description:
+                "TBD"
+            operationId: postStreamExternalReferenceCode
+            parameters:
+                - in: path
+                  description:
+                      The chat configuration external reference code.
+                  name: externalReferenceCode
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/AITaskRequest"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/AITaskRequest"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                format: binary
+                                type: string
+                        application/xml:
+                            schema:
+                                format: binary
+                                type: string
             tags: ["AITaskResponse"]
     /ai-tasks:
         get:
@@ -316,7 +347,6 @@ paths:
                       type: string
                 - in: query
                   name: nodeId
-                  required: true
                   schema:
                       type: string
             responses:

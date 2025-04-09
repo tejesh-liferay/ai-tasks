@@ -1,5 +1,5 @@
 
-package fi.soveltia.liferay.aitasks.internal.task.node.huggingface;
+package fi.soveltia.liferay.aitasks.internal.task.node.type.huggingface;
 
 import com.liferay.portal.kernel.json.JSONObject;
 
@@ -7,11 +7,9 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.huggingface.HuggingFaceChatModel;
 
 import fi.soveltia.liferay.aitasks.internal.task.node.BaseChatModelAITaskNode;
+import fi.soveltia.liferay.aitasks.internal.task.node.type.ChatModelAITaskNode;
 import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
-import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
-
-import java.time.Duration;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -23,14 +21,10 @@ import org.osgi.service.component.annotations.Component;
 	service = AITaskNode.class
 )
 public class HuggingFaceChatModelAITaskNode
-	extends BaseChatModelAITaskNode implements AITaskNode {
+	extends BaseChatModelAITaskNode implements ChatModelAITaskNode {
 
 	@Override
-	public AITaskNodeInformation getAITaskNodeInformation() {
-		return new AITaskNodeInformation("huggingFaceChatModel", "input");
-	}
-
-	protected ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
+	public ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
 		HuggingFaceChatModel.Builder builder = HuggingFaceChatModel.builder();
 
 		SetterUtil.setNotBlankString(
@@ -41,17 +35,14 @@ public class HuggingFaceChatModelAITaskNode
 			builder::maxNewTokens, jsonObject, "maxNewTokens");
 		SetterUtil.setNotBlankString(
 			builder::modelId, jsonObject.getString("modelId"));
-
-		builder.returnFullText(jsonObject.getBoolean("returnFullText"));
-
+		SetterUtil.setNotNullBoolean(
+			builder::returnFullText, jsonObject, "returnFullText");
 		SetterUtil.setNotNullDouble(
 			builder::temperature, jsonObject, "temperature");
-
-		if (jsonObject.has("timeout")) {
-			builder.timeout(Duration.ofSeconds(jsonObject.getInt("timeout")));
-		}
-
-		builder.waitForModel(jsonObject.getBoolean("waitForModel"));
+		SetterUtil.setNotNullDurationOfSeconds(
+			builder::timeout, jsonObject, "timeout");
+		SetterUtil.setNotNullBoolean(
+			builder::waitForModel, jsonObject, "waitForModel");
 
 		return builder.build();
 	}

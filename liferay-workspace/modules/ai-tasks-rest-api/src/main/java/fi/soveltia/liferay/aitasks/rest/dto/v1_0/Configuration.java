@@ -46,47 +46,6 @@ public class Configuration implements Serializable {
 	}
 
 	@Schema
-	public Boolean getDebug() {
-		if (_debugSupplier != null) {
-			debug = _debugSupplier.get();
-
-			_debugSupplier = null;
-		}
-
-		return debug;
-	}
-
-	public void setDebug(Boolean debug) {
-		this.debug = debug;
-
-		_debugSupplier = null;
-	}
-
-	@JsonIgnore
-	public void setDebug(
-		UnsafeSupplier<Boolean, Exception> debugUnsafeSupplier) {
-
-		_debugSupplier = () -> {
-			try {
-				return debugUnsafeSupplier.get();
-			}
-			catch (RuntimeException runtimeException) {
-				throw runtimeException;
-			}
-			catch (Exception exception) {
-				throw new RuntimeException(exception);
-			}
-		};
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Boolean debug;
-
-	@JsonIgnore
-	private Supplier<Boolean> _debugSupplier;
-
-	@Schema
 	@Valid
 	public Edge[] getEdges() {
 		if (_edgesSupplier != null) {
@@ -171,29 +130,29 @@ public class Configuration implements Serializable {
 	private Supplier<Node[]> _nodesSupplier;
 
 	@Schema
-	public String getStartNodeId() {
-		if (_startNodeIdSupplier != null) {
-			startNodeId = _startNodeIdSupplier.get();
+	public Boolean getTrace() {
+		if (_traceSupplier != null) {
+			trace = _traceSupplier.get();
 
-			_startNodeIdSupplier = null;
+			_traceSupplier = null;
 		}
 
-		return startNodeId;
+		return trace;
 	}
 
-	public void setStartNodeId(String startNodeId) {
-		this.startNodeId = startNodeId;
+	public void setTrace(Boolean trace) {
+		this.trace = trace;
 
-		_startNodeIdSupplier = null;
+		_traceSupplier = null;
 	}
 
 	@JsonIgnore
-	public void setStartNodeId(
-		UnsafeSupplier<String, Exception> startNodeIdUnsafeSupplier) {
+	public void setTrace(
+		UnsafeSupplier<Boolean, Exception> traceUnsafeSupplier) {
 
-		_startNodeIdSupplier = () -> {
+		_traceSupplier = () -> {
 			try {
-				return startNodeIdUnsafeSupplier.get();
+				return traceUnsafeSupplier.get();
 			}
 			catch (RuntimeException runtimeException) {
 				throw runtimeException;
@@ -206,10 +165,10 @@ public class Configuration implements Serializable {
 
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected String startNodeId;
+	protected Boolean trace;
 
 	@JsonIgnore
-	private Supplier<String> _startNodeIdSupplier;
+	private Supplier<Boolean> _traceSupplier;
 
 	@Override
 	public boolean equals(Object object) {
@@ -237,18 +196,6 @@ public class Configuration implements Serializable {
 		StringBundler sb = new StringBundler();
 
 		sb.append("{");
-
-		Boolean debug = getDebug();
-
-		if (debug != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"debug\": ");
-
-			sb.append(debug);
-		}
 
 		Edge[] edges = getEdges();
 
@@ -294,20 +241,16 @@ public class Configuration implements Serializable {
 			sb.append("]");
 		}
 
-		String startNodeId = getStartNodeId();
+		Boolean trace = getTrace();
 
-		if (startNodeId != null) {
+		if (trace != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"startNodeId\": ");
+			sb.append("\"trace\": ");
 
-			sb.append("\"");
-
-			sb.append(_escape(startNodeId));
-
-			sb.append("\"");
+			sb.append(trace);
 		}
 
 		sb.append("}");

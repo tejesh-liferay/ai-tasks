@@ -1,10 +1,16 @@
 
 package fi.soveltia.liferay.aitasks.internal.util;
 
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
+import java.time.Duration;
+
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -68,6 +74,14 @@ public class SetterUtil {
 		}
 	}
 
+	public static void setNotNullDurationOfSeconds(
+		Consumer<Duration> consumer, JSONObject jsonObject, String key) {
+
+		if (jsonObject.has(key)) {
+			consumer.accept(Duration.ofSeconds(jsonObject.getInt(key)));
+		}
+	}
+
 	public static void setNotNullInteger(
 		Consumer<Integer> consumer, Integer value) {
 
@@ -81,6 +95,27 @@ public class SetterUtil {
 
 		if (jsonObject.has(key)) {
 			consumer.accept(jsonObject.getInt(key));
+		}
+	}
+
+	public static void setNotNullJSONArrayAsStringList(
+		Consumer<List<String>> consumer, JSONObject jsonObject, String key) {
+
+		JSONArray jsonArray = jsonObject.getJSONArray(key);
+
+		if (jsonArray != null) {
+			consumer.accept(JSONUtil.toStringList(jsonArray));
+		}
+	}
+
+	public static void setNotNullJSONObjectAsStringMap(
+		Consumer<Map<String, String>> consumer, JSONObject jsonObject1,
+		String key) {
+
+		JSONObject jsonObject2 = jsonObject1.getJSONObject(key);
+
+		if (jsonObject2 != null) {
+			consumer.accept(JSONUtil.toStringMap(jsonObject2));
 		}
 	}
 

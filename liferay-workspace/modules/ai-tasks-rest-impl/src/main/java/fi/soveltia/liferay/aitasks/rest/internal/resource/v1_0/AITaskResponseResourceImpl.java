@@ -14,7 +14,7 @@ import fi.soveltia.liferay.aitasks.task.request.AITaskRequestBuilder;
 import fi.soveltia.liferay.aitasks.task.request.AITaskRequestBuilderFactory;
 import fi.soveltia.liferay.aitasks.task.request.AITaskRequestExecutor;
 
-import java.util.Map;
+import javax.ws.rs.core.Response;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
@@ -41,6 +41,15 @@ public class AITaskResponseResourceImpl extends BaseAITaskResponseResourceImpl {
 				_createAITaskRequest(externalReferenceCode, aiTaskRequest)));
 	}
 
+	@Override
+	public Response postStreamExternalReferenceCode(
+		String externalReferenceCode, AITaskRequest aiTaskRequest) {
+
+		// TODO
+
+		return null;
+	}
+
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
@@ -53,10 +62,10 @@ public class AITaskResponseResourceImpl extends BaseAITaskResponseResourceImpl {
 		_serviceTrackerMap.close();
 	}
 
-	private AITaskContext _createAITaskContext(AITask aiTask) {
+	private AITaskContext _createAITaskContext(AITask aiTask, Object input) {
 		AITaskContext aiTaskContext = new AITaskContext(
 			aiTask.getExternalReferenceCode(), contextCompany.getCompanyId(),
-			contextAcceptLanguage.getPreferredLocale(),
+			input, contextAcceptLanguage.getPreferredLocale(),
 			contextUser.getUserId());
 
 		for (AITaskContextContributor aiTaskContextContributor :
@@ -82,10 +91,8 @@ public class AITaskResponseResourceImpl extends BaseAITaskResponseResourceImpl {
 			contextCompany.getCompanyId(), externalReferenceCode);
 
 		aiTaskRequestBuilder.aiTask(aiTask);
-		aiTaskRequestBuilder.aiTaskContext(_createAITaskContext(aiTask));
-
-		aiTaskRequestBuilder.input(
-			(Map<String, Object>)aiTaskRequest.getInput());
+		aiTaskRequestBuilder.aiTaskContext(
+			_createAITaskContext(aiTask, aiTaskRequest.getInput()));
 
 		return aiTaskRequestBuilder.build();
 	}
@@ -96,8 +103,8 @@ public class AITaskResponseResourceImpl extends BaseAITaskResponseResourceImpl {
 
 		return new AITaskResponse() {
 			{
-				if (aiTaskResponse.getDebugInfo() != null) {
-					setDebugInfo(aiTaskResponse::getDebugInfo);
+				if (aiTaskResponse.getExecutionTrace() != null) {
+					setExecutionTrace(aiTaskResponse::getExecutionTrace);
 				}
 
 				setOutput(aiTaskResponse::getOutput);

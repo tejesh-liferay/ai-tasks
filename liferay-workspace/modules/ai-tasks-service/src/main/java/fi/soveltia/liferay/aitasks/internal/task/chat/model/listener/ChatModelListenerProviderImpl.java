@@ -33,7 +33,7 @@ public class ChatModelListenerProviderImpl
 			return chatModelListener;
 		}
 
-		_log.error("Chat model listener " + name + " could not be resolved");
+		_log.error("Chat model listener " + name + " not found");
 
 		return null;
 	}

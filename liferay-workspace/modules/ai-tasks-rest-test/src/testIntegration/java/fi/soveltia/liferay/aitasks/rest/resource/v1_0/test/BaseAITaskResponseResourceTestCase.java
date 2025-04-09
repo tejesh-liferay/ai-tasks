@@ -188,6 +188,11 @@ public abstract class BaseAITaskResponseResourceTestCase {
 			"This method needs to be implemented");
 	}
 
+	@Test
+	public void testPostStreamExternalReferenceCode() throws Exception {
+		Assert.assertTrue(false);
+	}
+
 	protected void assertContains(
 		AITaskResponse aiTaskResponse, List<AITaskResponse> aiTaskResponses) {
 
@@ -264,8 +269,8 @@ public abstract class BaseAITaskResponseResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("debugInfo", additionalAssertFieldName)) {
-				if (aiTaskResponse.getDebugInfo() == null) {
+			if (Objects.equals("executionTrace", additionalAssertFieldName)) {
+				if (aiTaskResponse.getExecutionTrace() == null) {
 					valid = false;
 				}
 
@@ -407,10 +412,10 @@ public abstract class BaseAITaskResponseResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("debugInfo", additionalAssertFieldName)) {
+			if (Objects.equals("executionTrace", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						aiTaskResponse1.getDebugInfo(),
-						aiTaskResponse2.getDebugInfo())) {
+						aiTaskResponse1.getExecutionTrace(),
+						aiTaskResponse2.getExecutionTrace())) {
 
 					return false;
 				}
@@ -547,7 +552,7 @@ public abstract class BaseAITaskResponseResourceTestCase {
 		sb.append(operator);
 		sb.append(" ");
 
-		if (entityFieldName.equals("debugInfo")) {
+		if (entityFieldName.equals("executionTrace")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
 		}

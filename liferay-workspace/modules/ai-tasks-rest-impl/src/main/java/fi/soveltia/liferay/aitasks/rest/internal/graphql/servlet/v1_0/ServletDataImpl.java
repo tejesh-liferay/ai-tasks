@@ -126,6 +126,11 @@ public class ServletDataImpl implements ServletData {
 						new ObjectValuePair<>(
 							AITaskResponseResourceImpl.class,
 							"postGenerateExternalReferenceCode"));
+					put(
+						"mutation#createStreamExternalReferenceCode",
+						new ObjectValuePair<>(
+							AITaskResponseResourceImpl.class,
+							"postStreamExternalReferenceCode"));
 
 					put(
 						"query#aITasks",

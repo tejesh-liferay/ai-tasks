@@ -22,27 +22,6 @@ public class Configuration implements Cloneable, Serializable {
 		return ConfigurationSerDes.toDTO(json);
 	}
 
-	public Boolean getDebug() {
-		return debug;
-	}
-
-	public void setDebug(Boolean debug) {
-		this.debug = debug;
-	}
-
-	public void setDebug(
-		UnsafeSupplier<Boolean, Exception> debugUnsafeSupplier) {
-
-		try {
-			debug = debugUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Boolean debug;
-
 	public Edge[] getEdges() {
 		return edges;
 	}
@@ -85,26 +64,26 @@ public class Configuration implements Cloneable, Serializable {
 
 	protected Node[] nodes;
 
-	public String getStartNodeId() {
-		return startNodeId;
+	public Boolean getTrace() {
+		return trace;
 	}
 
-	public void setStartNodeId(String startNodeId) {
-		this.startNodeId = startNodeId;
+	public void setTrace(Boolean trace) {
+		this.trace = trace;
 	}
 
-	public void setStartNodeId(
-		UnsafeSupplier<String, Exception> startNodeIdUnsafeSupplier) {
+	public void setTrace(
+		UnsafeSupplier<Boolean, Exception> traceUnsafeSupplier) {
 
 		try {
-			startNodeId = startNodeIdUnsafeSupplier.get();
+			trace = traceUnsafeSupplier.get();
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	protected String startNodeId;
+	protected Boolean trace;
 
 	@Override
 	public Configuration clone() throws CloneNotSupportedException {

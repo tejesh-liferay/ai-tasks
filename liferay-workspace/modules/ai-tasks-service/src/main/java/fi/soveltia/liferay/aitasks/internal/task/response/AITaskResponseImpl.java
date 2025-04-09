@@ -12,17 +12,17 @@ import java.util.Map;
 public class AITaskResponseImpl implements AITaskResponse {
 
 	public AITaskResponseImpl(
-		Map<String, Map<String, Object>> debugInfo, Map<String, Object> output,
-		String took) {
+		Map<String, Map<String, Object>> executionTrace,
+		Map<String, Object> output, String took) {
 
-		_debugInfo = debugInfo;
+		_executionTrace = executionTrace;
 		_output = output;
 		_took = took;
 	}
 
 	@Override
-	public Map<String, Map<String, Object>> getDebugInfo() {
-		return _debugInfo;
+	public Map<String, Map<String, Object>> getExecutionTrace() {
+		return _executionTrace;
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class AITaskResponseImpl implements AITaskResponse {
 		return _took;
 	}
 
-	private final Map<String, Map<String, Object>> _debugInfo;
+	private final Map<String, Map<String, Object>> _executionTrace;
 	private final Map<String, Object> _output;
 	private final String _took;
 

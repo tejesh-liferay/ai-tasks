@@ -1,19 +1,16 @@
 
-package fi.soveltia.liferay.aitasks.internal.task.node.ollama;
+package fi.soveltia.liferay.aitasks.internal.task.node.type.ollama;
 
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.json.JSONUtil;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.chat.request.ResponseFormat;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 
 import fi.soveltia.liferay.aitasks.internal.task.node.BaseChatModelAITaskNode;
+import fi.soveltia.liferay.aitasks.internal.task.node.type.ChatModelAITaskNode;
 import fi.soveltia.liferay.aitasks.internal.util.SetterUtil;
 import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
-import fi.soveltia.liferay.aitasks.task.node.AITaskNodeInformation;
-
-import java.time.Duration;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -24,14 +21,10 @@ import org.osgi.service.component.annotations.Component;
 	property = "ai.task.node.type=ollamaChatModel", service = AITaskNode.class
 )
 public class OllamaChatModelAITaskNode
-	extends BaseChatModelAITaskNode implements AITaskNode {
+	extends BaseChatModelAITaskNode implements ChatModelAITaskNode {
 
 	@Override
-	public AITaskNodeInformation getAITaskNodeInformation() {
-		return new AITaskNodeInformation("ollamaChatModel", "input");
-	}
-
-	protected ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
+	public ChatLanguageModel getChatLanguageModel(JSONObject jsonObject) {
 		OllamaChatModel.OllamaChatModelBuilder builder =
 			OllamaChatModel.builder();
 
@@ -44,18 +37,14 @@ public class OllamaChatModelAITaskNode
 					jsonObject.getJSONArray("chatModelListeners")));
 		}
 
-		if (jsonObject.has("customHeaders")) {
-			builder.customHeaders(
-				JSONUtil.toStringMap(
-					jsonObject.getJSONObject("customHeaders")));
-		}
-
+		SetterUtil.setNotNullJSONObjectAsStringMap(
+			builder::customHeaders, jsonObject, "customHeaders");
 		SetterUtil.setNotBlankString(
 			builder::format, jsonObject.getString("format"));
-
-		builder.logRequests(jsonObject.getBoolean("logRequests"));
-		builder.logResponses(jsonObject.getBoolean("logResponses"));
-
+		SetterUtil.setNotNullBoolean(
+			builder::logRequests, jsonObject, "logRequests");
+		SetterUtil.setNotNullBoolean(
+			builder::logRequests, jsonObject, "logResponses");
 		SetterUtil.setNotNullInteger(
 			builder::maxRetries, jsonObject, "maxRetries");
 		SetterUtil.setNotBlankString(
@@ -63,7 +52,6 @@ public class OllamaChatModelAITaskNode
 		SetterUtil.setNotNullInteger(builder::numCtx, jsonObject, "numCtx");
 		SetterUtil.setNotNullInteger(
 			builder::numPredict, jsonObject, "numPredict");
-
 		SetterUtil.setNotNullDouble(
 			builder::repeatPenalty, jsonObject, "repeatPenalty");
 
@@ -79,19 +67,12 @@ public class OllamaChatModelAITaskNode
 		}
 
 		SetterUtil.setNotNullInteger(builder::seed, jsonObject, "seed");
-
-		if (jsonObject.has("stop")) {
-			builder.stop(
-				JSONUtil.toStringList(jsonObject.getJSONArray("stop")));
-		}
-
+		SetterUtil.setNotNullJSONArrayAsStringList(
+			builder::stop, jsonObject, "stop");
 		SetterUtil.setNotNullDouble(
 			builder::temperature, jsonObject, "temperature");
-
-		if (jsonObject.has("timeout")) {
-			builder.timeout(Duration.ofSeconds(jsonObject.getInt("timeout")));
-		}
-
+		SetterUtil.setNotNullDurationOfSeconds(
+			builder::timeout, jsonObject, "timeout");
 		SetterUtil.setNotNullInteger(builder::topK, jsonObject, "topK");
 		SetterUtil.setNotNullDouble(builder::topP, jsonObject, "topP");
 

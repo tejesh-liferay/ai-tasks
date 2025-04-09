@@ -43,7 +43,8 @@ public class MapDBChatMemoryStore implements ChatMemoryStore {
 	}
 
 	private static String _getDBFilePath() {
-		return System.getProperty("java.io.tmpdir") + "/gemini-chat-memory.db";
+		return System.getProperty("java.io.tmpdir") +
+			"/ai-tasks-chat-memory.db";
 	}
 
 	private static final DB _db;
