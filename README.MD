@@ -45,7 +45,7 @@ AI Tasks backend is built on [LangChain4J](https://docs.langchain4j.dev/) and su
 
 ## Quick Start
 
-See the quick start tutorial  [here](./QUICKSTART.MD).
+See the quick start tutorial  [here](QUICKSTART.MD).
 
 ## How To Use It
 
