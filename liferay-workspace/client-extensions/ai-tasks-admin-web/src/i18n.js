@@ -206,7 +206,7 @@ const resources = {
       'systemMessage-placeholder': 'Enter the system message',
       'taskContextOutputParameterName-help':
         'Enter the name of the task context output parameter. Use this if this node is not the final output node, but sharing output data with the next nodes in chain. Access the value in the next nodes using {{taskContext.YOUR_VARIABLE_NAME}}.',
-      'taskContextOutputParameterName-label': 'Task Context Output Parameter Mame',
+      'taskContextOutputParameterName-label': 'Task Context Output Parameter Name',
       'taskContextOutputParameterName-placeholder': '',
       'temperature-help':
         'Controls the randomness of the output (0.0 - 1.0). Higher values result in more random output.',
@@ -252,6 +252,33 @@ const resources = {
       webhook: 'Webhook',
       'webhook-node-description':
         'The Webhook Node allows you to integrate with external services by sending HTTP requests to webhooks within your AI Task flows. This node provides a flexible way to trigger actions in external systems, retrieve data from third-party APIs, or orchestrate complex workflows.',
+      'condition-type-label': 'Condition Type',
+      equals: 'Equals',
+      contains: 'Contains',
+      in: 'In',
+      exists: 'Exists',
+      range: 'Range',
+      not: 'Not',
+      allConditions: 'All Conditions',
+      anyConditions: 'Any Conditions',
+      'condition-field-label': 'Condition Field',
+      'condition-value-label': 'Condition Value',
+      'exists-condition-description': 'This condition checks if the field exists.',
+      'range-condition-label': 'Range Condition',
+      'not-condition-label': 'Not Condition',
+      'all-conditions-label': 'All Conditions',
+      'any-conditions-label': 'Any Conditions',
+      'remove-condition': 'Remove Condition',
+      'add-condition': 'Add Condition',
+      geminiStreamingChatModel: 'Gemini Streaming Chat Model',
+      ollamaStreamingChatModel: 'Ollama Streaming Chat Model',
+      openAIStreamingChatModel: 'OpenAI Streaming Chat Model',
+      'ollama-streaming-chat-model-node-description':
+        'The Ollama Streaming Chat Model Node allows you to seamlessly integrate locally-run large language models (LLMs) managed by Ollama into your AI Task flows, providing a streaming response. This node provides a powerful and flexible way to leverage the capabilities of open-source LLMs without relying on external APIs, and it provides the response in a streaming fashion.',
+      'openai-streaming-chat-model-node-description':
+        "The OpenAI Streaming Chat Model Node allows you to integrate OpenAI's powerful large language models (LLMs) into your AI Task flows, providing a streaming response.",
+      'gemini-streaming-chat-model-node-description':
+        "The Gemini Streaming Chat Model Node allows you to integrate Google's powerful Gemini family of large language models (LLMs) into your AI Task flows, providing a streaming response.",
     },
   },
 };

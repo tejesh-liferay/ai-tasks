@@ -9,7 +9,6 @@ import { TabContent } from '../../ui/TabContent';
 import { Tab, Tabs } from '../../ui/Tabs';
 import JsonField from './fields/JsonField';
 import NumberField from './fields/NumberField';
-import SelectField from './fields/SelectField';
 import TextField from './fields/TextField';
 
 const LiferaySearchNodeConfigureForm = ({ nodeParameters, onChange }) => {

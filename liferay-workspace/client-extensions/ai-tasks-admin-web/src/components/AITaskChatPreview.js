@@ -12,16 +12,32 @@ import LiferayService from '../services/LiferayService';
 import ChatMessage from './ui/ChatMessage';
 import Icon from './ui/Icon';
 
-const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
-  const { clearMemory, executeTask, memoryClearing, selectedTask, taskExecuting } =
-    useAITasksContext();
+const AITaskChatPreview = ({ hasStreamingNode, isOpen, setIsOpen }) => {
+  const {
+    clearMemory,
+    executeTask,
+    executeStreamingTask,
+    memoryClearing,
+    selectedTask,
+    taskExecuting,
+  } = useAITasksContext();
   const [userInput, setUserInput] = useState('');
   const { history, addMessage, clearHistory } = useChatHistory(selectedTask.id);
   const [visibleThoughts, setVisibleThoughts] = useState([]);
   const chatPreviewEndRef = useRef(null);
   const scrollTimeoutRef = useRef(null);
+  const [streamingResponse, setStreamingResponse] = useState('');
+  const [isStreaming, setIsStreaming] = useState(false);
 
   const handleSubmit = async (e) => {
+    if (hasStreamingNode) {
+      handleStreamingSubmit(e);
+    } else {
+      handleDefaultSubmit(e);
+    }
+  };
+
+  const handleDefaultSubmit = async (e) => {
     e.preventDefault();
     addMessage(userInput, 'USER');
     setUserInput('');
@@ -32,6 +48,41 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
       response.executionTrace || {},
       response.output.think || '',
     );
+  };
+
+  const handleStreamingSubmit = async (e) => {
+    e.preventDefault();
+    addMessage(userInput, 'USER');
+    setUserInput('');
+    setIsStreaming(true);
+    setStreamingResponse('');
+    let currentResponse = '';
+
+    const response = await executeStreamingTask(selectedTask.externalReferenceCode, userInput);
+
+    const reader = response.body.getReader();
+
+    const decoder = new TextDecoder();
+
+    let executionTrace = {};
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+
+      const chunk = decoder.decode(value);
+
+      if (chunk.startsWith('executionTrace:')) {
+        executionTrace = JSON.parse(chunk.replace('executionTrace:', ''));
+      } else {
+        currentResponse += chunk.replaceAll('\n##', '');
+        setStreamingResponse(currentResponse);
+      }
+    }
+    addMessage(currentResponse, 'AI', executionTrace);
+    setIsStreaming(false);
   };
 
   useEffect(() => {
@@ -107,13 +158,18 @@ const AITaskChatPreview = ({ isOpen, setIsOpen }) => {
               )}
             </ChatMessage>
           ))}
-          {taskExecuting && (
+          {taskExecuting && !isStreaming && (
             <ChatMessage>
               <span className="loading-dots">
                 <span style={{ animationDelay: '0s' }}></span>
                 <span style={{ animationDelay: '0.3s' }}></span>
                 <span style={{ animationDelay: '0.6s' }}></span>
               </span>
+            </ChatMessage>
+          )}
+          {isStreaming && (
+            <ChatMessage role="AI">
+              <Remark>{streamingResponse}</Remark>
             </ChatMessage>
           )}
           <div ref={chatPreviewEndRef} className={'chat-preview-end mt-4'}></div>

@@ -26,6 +26,7 @@ const AITasksContext = createContext({
   exportTask: (taskId) => {},
   updateTask: (updatedTask) => {},
   deleteTask: (task) => {},
+  executeStreamingTask: (externalReferenceCode, userInput) => {},
   executeTask: (externalReferenceCode, userInput) => {},
   taskExecuting: false,
   loading: false,
@@ -182,6 +183,21 @@ const AITasksProvider = ({ children }) => {
     }
   };
 
+  const executeStreamingTask = async (externalReferenceCode, userInput) => {
+    try {
+      setTaskExecuting(true);
+      return await LiferayService.postStream(`/o/ai-tasks/v1.0/stream/${externalReferenceCode}`, {
+        input: {
+          text: userInput,
+        },
+      });
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setTaskExecuting(false);
+    }
+  };
+
   const handleFlowConfigurationChange = async (newConfig) => {
     const updatedTask = {
       ...selectedTask,
@@ -236,10 +252,10 @@ const AITasksProvider = ({ children }) => {
         importTask,
         clearMemory,
         memoryClearing,
-
         exportTask,
         updateTask,
         deleteTask,
+        executeStreamingTask,
         executeTask,
         taskExecuting,
         loading,

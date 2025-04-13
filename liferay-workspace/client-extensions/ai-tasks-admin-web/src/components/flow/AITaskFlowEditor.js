@@ -26,15 +26,19 @@ import { AI_TASK_FLOW_EDGE } from '../../constants/AITasksEdgeTypesConstants';
 import {
   ANTHROPIC_CHAT_MODEL,
   GEMINI_CHAT_MODEL,
+  GEMINI_STREAMING_CHAT_MODEL,
   GOOGLE_IMAGEN,
   HUGGING_FACE_CHAT_MODEL,
   INPUT_TRIGGER,
   LIFERAY_SEARCH,
   MISTRALAI_CHAT_MODEL,
   OLLAMA_CHAT_MODEL,
+  OLLAMA_STREAMING_CHAT_MODEL,
   OPENAI_CHAT_MODEL,
   OPENAI_IMAGE_MODEL,
+  OPENAI_STREAMING_CHAT_MODEL,
   WEBHOOK,
+  getStreamingNodes,
 } from '../../constants/AITasksNodeTypesConstants';
 import { useAITasksContext } from '../../contexts/AITasksContext';
 import { useDnD } from '../../contexts/DnDContext';
@@ -54,14 +58,17 @@ import AITaskFlowNodesPane from './AITaskFlowNodesPane';
 import AITaskFlowEdge from './edges/AITaskFlowEdge';
 import AnthropicChatModelNode from './nodes/AnthropicChatModelNode';
 import GeminiChatModelNode from './nodes/GeminiChatModelNode';
+import GeminiStreamingChatModelNode from './nodes/GeminiStreamingChatModelNode';
 import GoogleImagenNode from './nodes/GoogleImagenNode';
 import HuggingFaceChatModelNode from './nodes/HuggingFaceChatModelNode';
 import InputTriggerNode from './nodes/InputTriggerNode';
 import LiferaySearchNode from './nodes/LiferaySearchNode';
 import MistralAIChatModelNode from './nodes/MistralAIChatModelNode';
 import OllamaChatModelNode from './nodes/OllamaChatModelNode';
+import OllamaStreamingChatModelNode from './nodes/OllamaStreamingChatModelNode';
 import OpenAIChatModelNode from './nodes/OpenAIChatModelNode';
 import OpenAIImageModelNode from './nodes/OpenAIImageModelNode';
+import OpenAIStreamingChatModelNode from './nodes/OpenAIStreamingChatModelNode';
 import WebhookNode from './nodes/WebhookNode';
 
 const AITaskFlowEditor = () => {
@@ -83,6 +90,7 @@ const AITaskFlowEditor = () => {
   const { screenToFlowPosition } = useReactFlow();
   const [type, name] = useDnD();
   const selectedNodeRef = useRef(selectedNode);
+  const [hasStreamingNode, setHasStreamingNode] = useState(false);
   const [isChatPreviewOpen, setIsChatPreviewOpen] = useState(false);
   const { t } = useTranslation();
 
@@ -90,12 +98,15 @@ const AITaskFlowEditor = () => {
     [ANTHROPIC_CHAT_MODEL]: AnthropicChatModelNode,
     [INPUT_TRIGGER]: InputTriggerNode,
     [GEMINI_CHAT_MODEL]: GeminiChatModelNode,
+    [GEMINI_STREAMING_CHAT_MODEL]: GeminiStreamingChatModelNode,
     [GOOGLE_IMAGEN]: GoogleImagenNode,
     [HUGGING_FACE_CHAT_MODEL]: HuggingFaceChatModelNode,
     [LIFERAY_SEARCH]: LiferaySearchNode,
     [MISTRALAI_CHAT_MODEL]: MistralAIChatModelNode,
     [OLLAMA_CHAT_MODEL]: OllamaChatModelNode,
+    [OLLAMA_STREAMING_CHAT_MODEL]: OllamaStreamingChatModelNode,
     [OPENAI_CHAT_MODEL]: OpenAIChatModelNode,
+    [OPENAI_STREAMING_CHAT_MODEL]: OpenAIStreamingChatModelNode,
     [OPENAI_IMAGE_MODEL]: OpenAIImageModelNode,
     [WEBHOOK]: WebhookNode,
   };
@@ -105,6 +116,8 @@ const AITaskFlowEditor = () => {
   };
 
   const getNodesFromConfig = (configuration) => {
+    setHasStreamingNode(configuration.nodes.some((node) => getStreamingNodes.includes(node.type)));
+
     return configuration.nodes.map((node) => ({
       id: node.id,
       type: node.type,
@@ -215,6 +228,10 @@ const AITaskFlowEditor = () => {
 
       if (!type) {
         return;
+      }
+
+      if (getStreamingNodes.includes(type)) {
+        setHasStreamingNode(true);
       }
 
       const position = screenToFlowPosition({
@@ -328,6 +345,7 @@ const AITaskFlowEditor = () => {
         onRename={openRenameModal}
         onConfigure={openConfigureModal}
         onSetCondition={openSetConditionModal}
+        setHasStreamingNode={setHasStreamingNode}
       />
       <ReactFlow
         ref={ref}
@@ -378,7 +396,11 @@ const AITaskFlowEditor = () => {
         <Controls showInteractive={false} />
         <MiniMap position={'bottom-left'} nodeStrokeColor={'#80acff'} nodeStrokeWidth={8} />
       </ReactFlow>
-      <AITaskChatPreview isOpen={isChatPreviewOpen} setIsOpen={setIsChatPreviewOpen} />
+      <AITaskChatPreview
+        hasStreamingNode={hasStreamingNode}
+        isOpen={isChatPreviewOpen}
+        setIsOpen={setIsChatPreviewOpen}
+      />
     </div>
   );
 };
