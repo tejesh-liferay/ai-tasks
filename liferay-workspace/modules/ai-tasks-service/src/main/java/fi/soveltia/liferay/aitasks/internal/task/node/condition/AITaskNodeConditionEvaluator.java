@@ -88,16 +88,16 @@ public class AITaskNodeConditionEvaluator {
 			String stringValue = GetterUtil.getString(value);
 
 			for (String s : (String[])field) {
-				if (Objects.equals(s, stringValue)) {
+				if (StringUtil.equalsIgnoreCase(s, stringValue)) {
 					return _withExecutionTrace(id, true, fieldName, value);
 				}
 			}
 		}
 		else if (field instanceof String) {
-			String stringField = (String)field;
-
 			return _withExecutionTrace(
-				id, stringField.contains(GetterUtil.getString(value)),
+				id,
+				StringUtil.containsIgnoreCase(
+					(String)field, GetterUtil.getString(value)),
 				fieldName, value);
 		}
 
@@ -259,7 +259,7 @@ public class AITaskNodeConditionEvaluator {
 		else if (field instanceof String) {
 			return _withExecutionTrace(
 				equals.getId(),
-				StringUtil.equals(
+				StringUtil.equalsIgnoreCase(
 					GetterUtil.getString(field), GetterUtil.getString(value)),
 				equals.getField(), value);
 		}

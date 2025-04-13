@@ -1,24 +1,26 @@
 package fi.soveltia.liferay.aitasks.internal.task.node;
 
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
-import dev.langchain4j.service.Result;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
 
 import fi.soveltia.liferay.aitasks.configuration.AITasksConfigurationProvider;
 import fi.soveltia.liferay.aitasks.internal.task.ai.service.AIServiceHelper;
 import fi.soveltia.liferay.aitasks.internal.task.ai.service.ChatAssistant;
 import fi.soveltia.liferay.aitasks.internal.task.ai.service.WithMemoryChatAssistant;
+import fi.soveltia.liferay.aitasks.internal.task.chat.model.listener.ChatModelListenerProvider;
 import fi.soveltia.liferay.aitasks.internal.task.node.type.StreamingChatModelAITaskNode;
 import fi.soveltia.liferay.aitasks.internal.task.node.util.MemoryUtil;
 import fi.soveltia.liferay.aitasks.internal.task.node.util.PromptUtil;
-import fi.soveltia.liferay.aitasks.internal.web.cache.ChatModelAITaskNodeWebCacheItem;
+import fi.soveltia.liferay.aitasks.internal.task.response.AITaskTokenStreamHandlerImpl;
 import fi.soveltia.liferay.aitasks.task.context.AITaskContext;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeResponse;
 
-import java.util.Map;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.osgi.service.component.annotations.Reference;
 
@@ -53,13 +55,29 @@ public abstract class BaseStreamingChatModelAITaskNode
 				userMessage);
 		}
 
-		return _chat(
-			aiTaskContext, jsonObject, nodeId, systemMessage, trace,
-			userMessage);
+		return _chat(jsonObject, nodeId, systemMessage, trace, userMessage);
 	}
 
 	public abstract StreamingChatLanguageModel getStreamingChatLanguageModel(
 		JSONObject jsonObject);
+
+	protected List<ChatModelListener> getChatModelListeners(
+		JSONArray jsonArray) {
+
+		List<ChatModelListener> chatModelListeners = new ArrayList<>();
+
+		for (int i = 0; i < jsonArray.length(); i++) {
+			ChatModelListener chatModelListener =
+				chatModelListenerProvider.getChatModelListener(
+					jsonArray.getString(i));
+
+			if (chatModelListener != null) {
+				chatModelListeners.add(chatModelListener);
+			}
+		}
+
+		return chatModelListeners;
+	}
 
 	@Reference
 	protected AIServiceHelper aiServiceHelper;
@@ -67,23 +85,26 @@ public abstract class BaseStreamingChatModelAITaskNode
 	@Reference
 	protected AITasksConfigurationProvider aiTasksConfigurationProvider;
 
+	@Reference
+	protected ChatModelListenerProvider chatModelListenerProvider;
+
 	private AITaskNodeResponse _chat(
-		AITaskContext aiTaskContext, JSONObject jsonObject, String nodeId,
-		String systemMessage, boolean trace, String userMessage) {
+		JSONObject jsonObject, String nodeId, String systemMessage,
+		boolean trace, String userMessage) {
 
 		ChatAssistant chatAssistant =
 			(ChatAssistant)aiServiceHelper.createAssistant(
 				ChatAssistant.class, jsonObject,
 				getStreamingChatLanguageModel(jsonObject), systemMessage, true);
 
-		Result<?> result = _getResult(
-			aiTaskContext, chatAssistant, jsonObject, nodeId,
-			() -> chatAssistant.chat(userMessage), userMessage);
-
-		return toAITaskNodeResponse(
-			aiTaskContext,
-			_getExecutionTrace(result, systemMessage, trace, userMessage),
-			jsonObject, trace, result);
+		return new AITaskNodeResponseImpl(
+			null,
+			HashMapBuilder.<String, Object>put(
+				"stream",
+				new AITaskTokenStreamHandlerImpl(
+					nodeId, systemMessage, chatAssistant.stream(userMessage),
+					trace, userMessage)
+			).build());
 	}
 
 	private AITaskNodeResponse _chatWithMemory(
@@ -95,51 +116,17 @@ public abstract class BaseStreamingChatModelAITaskNode
 				WithMemoryChatAssistant.class, jsonObject,
 				getStreamingChatLanguageModel(jsonObject), systemMessage, true);
 
-		Result<?> result = _getResult(
-			aiTaskContext, withMemoryChatAssistant, jsonObject, nodeId,
-			() -> withMemoryChatAssistant.chat(
-				MemoryUtil.getMemoryId(aiTaskContext, nodeId), userMessage),
-			userMessage);
-
-		return toAITaskNodeResponse(
-			aiTaskContext,
-			_getExecutionTrace(result, systemMessage, trace, userMessage),
-			jsonObject, trace, result);
-	}
-
-	private Map<String, Object> _getExecutionTrace(
-		Result<?> result, String systemMessage, boolean trace,
-		String userMessage) {
-
-		if ((result == null) || !trace) {
-			return null;
-		}
-
-		return HashMapBuilder.<String, Object>put(
-			"systemMessage", systemMessage
-		).put(
-			"userMessage", userMessage
-		).putAll(
-			getExecutionTrace(result)
-		).build();
-	}
-
-	private Result<?> _getResult(
-		AITaskContext aiTaskContext, Object chatAssistant,
-		JSONObject jsonObject, String nodeId, Supplier<Result<?>> supplier,
-		String userMessage) {
-
-		if (jsonObject.getBoolean("useCache")) {
-			String json = jsonObject.toString();
-
-			return (Result<String>)ChatModelAITaskNodeWebCacheItem.get(
-				aiTasksConfigurationProvider.getCompanyConfiguration(
-					aiTaskContext.getCompanyId()),
-				chatAssistant, MemoryUtil.getMemoryId(aiTaskContext, nodeId),
-				String.valueOf(json.hashCode()), userMessage);
-		}
-
-		return supplier.get();
+		return new AITaskNodeResponseImpl(
+			null,
+			HashMapBuilder.<String, Object>put(
+				"stream",
+				new AITaskTokenStreamHandlerImpl(
+					nodeId, systemMessage,
+					withMemoryChatAssistant.stream(
+						MemoryUtil.getMemoryId(aiTaskContext, nodeId),
+						userMessage),
+					trace, userMessage)
+			).build());
 	}
 
 }

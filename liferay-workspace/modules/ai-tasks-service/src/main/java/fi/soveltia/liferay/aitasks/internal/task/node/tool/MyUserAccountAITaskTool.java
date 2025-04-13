@@ -1,7 +1,5 @@
 package fi.soveltia.liferay.aitasks.internal.task.node.tool;
 
-import com.liferay.blogs.model.BlogsEntry;
-import com.liferay.headless.delivery.dto.v1_0.BlogPosting;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -12,7 +10,6 @@ import com.liferay.portal.kernel.service.UserService;
 import com.liferay.portal.kernel.service.UserServiceUtil;
 import com.liferay.portal.kernel.util.Validator;
 
-import com.liferay.portal.vulcan.dto.converter.DTOConverter;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 
@@ -106,6 +103,7 @@ public class MyUserAccountAITaskTool implements AITaskTool {
 				throw portalException;
 			}
 		}
+
 	}
 
 	protected static final Log log = LogFactoryUtil.getLog(
@@ -113,6 +111,5 @@ public class MyUserAccountAITaskTool implements AITaskTool {
 
 	@Reference
 	protected UserService userService;
-
 
 }

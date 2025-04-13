@@ -14,6 +14,7 @@ import fi.soveltia.liferay.aitasks.internal.task.ai.service.ChatAssistant;
 import fi.soveltia.liferay.aitasks.internal.task.ai.service.WithMemoryChatAssistant;
 import fi.soveltia.liferay.aitasks.internal.task.chat.model.listener.ChatModelListenerProvider;
 import fi.soveltia.liferay.aitasks.internal.task.node.type.ChatModelAITaskNode;
+import fi.soveltia.liferay.aitasks.internal.task.node.util.ExecutionTraceUtil;
 import fi.soveltia.liferay.aitasks.internal.task.node.util.MemoryUtil;
 import fi.soveltia.liferay.aitasks.internal.task.node.util.PromptUtil;
 import fi.soveltia.liferay.aitasks.internal.web.cache.ChatModelAITaskNodeWebCacheItem;
@@ -144,7 +145,7 @@ public abstract class BaseChatModelAITaskNode
 		).put(
 			"userMessage", userMessage
 		).putAll(
-			getExecutionTrace(result)
+			ExecutionTraceUtil.getExecutionTrace(result)
 		).build();
 	}
 

@@ -8,6 +8,7 @@ import dev.langchain4j.model.image.ImageModel;
 import dev.langchain4j.model.output.Response;
 
 import fi.soveltia.liferay.aitasks.internal.task.node.type.ImageModelAITaskNode;
+import fi.soveltia.liferay.aitasks.internal.task.node.util.ExecutionTraceUtil;
 import fi.soveltia.liferay.aitasks.internal.task.node.util.PromptUtil;
 import fi.soveltia.liferay.aitasks.task.context.AITaskContext;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeResponse;
@@ -42,7 +43,8 @@ public abstract class BaseImageModelAITaskNode
 		Map<String, Object> executionTrace = new HashMap<>();
 
 		executionTrace.putAll(
-			getExecutionTrace(response.finishReason(), response.tokenUsage()));
+			ExecutionTraceUtil.getExecutionTrace(
+				response.finishReason(), response.tokenUsage()));
 
 		if (response.content() instanceof List) {
 			Map<String, Object> imageExecutionTraces = new HashMap<>();
