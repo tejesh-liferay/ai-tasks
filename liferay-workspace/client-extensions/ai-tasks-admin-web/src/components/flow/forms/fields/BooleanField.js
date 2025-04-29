@@ -17,7 +17,7 @@ const BooleanField = ({ className, helpText, label, onChange, parameterName, par
             id={parameterName}
             name={parameterName}
             onChange={(e) => {
-              onChange(parameterName, e.currentTarget.value);
+              onChange(parameterName, e.currentTarget.checked);
             }}
             type="checkbox"
             value={parameterValue}
