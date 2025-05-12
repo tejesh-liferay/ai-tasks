@@ -203,6 +203,20 @@ public class Mutation {
 					externalReferenceCode, aiTaskRequest));
 	}
 
+	@GraphQLField(description = "TBD")
+	public Response createStreamExternalReferenceCode(
+			@GraphQLName("externalReferenceCode") String externalReferenceCode,
+			@GraphQLName("aiTaskRequest") AITaskRequest aiTaskRequest)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_aiTaskResponseResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			aiTaskResponseResource ->
+				aiTaskResponseResource.postStreamExternalReferenceCode(
+					externalReferenceCode, aiTaskRequest));
+	}
+
 	private <T, R, E1 extends Throwable, E2 extends Throwable> R
 			_applyComponentServiceObjects(
 				ComponentServiceObjects<T> componentServiceObjects,

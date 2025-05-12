@@ -1,11 +1,15 @@
 .flow-nodes-pane {
+  font-size: 0.8rem;
+  height: auto;
   left: 0;
+  position: static;
   z-index: 1020;
   transition: width 0.3s ease-in-out;
   overflow-x: hidden;
   box-shadow: var(--box-shadow-lg);
 
   &.flow-nodes-pane-open {
+    width: 25%;
     opacity: 1;
   }
 
@@ -32,6 +36,8 @@
       padding: 0.5rem;
     }
     h4 {
+      font-size: 0.85rem;
+      font-weight: normal;
       margin: 0;
     }
   }

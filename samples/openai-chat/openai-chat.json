@@ -4,17 +4,28 @@
     "en_US": "OpenAI Chat"
   },
   "configuration": {
-    "startNodeId": "lavenderCreativeBear",
-    "debug": true,
+    "trace": true,
     "nodes": [
       {
         "uiConfiguration": {
           "position": {
-            "x": 405.15417798264366,
-            "y": -153.11846137606454
+            "x": 81.12857055664062,
+            "y": 233.08570861816406
           }
         },
-        "id": "lavenderCreativeBear",
+        "id": "violetRaspyQuelea",
+        "label": "Input Trigger",
+        "type": "inputTrigger",
+        "parameters": {}
+      },
+      {
+        "uiConfiguration": {
+          "position": {
+            "x": 375.79523722330725,
+            "y": 200.75237528483072
+          }
+        },
+        "id": "cyanComprehensiveBoar",
         "label": "OpenAI Chat Model",
         "type": "openAIChatModel",
         "parameters": {
@@ -31,10 +42,16 @@
         }
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "2add1d3a-7ae3-486d-92f1-d99319d09671",
+        "source": "violetRaspyQuelea",
+        "target": "cyanComprehensiveBoar"
+      }
+    ]
   },
   "description_i18n": {
-    "en_US": "A chat demo task relying on OpenAI \n"
+    "en_US": "A chat demo task relying on OpenAI"
   },
   "enabled": true,
   "externalReferenceCode": "openai-chat"

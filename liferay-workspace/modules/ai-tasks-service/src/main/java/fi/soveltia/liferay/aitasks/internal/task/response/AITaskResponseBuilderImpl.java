@@ -17,24 +17,24 @@ import org.osgi.service.component.annotations.Component;
 public class AITaskResponseBuilderImpl implements AITaskResponseBuilder {
 
 	@Override
-	public AITaskResponseBuilder addDebugInfo(
-		Map<String, Object> debugInfo, String id) {
+	public AITaskResponseBuilder addExecutionTrace(
+		Map<String, Object> executionTrace, String id) {
 
-		if (_debugInfo == null) {
-			_debugInfo = new HashMap<>();
+		if (_executionTrace == null) {
+			_executionTrace = new HashMap<>();
 		}
 
-		if (_debugInfo.containsKey(id)) {
-			Map<String, Object> map = _debugInfo.get(id);
+		if (_executionTrace.containsKey(id)) {
+			Map<String, Object> map = _executionTrace.get(id);
 
 			if (map == null) {
 				map = new HashMap<>();
 			}
 
-			map.putAll(debugInfo);
+			map.putAll(executionTrace);
 		}
 		else {
-			_debugInfo.put(id, debugInfo);
+			_executionTrace.put(id, executionTrace);
 		}
 
 		return this;
@@ -53,7 +53,7 @@ public class AITaskResponseBuilderImpl implements AITaskResponseBuilder {
 
 	@Override
 	public AITaskResponse build() {
-		return new AITaskResponseImpl(_debugInfo, _output, _took);
+		return new AITaskResponseImpl(_executionTrace, _output, _took);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class AITaskResponseBuilderImpl implements AITaskResponseBuilder {
 		return this;
 	}
 
-	private Map<String, Map<String, Object>> _debugInfo;
+	private Map<String, Map<String, Object>> _executionTrace;
 	private Map<String, Object> _output;
 	private String _took;
 

@@ -28,19 +28,10 @@ const AITaskFlowEdge = ({
 
   return (
     <>
-      <BaseEdge
-        id={id}
-        path={edgePath}
-        style={{
-          strokeWidth: 2,
-          stroke: '#80acff',
-        }}
-      />
+      <BaseEdge id={id} path={edgePath} />
       <EdgeLabelRenderer>
         <button
           style={{
-            background: '#80acff',
-            color: '#fff',
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             pointerEvents: 'all',

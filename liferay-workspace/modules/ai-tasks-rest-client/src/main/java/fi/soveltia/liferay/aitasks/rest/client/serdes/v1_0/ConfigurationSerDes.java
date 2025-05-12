@@ -43,16 +43,6 @@ public class ConfigurationSerDes {
 
 		sb.append("{");
 
-		if (configuration.getDebug() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"debug\": ");
-
-			sb.append(configuration.getDebug());
-		}
-
 		if (configuration.getEdges() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -93,18 +83,14 @@ public class ConfigurationSerDes {
 			sb.append("]");
 		}
 
-		if (configuration.getStartNodeId() != null) {
+		if (configuration.getTrace() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"startNodeId\": ");
+			sb.append("\"trace\": ");
 
-			sb.append("\"");
-
-			sb.append(_escape(configuration.getStartNodeId()));
-
-			sb.append("\"");
+			sb.append(configuration.getTrace());
 		}
 
 		sb.append("}");
@@ -126,13 +112,6 @@ public class ConfigurationSerDes {
 
 		Map<String, String> map = new TreeMap<>();
 
-		if (configuration.getDebug() == null) {
-			map.put("debug", null);
-		}
-		else {
-			map.put("debug", String.valueOf(configuration.getDebug()));
-		}
-
 		if (configuration.getEdges() == null) {
 			map.put("edges", null);
 		}
@@ -147,12 +126,11 @@ public class ConfigurationSerDes {
 			map.put("nodes", String.valueOf(configuration.getNodes()));
 		}
 
-		if (configuration.getStartNodeId() == null) {
-			map.put("startNodeId", null);
+		if (configuration.getTrace() == null) {
+			map.put("trace", null);
 		}
 		else {
-			map.put(
-				"startNodeId", String.valueOf(configuration.getStartNodeId()));
+			map.put("trace", String.valueOf(configuration.getTrace()));
 		}
 
 		return map;
@@ -173,16 +151,13 @@ public class ConfigurationSerDes {
 
 		@Override
 		protected boolean parseMaps(String jsonParserFieldName) {
-			if (Objects.equals(jsonParserFieldName, "debug")) {
-				return false;
-			}
-			else if (Objects.equals(jsonParserFieldName, "edges")) {
+			if (Objects.equals(jsonParserFieldName, "edges")) {
 				return false;
 			}
 			else if (Objects.equals(jsonParserFieldName, "nodes")) {
 				return false;
 			}
-			else if (Objects.equals(jsonParserFieldName, "startNodeId")) {
+			else if (Objects.equals(jsonParserFieldName, "trace")) {
 				return false;
 			}
 
@@ -194,12 +169,7 @@ public class ConfigurationSerDes {
 			Configuration configuration, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "debug")) {
-				if (jsonParserFieldValue != null) {
-					configuration.setDebug((Boolean)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "edges")) {
+			if (Objects.equals(jsonParserFieldName, "edges")) {
 				if (jsonParserFieldValue != null) {
 					Object[] jsonParserFieldValues =
 						(Object[])jsonParserFieldValue;
@@ -229,9 +199,9 @@ public class ConfigurationSerDes {
 					configuration.setNodes(nodesArray);
 				}
 			}
-			else if (Objects.equals(jsonParserFieldName, "startNodeId")) {
+			else if (Objects.equals(jsonParserFieldName, "trace")) {
 				if (jsonParserFieldValue != null) {
-					configuration.setStartNodeId((String)jsonParserFieldValue);
+					configuration.setTrace((Boolean)jsonParserFieldValue);
 				}
 			}
 		}

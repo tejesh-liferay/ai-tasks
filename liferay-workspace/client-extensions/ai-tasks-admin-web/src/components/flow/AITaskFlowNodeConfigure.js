@@ -7,25 +7,31 @@ import React, { useEffect, useState } from 'react';
 import {
   ANTHROPIC_CHAT_MODEL,
   GEMINI_CHAT_MODEL,
+  GEMINI_STREAMING_CHAT_MODEL,
   GOOGLE_IMAGEN,
   HUGGING_FACE_CHAT_MODEL,
   LIFERAY_SEARCH,
   MISTRALAI_CHAT_MODEL,
   OLLAMA_CHAT_MODEL,
+  OLLAMA_STREAMING_CHAT_MODEL,
   OPENAI_CHAT_MODEL,
   OPENAI_IMAGE_MODEL,
+  OPENAI_STREAMING_CHAT_MODEL,
   WEBHOOK,
 } from '../../constants/AITasksNodeTypesConstants';
 import { useAITasksContext } from '../../contexts/AITasksContext';
 import AnthropicChatModelNodeConfigureForm from './forms/AnthropicChatModelNodeConfigureForm';
 import GeminiChatModelNodeConfigureForm from './forms/GeminiChatModelNodeConfigureForm';
+import GeminiStreamingChatModelNodeConfigureForm from './forms/GeminiStreamingChatModelNodeConfigureForm';
 import GoogleImagenNodeConfigureForm from './forms/GoogleImagenNodeConfigureForm';
 import HuggingFaceChatModelNodeConfigureForm from './forms/HuggingFaceChatModelNodeConfigureForm';
 import LiferaySearchNodeConfigureForm from './forms/LiferaySearchNodeConfigureForm';
 import MistralAIChatModelNodeConfigureForm from './forms/MistralAIChatModelNodeConfigureForm';
 import OllamaChatModelNodeConfigureForm from './forms/OllamaChatModelNodeConfigureForm';
+import OllamaStreamingChatModelNodeConfigureForm from './forms/OllamaStreamingChatModelNodeConfigureForm';
 import OpenAIChatModelNodeConfigureForm from './forms/OpenAIChatModelNodeConfigureForm';
 import OpenAIImageModelNodeConfigureForm from './forms/OpenAIImageModelNodeConfigureForm';
+import OpenAIStreamingChatModelNodeConfigureForm from './forms/OpenAIStreamingChatModelNodeConfigureForm';
 import WebhookNodeConfigureForm from './forms/WebhookNodeConfigureForm';
 
 const AITaskFlowNodeConfigure = () => {
@@ -64,6 +70,15 @@ const AITaskFlowNodeConfigure = () => {
   if (currentNode.type === GEMINI_CHAT_MODEL) {
     return (
       <GeminiChatModelNodeConfigureForm
+        nodeParameters={currentNode.parameters}
+        onChange={handleParameterChange}
+      />
+    );
+  }
+
+  if (currentNode.type === GEMINI_STREAMING_CHAT_MODEL) {
+    return (
+      <GeminiStreamingChatModelNodeConfigureForm
         nodeParameters={currentNode.parameters}
         onChange={handleParameterChange}
       />
@@ -115,9 +130,27 @@ const AITaskFlowNodeConfigure = () => {
     );
   }
 
+  if (currentNode.type === OLLAMA_STREAMING_CHAT_MODEL) {
+    return (
+      <OllamaStreamingChatModelNodeConfigureForm
+        nodeParameters={currentNode.parameters}
+        onChange={handleParameterChange}
+      />
+    );
+  }
+
   if (currentNode.type === OPENAI_CHAT_MODEL) {
     return (
       <OpenAIChatModelNodeConfigureForm
+        nodeParameters={currentNode.parameters}
+        onChange={handleParameterChange}
+      />
+    );
+  }
+
+  if (currentNode.type === OPENAI_STREAMING_CHAT_MODEL) {
+    return (
+      <OpenAIStreamingChatModelNodeConfigureForm
         nodeParameters={currentNode.parameters}
         onChange={handleParameterChange}
       />

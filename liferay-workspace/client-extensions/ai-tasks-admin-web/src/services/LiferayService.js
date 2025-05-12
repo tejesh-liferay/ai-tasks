@@ -18,7 +18,7 @@ const LiferayService = (() => {
    * @returns {Promise<any|null>} A promise that resolves with the JSON response or null (for 204).
    * @throws {Error} If the Liferay object is not defined, the response is not ok, or JSON parsing fails.
    */
-  const _fetch = async (url, options) => {
+  const _fetch = async (url, options, contentType = 'json') => {
     // Check if the Liferay object is defined
     if (typeof window.Liferay !== 'undefined') {
       try {
@@ -46,8 +46,11 @@ const LiferayService = (() => {
           return null;
         }
         try {
-          // Attempt to parse the response as JSON
-          return await response.json();
+          // Attempt to parse the response
+          if (contentType === 'json') {
+            return await response.json();
+          }
+          return await response;
         } catch (jsonError) {
           // If parsing fails, log an error and throw a specific error to indicate the issue
           console.error('Error parsing JSON response:', jsonError);
@@ -103,6 +106,20 @@ const LiferayService = (() => {
         },
         body: JSON.stringify(body),
       });
+    },
+    postStream: async (url, body = {}, headers = {}) => {
+      return _fetch(
+        url,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...headers,
+          },
+          body: JSON.stringify(body),
+        },
+        'raw',
+      );
     },
     /**
      * Makes a PUT request to the specified URL.

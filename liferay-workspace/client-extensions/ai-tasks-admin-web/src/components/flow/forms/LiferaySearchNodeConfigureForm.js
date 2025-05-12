@@ -2,119 +2,71 @@
  * @author Louis-Guillaume Durand
  * @author Petteri Karttunen
  */
-import React from 'react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { TabContent } from '../../ui/TabContent';
 import { Tab, Tabs } from '../../ui/Tabs';
+import JsonField from './fields/JsonField';
+import NumberField from './fields/NumberField';
+import TextField from './fields/TextField';
 
 const LiferaySearchNodeConfigureForm = ({ nodeParameters, onChange }) => {
+  const [activeTab, setActiveTab] = useState(0);
+  const { t } = useTranslation();
+
   return (
-    <Tabs>
-      <Tab id={'generalSettings'} label={'General Settings'}>
-        <div>
-          <div className="form-row">
-            <div className="form-group col-6">
-              <label htmlFor="sxpBlueprintExternalReferenceCode">
-                Search Blueprint External Reference Code
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="sxpBlueprintExternalReferenceCode"
-                placeholder="Enter an external reference code"
-                value={nodeParameters.sxpBlueprintExternalReferenceCode}
-                onChange={(e) => {
-                  onChange('sxpBlueprintExternalReferenceCode', e.currentTarget.value);
-                }}
-              />
-              <small className="form-text text-muted">
-                The external reference of a blueprint performing a semantic search.
-              </small>
-            </div>
+    <div>
+      <div class="alert alert-info">{t('liferay-search-node-description')}</div>
 
-            <div className="form-group col-6">
-              <label htmlFor="documentResultField">Document Result Field</label>
-              <input
-                type="text"
-                className="form-control"
-                id="documentResultField"
-                placeholder="Enter location"
-                value={nodeParameters.documentResultField}
-                onChange={(e) => {
-                  onChange('documentResultField', e.currentTarget.value);
-                }}
-              />
-              <small className="form-text text-muted">
-                The Elasticsearch document field to use for extracting content from search results
-                for grounding the LLM within a RAG pipeline.
-              </small>
-            </div>
-          </div>
-        </div>
-      </Tab>
-      <Tab id={'aiBehaviour'} label={'AI Behaviour'}>
-        <div>
-          <div className="form-group">
-            <label htmlFor="topK">Top K</label>
-            <input
-              type="number"
-              className="form-control"
-              id="topK"
-              min="1"
-              value={nodeParameters.topK}
-              onChange={(e) => {
-                onChange('topK', e.currentTarget.value);
-              }}
+      <Tabs onChange={setActiveTab}>
+        <Tab id="generalSettings" label={t('general')} />
+        <Tab id="inputOutputSettings" label={t('input-and-output')} />
+      </Tabs>
+
+      <TabContent activeTab={activeTab}>
+        <div id="generalSettings">
+          <div>
+            <TextField
+              onChange={onChange}
+              parameterName="sxpBlueprintExternalReferenceCode"
+              parameterValue={nodeParameters.sxpBlueprintExternalReferenceCode}
             />
-            <small className="form-text text-muted">
-              Limits the number of potential tokens the model considers. Higher values are less
-              random.
-            </small>
+            <TextField
+              onChange={onChange}
+              parameterName="documentResultField"
+              parameterValue={nodeParameters.documentResultField}
+            />
+            <NumberField
+              helpText="Enter the max number of search results to be returned."
+              min="1"
+              onChange={onChange}
+              parameterName="topK"
+              parameterValue={nodeParameters.topK}
+            />
           </div>
         </div>
-      </Tab>
-      <Tab id={'inputOutput'} label={'Input & Output'}>
-        <div>
-          <div className="form-row">
-            <div className="form-group col-6">
-              <label htmlFor="inputParameterName">Input Parameter Name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="inputParameterName"
-                placeholder="text"
-                defaultValue="text"
-                value={nodeParameters.inputParameterName}
-                onChange={(e) => {
-                  onChange('inputParameterName', e.currentTarget.value);
-                }}
-              />
-              <small className="form-text text-muted">
-                The name of the parameter that hold the user's query.
-              </small>
-            </div>
-
-            <div className="form-group col-6">
-              <label htmlFor="taskContextOutputParameterName">Output Parameter Name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="taskContextOutputParameterName"
-                placeholder="ragDocuments"
-                value={nodeParameters.taskContextOutputParameterName}
-                onChange={(e) => {
-                  onChange('taskContextOutputParameterName', e.currentTarget.value);
-                }}
-              />
-              <small className="form-text text-muted">
-                {
-                  'The output parameter name injected in {{taskContext}} as a field. For example, {{taskContext.myOutput}}'
-                }
-              </small>
-            </div>
+        <div id="inputOutputSettings">
+          <div>
+            <TextField
+              onChange={onChange}
+              parameterName="inputParameterName"
+              parameterValue={nodeParameters.inputParameterName}
+            />
+            <TextField
+              onChange={onChange}
+              parameterName="outputParameterName"
+              parameterValue={nodeParameters.outputParameterName}
+            />
+            <TextField
+              onChange={onChange}
+              parameterName="taskContextOutputParameterName"
+              parameterValue={nodeParameters.taskContextOutputParameterName}
+            />
           </div>
         </div>
-      </Tab>
-    </Tabs>
+      </TabContent>
+    </div>
   );
 };
 

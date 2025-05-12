@@ -1,11 +1,14 @@
 /**
  * @author Louis-Guillaume Durand
+ * @author Petteri Karttunen
  */
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   getImageGenerationNodes,
   getTextGenerationNodes,
+  getTriggerNodes,
   getUtilityNodes,
 } from '../../constants/AITasksNodeTypesConstants';
 import { useDnD } from '../../contexts/DnDContext';
@@ -19,6 +22,8 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
     event.dataTransfer.effectAllowed = 'move';
   };
 
+  const { t } = useTranslation();
+
   return (
     <div
       className={
@@ -28,27 +33,18 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
     >
       <div className="sidebar-header">
         <span className="d-flex flex-row justify-content-between text-truncate-inline">
-          <span className="component-title text-truncate">Add Nodes</span>
-          <button
-            className={'btn btn-default'}
-            onClick={(e) => {
-              e.preventDefault();
-              setIsOpen(false);
-            }}
-          >
-            <Icon name={'times'} />
-          </button>
+          Drag & Drop nodes into the canvas
         </span>
       </div>
       <div className="container">
         <div className="flow-nodes-pane-area d-flex flex-column">
-          <h3 className={'node-category-title'}>Text Generation</h3>
-          {getTextGenerationNodes.map((node, index) => {
+          <h3 className={'node-category-title'}>Trigger</h3>
+          {getTriggerNodes.map((node, index) => {
             return (
               <div
                 key={index}
                 className={'new-node'}
-                onDragStart={(event) => onDragStart(event, node.id)}
+                onDragStart={(event) => onDragStart(event, node)}
                 draggable
               >
                 <div
@@ -56,7 +52,27 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
                     'node-header-container d-flex flex-row align-items-center justify-content-start'
                   }
                 >
-                  <h4>{node.name}</h4>
+                  <h4>{t(node)}</h4>
+                </div>
+              </div>
+            );
+          })}
+
+          <h3 className={'node-category-title'}>Text Generation</h3>
+          {getTextGenerationNodes.map((node, index) => {
+            return (
+              <div
+                key={index}
+                className={'new-node'}
+                onDragStart={(event) => onDragStart(event, node)}
+                draggable
+              >
+                <div
+                  className={
+                    'node-header-container d-flex flex-row align-items-center justify-content-start'
+                  }
+                >
+                  <h4>{t(node)}</h4>
                 </div>
               </div>
             );
@@ -67,7 +83,7 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
               <div
                 key={index}
                 className={'new-node'}
-                onDragStart={(event) => onDragStart(event, node.id)}
+                onDragStart={(event) => onDragStart(event, node)}
                 draggable
               >
                 <div
@@ -75,7 +91,7 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
                     'node-header-container d-flex flex-row align-items-center justify-content-start'
                   }
                 >
-                  <h4>{node.name}</h4>
+                  <h4>{t(node)}</h4>
                 </div>
               </div>
             );
@@ -86,7 +102,7 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
               <div
                 key={index}
                 className={'new-node'}
-                onDragStart={(event) => onDragStart(event, node.id)}
+                onDragStart={(event) => onDragStart(event, node)}
                 draggable
               >
                 <div
@@ -94,7 +110,7 @@ const AITaskFlowNodesPane = ({ isOpen, setIsOpen }) => {
                     'node-header-container d-flex flex-row align-items-center justify-content-start'
                   }
                 >
-                  <h4>{node.name}</h4>
+                  <h4>{t(node)}</h4>
                 </div>
               </div>
             );

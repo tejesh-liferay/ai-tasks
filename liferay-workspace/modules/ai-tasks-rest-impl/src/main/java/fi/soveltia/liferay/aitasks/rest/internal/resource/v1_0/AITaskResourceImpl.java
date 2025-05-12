@@ -235,9 +235,16 @@ public class AITaskResourceImpl extends BaseAITaskResourceImpl {
 	public void postAITaskByExternalReferenceCodeClear(
 		String externalReferenceCode, String nodeId) {
 
-		_chatMemoryManager.clearChatMemory(
-			contextCompany.getCompanyId(), externalReferenceCode, nodeId,
-			contextUser.getUserId());
+		if (Validator.isBlank(nodeId)) {
+			_chatMemoryManager.clearChatMemory(
+				contextCompany.getCompanyId(), externalReferenceCode,
+				contextUser.getUserId());
+		}
+		else {
+			_chatMemoryManager.clearChatMemory(
+				contextCompany.getCompanyId(), externalReferenceCode, nodeId,
+				contextUser.getUserId());
+		}
 	}
 
 	@Override

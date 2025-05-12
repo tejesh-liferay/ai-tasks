@@ -19,6 +19,7 @@ import { AITasksProvider } from './contexts/AITasksContext';
 import { ModalProvider } from './contexts/ModalContext';
 import { NodeMenuProvider } from './contexts/NodeMenuContext';
 import { TooltipProvider } from './contexts/TooltipContext';
+import './i18n';
 import './styles/index.scss';
 
 const AITaskRouting = () => (

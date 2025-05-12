@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.util.MapUtil;
 
 import fi.soveltia.liferay.aitasks.internal.task.node.condition.AITaskNodeConditionEvaluationResponse;
 import fi.soveltia.liferay.aitasks.internal.task.node.condition.AITaskNodeConditionEvaluator;
+import fi.soveltia.liferay.aitasks.internal.task.node.type.TriggerAITaskNode;
 import fi.soveltia.liferay.aitasks.model.AITask;
 import fi.soveltia.liferay.aitasks.rest.dto.v1_0.Configuration;
 import fi.soveltia.liferay.aitasks.rest.dto.v1_0.Edge;
@@ -26,6 +27,7 @@ import fi.soveltia.liferay.aitasks.task.response.AITaskResponseBuilder;
 import fi.soveltia.liferay.aitasks.task.response.AITaskResponseBuilderFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -43,72 +45,34 @@ import org.osgi.service.component.annotations.Reference;
 public class AITaskRequestExecutorImpl implements AITaskRequestExecutor {
 
 	public AITaskResponse execute(AITaskRequest aiTaskRequest) {
-		AITaskResponseBuilder aiTaskResponseBuilder =
-			_aiTaskResponseBuilderFactory.builder();
-
 		AITask aiTask = aiTaskRequest.getAITask();
 
 		if (!aiTask.getEnabled()) {
-			aiTaskResponseBuilder.addOutput(
+			return _aiTaskResponseBuilderFactory.builder(
+			).addOutput(
 				"error",
-				"Oh dear, the requested task could not be found or is not " +
-					"enabled");
-
-			return aiTaskResponseBuilder.build();
+				StringBundler.concat(
+					"The task ", aiTask.getExternalReferenceCode(),
+					" is not enabled")
+			).build();
 		}
 
 		Configuration configuration = Configuration.toDTO(
 			aiTask.getConfigurationJSON());
 
-		Node node = _getStartNode(configuration);
+		Map<String, TriggerAITaskNode> triggerAITaskNodes =
+			_getTriggerAITaskNodes(configuration);
 
-		if (node == null) {
-			aiTaskResponseBuilder.addOutput(
+		if (triggerAITaskNodes.isEmpty()) {
+			return _aiTaskResponseBuilderFactory.builder(
+			).addOutput(
 				"error",
-				StringBundler.concat(
-					"Oh dear, the start node ", configuration.getStartNodeId(),
-					" could not be found! Please check the task configuration ",
-					"and try again."));
-
-			return aiTaskResponseBuilder.build();
+				"No trigger nodes defined. Please check the configuration"
+			).build();
 		}
 
-		long startTime = System.currentTimeMillis();
-
-		try {
-			if (_evaluateCondition(
-					aiTaskRequest.getAITaskContext(), aiTaskResponseBuilder,
-					configuration.getDebug(), aiTaskRequest.getInput(), node)) {
-
-				_executeTaskNode(
-					aiTaskRequest.getAITaskContext(), aiTaskResponseBuilder,
-					configuration.getDebug(), configuration.getEdges(),
-					aiTaskRequest.getInput(), node, configuration.getNodes());
-			}
-		}
-		catch (Exception exception) {
-			_log.error(exception);
-
-			aiTaskResponseBuilder.addDebugInfo(
-				HashMapBuilder.<String, Object>put(
-					"exception", exception.toString()
-				).build(),
-				node.getId());
-
-			aiTaskResponseBuilder.addOutput(
-				"error",
-				StringBundler.concat(
-					"Oh dear, something went wrong! Please check the task ",
-					"configuration and try again.\n\nReason:\n", "```json\n",
-					exception.getMessage(), "\n```\n"));
-		}
-
-		if (configuration.getDebug()) {
-			aiTaskResponseBuilder.took(
-				(System.currentTimeMillis() - startTime) + "ms");
-		}
-
-		return aiTaskResponseBuilder.build();
+		return _executeTriggerNodes(
+			aiTaskRequest, configuration, triggerAITaskNodes);
 	}
 
 	@Activate
@@ -122,18 +86,6 @@ public class AITaskRequestExecutorImpl implements AITaskRequestExecutor {
 		_serviceTrackerMap.close();
 	}
 
-	private void _addDebugInfo(
-		AITaskNodeResponse aiTaskNodeResponse,
-		AITaskResponseBuilder aiTaskResponseBuilder, String id) {
-
-		if (aiTaskNodeResponse == null) {
-			return;
-		}
-
-		aiTaskResponseBuilder.addDebugInfo(
-			aiTaskNodeResponse.getDebugInfo(), id);
-	}
-
 	private void _addExecutionTime(
 		AITaskNodeResponse aiTaskNodeResponse, long startTime) {
 
@@ -141,15 +93,28 @@ public class AITaskRequestExecutorImpl implements AITaskRequestExecutor {
 			return;
 		}
 
-		Map<String, Object> debugInfo = aiTaskNodeResponse.getDebugInfo();
+		Map<String, Object> executionTrace =
+			aiTaskNodeResponse.getExecutionTrace();
 
-		debugInfo.put(
+		executionTrace.put(
 			"executionTime", (System.currentTimeMillis() - startTime) + "ms");
 	}
 
+	private void _addExecutionTrace(
+		AITaskNodeResponse aiTaskNodeResponse,
+		AITaskResponseBuilder aiTaskResponseBuilder, String id) {
+
+		if (aiTaskNodeResponse == null) {
+			return;
+		}
+
+		aiTaskResponseBuilder.addExecutionTrace(
+			aiTaskNodeResponse.getExecutionTrace(), id);
+	}
+
 	private void _addOutput(
-		AITaskResponseBuilder aiTaskResponseBuilder,
-		AITaskNodeResponse aiTaskNodeResponse) {
+		AITaskNodeResponse aiTaskNodeResponse,
+		AITaskResponseBuilder aiTaskResponseBuilder) {
 
 		if (aiTaskNodeResponse == null) {
 			return;
@@ -162,25 +127,24 @@ public class AITaskRequestExecutorImpl implements AITaskRequestExecutor {
 
 	private boolean _evaluateCondition(
 		AITaskContext aiTaskContext,
-		AITaskResponseBuilder aiTaskResponseBuilder, boolean debug,
-		Map<String, Object> input, Node node) {
+		AITaskResponseBuilder aiTaskResponseBuilder, Node node, boolean trace) {
 
 		if (node.getCondition() == null) {
 			return true;
 		}
 
 		AITaskNodeConditionEvaluator aiTaskNodeConditionEvaluator =
-			new AITaskNodeConditionEvaluator(aiTaskContext, debug, input);
+			new AITaskNodeConditionEvaluator(aiTaskContext, trace);
 
 		AITaskNodeConditionEvaluationResponse
 			aiTaskNodeConditionEvaluationResponse =
 				aiTaskNodeConditionEvaluator.evaluate(node.getCondition());
 
-		if (debug) {
-			aiTaskResponseBuilder.addDebugInfo(
+		if (trace) {
+			aiTaskResponseBuilder.addExecutionTrace(
 				HashMapBuilder.<String, Object>put(
 					"condition",
-					aiTaskNodeConditionEvaluationResponse.getDebugInfo()
+					aiTaskNodeConditionEvaluationResponse.getExecutionTrace()
 				).build(),
 				node.getId());
 		}
@@ -188,10 +152,10 @@ public class AITaskRequestExecutorImpl implements AITaskRequestExecutor {
 		return aiTaskNodeConditionEvaluationResponse.isValid();
 	}
 
-	private void _executeTaskNode(
+	private void _executeNode(
 		AITaskContext aiTaskContext,
-		AITaskResponseBuilder aiTaskResponseBuilder, boolean debug,
-		Edge[] edges, Map<String, Object> input, Node node, Node[] nodes) {
+		AITaskResponseBuilder aiTaskResponseBuilder,
+		Configuration configuration, Node node) {
 
 		AITaskNode aiTaskNode = _serviceTrackerMap.getService(node.getType());
 
@@ -208,18 +172,19 @@ public class AITaskRequestExecutorImpl implements AITaskRequestExecutor {
 		long startTime = System.currentTimeMillis();
 
 		AITaskNodeResponse aiTaskNodeResponse = aiTaskNode.execute(
-			aiTaskContext, debug, node.getId(), input,
-			_jsonFactory.createJSONObject((Map)node.getParameters()));
+			aiTaskContext,
+			_jsonFactory.createJSONObject((Map)node.getParameters()),
+			node.getId(), configuration.getTrace());
 
-		if (debug) {
-			_addDebugInfo(
+		if (configuration.getTrace()) {
+			_addExecutionTrace(
 				aiTaskNodeResponse, aiTaskResponseBuilder, node.getId());
 			_addExecutionTime(aiTaskNodeResponse, startTime);
 		}
 
-		_addOutput(aiTaskResponseBuilder, aiTaskNodeResponse);
+		_addOutput(aiTaskNodeResponse, aiTaskResponseBuilder);
 
-		List<Node> nextNodes = _getNextNodes(edges, node.getId(), nodes);
+		List<Node> nextNodes = _getNextNodes(configuration, node.getId());
 
 		if (nextNodes.isEmpty()) {
 			return;
@@ -227,28 +192,82 @@ public class AITaskRequestExecutorImpl implements AITaskRequestExecutor {
 
 		for (Node nextNode : nextNodes) {
 			if (!_evaluateCondition(
-					aiTaskContext, aiTaskResponseBuilder, debug, input,
-					nextNode)) {
+					aiTaskContext, aiTaskResponseBuilder, nextNode,
+					configuration.getTrace())) {
 
 				continue;
 			}
 
-			_executeTaskNode(
-				aiTaskContext, aiTaskResponseBuilder, debug, edges, input,
-				nextNode, nodes);
+			_executeNode(
+				aiTaskContext, aiTaskResponseBuilder, configuration, nextNode);
 		}
 	}
 
-	private List<Node> _getNextNodes(Edge[] edges, String id, Node[] nodes) {
+	private AITaskResponse _executeTriggerNodes(
+		AITaskRequest aiTaskRequest, Configuration configuration,
+		Map<String, TriggerAITaskNode> triggerAITaskNodes) {
+
+		long startTime = System.currentTimeMillis();
+
+		AITaskResponseBuilder aiTaskResponseBuilder =
+			_aiTaskResponseBuilderFactory.builder();
+
+		// TODO: For now, all the trees share the same context and output
+
+		for (Map.Entry<String, TriggerAITaskNode> entry :
+				triggerAITaskNodes.entrySet()) {
+
+			Node node = _getNode(entry.getKey(), configuration.getNodes());
+
+			TriggerAITaskNode triggerAITaskNode = entry.getValue();
+
+			try {
+				if (triggerAITaskNode.evaluate(
+						aiTaskRequest.getAITaskContext(),
+						_jsonFactory.createJSONObject(
+							(Map)node.getParameters()))) {
+
+					_executeNode(
+						aiTaskRequest.getAITaskContext(), aiTaskResponseBuilder,
+						configuration, node);
+				}
+			}
+			catch (Exception exception) {
+				_log.error(exception);
+
+				aiTaskResponseBuilder.addExecutionTrace(
+					HashMapBuilder.<String, Object>put(
+						"exception", exception.toString()
+					).build(),
+					entry.getKey());
+
+				aiTaskResponseBuilder.addOutput(
+					"error",
+					StringBundler.concat(
+						"Something went wrong:\n", "```json\n",
+						exception.getMessage(), "\n```\n"));
+			}
+		}
+
+		if (configuration.getTrace()) {
+			aiTaskResponseBuilder.took(
+				(System.currentTimeMillis() - startTime) + "ms");
+		}
+
+		return aiTaskResponseBuilder.build();
+	}
+
+	private List<Node> _getNextNodes(Configuration configuration, String id) {
 		List<Node> nextNodes = new ArrayList<>();
 
-		if (edges == null) {
+		if (configuration.getEdges() == null) {
 			return nextNodes;
 		}
 
-		for (Edge edge : edges) {
+		for (Edge edge : configuration.getEdges()) {
 			if (Objects.equals(edge.getSource(), id)) {
-				nextNodes.add(_getNode(edge.getTarget(), nodes));
+				nextNodes.add(
+					_getNode(edge.getTarget(), configuration.getNodes()));
 			}
 		}
 
@@ -265,14 +284,25 @@ public class AITaskRequestExecutorImpl implements AITaskRequestExecutor {
 		return null;
 	}
 
-	private Node _getStartNode(Configuration configuration) {
+	private Map<String, TriggerAITaskNode> _getTriggerAITaskNodes(
+		Configuration configuration) {
+
+		Map<String, TriggerAITaskNode> triggerAITaskNodes = new HashMap<>();
+
 		for (Node node : configuration.getNodes()) {
-			if (Objects.equals(node.getId(), configuration.getStartNodeId())) {
-				return node;
+			AITaskNode aiTaskNode = _serviceTrackerMap.getService(
+				node.getType());
+
+			if ((aiTaskNode == null) ||
+				!(aiTaskNode instanceof TriggerAITaskNode)) {
+
+				continue;
 			}
+
+			triggerAITaskNodes.put(node.getId(), (TriggerAITaskNode)aiTaskNode);
 		}
 
-		return null;
+		return triggerAITaskNodes;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

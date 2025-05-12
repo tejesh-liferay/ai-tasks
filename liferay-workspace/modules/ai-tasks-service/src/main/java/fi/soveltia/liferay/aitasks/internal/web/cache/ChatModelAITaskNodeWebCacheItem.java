@@ -8,8 +8,8 @@ import com.liferay.portal.kernel.webcache.WebCacheItem;
 import com.liferay.portal.kernel.webcache.WebCachePoolUtil;
 
 import fi.soveltia.liferay.aitasks.configuration.AITasksConfiguration;
-
-import java.util.function.BiFunction;
+import fi.soveltia.liferay.aitasks.internal.task.ai.service.ChatAssistant;
+import fi.soveltia.liferay.aitasks.internal.task.ai.service.WithMemoryChatAssistant;
 
 /**
  * @author Petteri Karttunen
@@ -17,9 +17,8 @@ import java.util.function.BiFunction;
 public class ChatModelAITaskNodeWebCacheItem implements WebCacheItem {
 
 	public static Object get(
-		AITasksConfiguration aiTasksConfiguration,
-		BiFunction<String, String, Object> biFunction, String chatMemoryId,
-		String id, String userMessage) {
+		AITasksConfiguration aiTasksConfiguration, Object object,
+		String chatMemoryId, String id, String userMessage) {
 
 		try {
 			return WebCachePoolUtil.get(
@@ -28,8 +27,7 @@ public class ChatModelAITaskNodeWebCacheItem implements WebCacheItem {
 					StringPool.POUND, chatMemoryId, StringPool.POUND, id,
 					StringPool.POUND, userMessage),
 				new ChatModelAITaskNodeWebCacheItem(
-					aiTasksConfiguration, biFunction, chatMemoryId,
-					userMessage));
+					aiTasksConfiguration, object, chatMemoryId, userMessage));
 		}
 		catch (Exception exception) {
 			if (_log.isDebugEnabled()) {
@@ -41,12 +39,11 @@ public class ChatModelAITaskNodeWebCacheItem implements WebCacheItem {
 	}
 
 	public ChatModelAITaskNodeWebCacheItem(
-		AITasksConfiguration aiTasksConfiguration,
-		BiFunction<String, String, Object> biFunction, String chatMemoryId,
-		String userMessage) {
+		AITasksConfiguration aiTasksConfiguration, Object object,
+		String chatMemoryId, String userMessage) {
 
 		_aiTasksConfiguration = aiTasksConfiguration;
-		_biFunction = biFunction;
+		_object = object;
 		_chatMemoryId = chatMemoryId;
 		_userMessage = userMessage;
 	}
@@ -54,7 +51,20 @@ public class ChatModelAITaskNodeWebCacheItem implements WebCacheItem {
 	@Override
 	public Object convert(String key) {
 		try {
-			Object result = _biFunction.apply(_chatMemoryId, _userMessage);
+			Object result = null;
+
+			if (_object instanceof ChatAssistant) {
+				ChatAssistant chatAssistant = (ChatAssistant)_object;
+
+				result = chatAssistant.chat(_userMessage);
+			}
+			else if (_object instanceof WithMemoryChatAssistant) {
+				WithMemoryChatAssistant withMemoryChatAssistant =
+					(WithMemoryChatAssistant)_object;
+
+				result = withMemoryChatAssistant.chat(
+					_chatMemoryId, _userMessage);
+			}
 
 			if (result == null) {
 				throw new RuntimeException("Result is null");
@@ -76,8 +86,8 @@ public class ChatModelAITaskNodeWebCacheItem implements WebCacheItem {
 		ChatModelAITaskNodeWebCacheItem.class);
 
 	private final AITasksConfiguration _aiTasksConfiguration;
-	private final BiFunction<String, String, Object> _biFunction;
 	private final String _chatMemoryId;
+	private final Object _object;
 	private final String _userMessage;
 
 }

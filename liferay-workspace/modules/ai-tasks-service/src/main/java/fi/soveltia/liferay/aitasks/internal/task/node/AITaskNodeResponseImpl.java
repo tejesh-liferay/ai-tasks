@@ -12,19 +12,19 @@ import java.util.Map;
 public class AITaskNodeResponseImpl implements AITaskNodeResponse {
 
 	public AITaskNodeResponseImpl(
-		Map<String, Object> debugInfo, Map<String, Object> output) {
+		Map<String, Object> executionTrace, Map<String, Object> output) {
 
-		_debugInfo = debugInfo;
+		_executionTrace = executionTrace;
 		_output = output;
 	}
 
 	@Override
-	public Map<String, Object> getDebugInfo() {
-		if (_debugInfo == null) {
-			_debugInfo = new HashMap<>();
+	public Map<String, Object> getExecutionTrace() {
+		if (_executionTrace == null) {
+			_executionTrace = new HashMap<>();
 		}
 
-		return _debugInfo;
+		return _executionTrace;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class AITaskNodeResponseImpl implements AITaskNodeResponse {
 		return _output;
 	}
 
-	private Map<String, Object> _debugInfo;
+	private Map<String, Object> _executionTrace;
 	private Map<String, Object> _output;
 
 }

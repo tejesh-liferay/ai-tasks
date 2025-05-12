@@ -9,25 +9,25 @@ import java.util.Map;
 public class AITaskNodeConditionEvaluationResponse {
 
 	public AITaskNodeConditionEvaluationResponse(
-		Map<String, Object> debugInfo, boolean valid) {
+		Map<String, Object> executionTrace, boolean valid) {
 
-		_debugInfo = debugInfo;
+		_executionTrace = executionTrace;
 		_valid = valid;
 	}
 
-	public Map<String, Object> getDebugInfo() {
-		if (_debugInfo == null) {
-			_debugInfo = new HashMap<>();
+	public Map<String, Object> getExecutionTrace() {
+		if (_executionTrace == null) {
+			_executionTrace = new HashMap<>();
 		}
 
-		return _debugInfo;
+		return _executionTrace;
 	}
 
 	public boolean isValid() {
 		return _valid;
 	}
 
-	private Map<String, Object> _debugInfo;
+	private Map<String, Object> _executionTrace;
 	private boolean _valid;
 
 }

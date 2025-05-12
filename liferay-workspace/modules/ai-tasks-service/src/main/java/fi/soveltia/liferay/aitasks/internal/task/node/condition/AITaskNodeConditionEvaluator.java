@@ -26,19 +26,19 @@ import java.util.Objects;
 public class AITaskNodeConditionEvaluator {
 
 	public AITaskNodeConditionEvaluator(
-		AITaskContext aiTaskContext, boolean debug, Map<String, Object> input) {
+		AITaskContext aiTaskContext, boolean trace) {
 
 		_aiTaskContext = aiTaskContext;
-		_debug = debug;
-		_input = input;
+		_trace = trace;
 	}
 
 	public AITaskNodeConditionEvaluationResponse evaluate(Condition condition) {
 		if (!_evaluate(condition)) {
-			return new AITaskNodeConditionEvaluationResponse(_debugInfo, false);
+			return new AITaskNodeConditionEvaluationResponse(
+				_executionTrace, false);
 		}
 
-		return new AITaskNodeConditionEvaluationResponse(_debugInfo, true);
+		return new AITaskNodeConditionEvaluationResponse(_executionTrace, true);
 	}
 
 	private boolean _contains(
@@ -53,7 +53,7 @@ public class AITaskNodeConditionEvaluator {
 
 			for (double d : (double[])field) {
 				if (d == doubleValue) {
-					return _withDebugInfo(id, true, fieldName, value);
+					return _withExecutionTrace(id, true, fieldName, value);
 				}
 			}
 		}
@@ -62,7 +62,7 @@ public class AITaskNodeConditionEvaluator {
 
 			for (float f : (float[])field) {
 				if (f == floatValue) {
-					return _withDebugInfo(id, true, fieldName, value);
+					return _withExecutionTrace(id, true, fieldName, value);
 				}
 			}
 		}
@@ -71,7 +71,7 @@ public class AITaskNodeConditionEvaluator {
 
 			for (int i : (int[])field) {
 				if (i == intValue) {
-					return _withDebugInfo(id, true, fieldName, value);
+					return _withExecutionTrace(id, true, fieldName, value);
 				}
 			}
 		}
@@ -80,7 +80,7 @@ public class AITaskNodeConditionEvaluator {
 
 			for (long l : (long[])field) {
 				if (l == longValue) {
-					return _withDebugInfo(id, true, fieldName, value);
+					return _withExecutionTrace(id, true, fieldName, value);
 				}
 			}
 		}
@@ -88,20 +88,20 @@ public class AITaskNodeConditionEvaluator {
 			String stringValue = GetterUtil.getString(value);
 
 			for (String s : (String[])field) {
-				if (Objects.equals(s, stringValue)) {
-					return _withDebugInfo(id, true, fieldName, value);
+				if (StringUtil.equalsIgnoreCase(s, stringValue)) {
+					return _withExecutionTrace(id, true, fieldName, value);
 				}
 			}
 		}
 		else if (field instanceof String) {
-			String stringField = (String)field;
-
-			return _withDebugInfo(
-				id, stringField.contains(GetterUtil.getString(value)),
+			return _withExecutionTrace(
+				id,
+				StringUtil.containsIgnoreCase(
+					(String)field, GetterUtil.getString(value)),
 				fieldName, value);
 		}
 
-		return _withDebugInfo(id, false, fieldName, value);
+		return _withExecutionTrace(id, false, fieldName, value);
 	}
 
 	private boolean _evaluate(Condition condition) {
@@ -157,12 +157,12 @@ public class AITaskNodeConditionEvaluator {
 				_getField(contains.getField()), contains.getField(),
 				contains.getId(), contains.getValue())) {
 
-			return _withDebugInfo(
+			return _withExecutionTrace(
 				contains.getId(), true, contains.getField(),
 				contains.getValue());
 		}
 
-		return _withDebugInfo(
+		return _withExecutionTrace(
 			contains.getId(), false, contains.getField(), contains.getValue());
 	}
 
@@ -180,7 +180,7 @@ public class AITaskNodeConditionEvaluator {
 		Object value = equals.getValue();
 
 		if (field instanceof Double) {
-			if (_withDebugInfo(
+			if (_withExecutionTrace(
 					equals.getId(),
 					GetterUtil.getDouble(field) == GetterUtil.getDouble(value),
 					equals.getField(), value)) {
@@ -191,7 +191,7 @@ public class AITaskNodeConditionEvaluator {
 			return false;
 		}
 		else if (field instanceof Double[]) {
-			return _withDebugInfo(
+			return _withExecutionTrace(
 				equals.getId(),
 				Arrays.equals(
 					GetterUtil.getDoubleValues(field),
@@ -199,7 +199,7 @@ public class AITaskNodeConditionEvaluator {
 				equals.getField(), value);
 		}
 		else if (field instanceof Float) {
-			if (_withDebugInfo(
+			if (_withExecutionTrace(
 					equals.getId(),
 					GetterUtil.getFloat(field) == GetterUtil.getFloat(value),
 					equals.getField(), value)) {
@@ -210,7 +210,7 @@ public class AITaskNodeConditionEvaluator {
 			return false;
 		}
 		else if (field instanceof Float[]) {
-			return _withDebugInfo(
+			return _withExecutionTrace(
 				equals.getId(),
 				Arrays.equals(
 					GetterUtil.getFloatValues(field),
@@ -218,7 +218,7 @@ public class AITaskNodeConditionEvaluator {
 				equals.getField(), value);
 		}
 		else if (field instanceof Integer) {
-			if (_withDebugInfo(
+			if (_withExecutionTrace(
 					equals.getId(),
 					GetterUtil.getInteger(field) == GetterUtil.getInteger(
 						value),
@@ -230,7 +230,7 @@ public class AITaskNodeConditionEvaluator {
 			return false;
 		}
 		else if (field instanceof Integer[]) {
-			return _withDebugInfo(
+			return _withExecutionTrace(
 				equals.getId(),
 				Arrays.equals(
 					GetterUtil.getIntegerValues(field),
@@ -238,7 +238,7 @@ public class AITaskNodeConditionEvaluator {
 				equals.getField(), value);
 		}
 		else if (field instanceof Long) {
-			if (_withDebugInfo(
+			if (_withExecutionTrace(
 					equals.getId(),
 					GetterUtil.getLong(field) == GetterUtil.getLong(value),
 					equals.getField(), value)) {
@@ -249,7 +249,7 @@ public class AITaskNodeConditionEvaluator {
 			return false;
 		}
 		else if (field instanceof Long[]) {
-			return _withDebugInfo(
+			return _withExecutionTrace(
 				equals.getId(),
 				Arrays.equals(
 					GetterUtil.getLongValues(field),
@@ -257,14 +257,14 @@ public class AITaskNodeConditionEvaluator {
 				equals.getField(), value);
 		}
 		else if (field instanceof String) {
-			return _withDebugInfo(
+			return _withExecutionTrace(
 				equals.getId(),
-				StringUtil.equals(
+				StringUtil.equalsIgnoreCase(
 					GetterUtil.getString(field), GetterUtil.getString(value)),
 				equals.getField(), value);
 		}
 		else if (field instanceof String[]) {
-			return _withDebugInfo(
+			return _withExecutionTrace(
 				equals.getId(),
 				Arrays.equals(
 					GetterUtil.getStringValues(field),
@@ -272,7 +272,8 @@ public class AITaskNodeConditionEvaluator {
 				equals.getField(), value);
 		}
 
-		return _withDebugInfo(equals.getId(), false, equals.getField(), value);
+		return _withExecutionTrace(
+			equals.getId(), false, equals.getField(), value);
 	}
 
 	private boolean _evaluateExists(Exists exists) {
@@ -281,11 +282,12 @@ public class AITaskNodeConditionEvaluator {
 		}
 
 		if (Objects.isNull(_getField(exists.getField()))) {
-			return _withDebugInfo(
+			return _withExecutionTrace(
 				exists.getId(), false, exists.getField(), null);
 		}
 
-		return _withDebugInfo(exists.getId(), true, exists.getField(), null);
+		return _withExecutionTrace(
+			exists.getId(), true, exists.getField(), null);
 	}
 
 	private boolean _evaluateIn(In in) {
@@ -297,11 +299,12 @@ public class AITaskNodeConditionEvaluator {
 				in.getValue(), in.getField(), in.getId(),
 				_getField(in.getField()))) {
 
-			return _withDebugInfo(
+			return _withExecutionTrace(
 				in.getId(), true, in.getField(), in.getValue());
 		}
 
-		return _withDebugInfo(in.getId(), false, in.getField(), in.getValue());
+		return _withExecutionTrace(
+			in.getId(), false, in.getField(), in.getValue());
 	}
 
 	private boolean _evaluateNot(Condition condition) {
@@ -321,8 +324,6 @@ public class AITaskNodeConditionEvaluator {
 			return true;
 		}
 
-		// TODO
-
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
@@ -335,7 +336,7 @@ public class AITaskNodeConditionEvaluator {
 		field = field.replaceAll("\\}\\}", "");
 
 		if (field.startsWith("input")) {
-			return _input.get(field);
+			return _aiTaskContext.getIfMapParameter(field);
 		}
 
 		if (field.startsWith("taskContext")) {
@@ -352,11 +353,11 @@ public class AITaskNodeConditionEvaluator {
 		return null;
 	}
 
-	private boolean _withDebugInfo(
+	private boolean _withExecutionTrace(
 		String id, boolean evaluationResult, String field, Object value) {
 
-		if (_debug) {
-			_debugInfo.put(
+		if (_trace) {
+			_executionTrace.put(
 				id,
 				HashMapBuilder.<String, Object>put(
 					"field", field
@@ -371,8 +372,7 @@ public class AITaskNodeConditionEvaluator {
 	}
 
 	private AITaskContext _aiTaskContext;
-	private boolean _debug;
-	private Map<String, Object> _debugInfo = new HashMap<>();
-	private Map<String, Object> _input;
+	private Map<String, Object> _executionTrace = new HashMap<>();
+	private boolean _trace;
 
 }

@@ -41,20 +41,20 @@ public class AITaskResponseSerDes {
 
 		sb.append("{");
 
-		if (aiTaskResponse.getDebugInfo() != null) {
+		if (aiTaskResponse.getExecutionTrace() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"debugInfo\": ");
+			sb.append("\"executionTrace\": ");
 
-			if (aiTaskResponse.getDebugInfo() instanceof String) {
+			if (aiTaskResponse.getExecutionTrace() instanceof String) {
 				sb.append("\"");
-				sb.append((String)aiTaskResponse.getDebugInfo());
+				sb.append((String)aiTaskResponse.getExecutionTrace());
 				sb.append("\"");
 			}
 			else {
-				sb.append(aiTaskResponse.getDebugInfo());
+				sb.append(aiTaskResponse.getExecutionTrace());
 			}
 		}
 
@@ -108,11 +108,13 @@ public class AITaskResponseSerDes {
 
 		Map<String, String> map = new TreeMap<>();
 
-		if (aiTaskResponse.getDebugInfo() == null) {
-			map.put("debugInfo", null);
+		if (aiTaskResponse.getExecutionTrace() == null) {
+			map.put("executionTrace", null);
 		}
 		else {
-			map.put("debugInfo", String.valueOf(aiTaskResponse.getDebugInfo()));
+			map.put(
+				"executionTrace",
+				String.valueOf(aiTaskResponse.getExecutionTrace()));
 		}
 
 		if (aiTaskResponse.getOutput() == null) {
@@ -147,7 +149,7 @@ public class AITaskResponseSerDes {
 
 		@Override
 		protected boolean parseMaps(String jsonParserFieldName) {
-			if (Objects.equals(jsonParserFieldName, "debugInfo")) {
+			if (Objects.equals(jsonParserFieldName, "executionTrace")) {
 				return false;
 			}
 			else if (Objects.equals(jsonParserFieldName, "output")) {
@@ -165,9 +167,10 @@ public class AITaskResponseSerDes {
 			AITaskResponse aiTaskResponse, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "debugInfo")) {
+			if (Objects.equals(jsonParserFieldName, "executionTrace")) {
 				if (jsonParserFieldValue != null) {
-					aiTaskResponse.setDebugInfo((Object)jsonParserFieldValue);
+					aiTaskResponse.setExecutionTrace(
+						(Object)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "output")) {

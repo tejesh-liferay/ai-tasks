@@ -1,5 +1,8 @@
 .chat-preview {
-  height: 88.4vh;
+  font-size: 0.85rem;
+  height: auto;
+  position: static;
+  z-index: 1020;
   transition: width 0.3s ease-in-out;
   overflow-x: hidden;
   box-shadow: var(--box-shadow-lg);
@@ -20,45 +23,49 @@
     border-bottom: 1px solid var(--gray-300);
   }
 
-  .container {
-    height: 75%;
+  .messages {
+    height: calc(100vh - 390px);
+  }
+
+  .prompt {
+    height: 9rem;
   }
 
   .chat-input-wrapper {
-    border-radius: 5rem;
-    border: 1px solid var(--gray-500);
-
     textarea.form-control {
       background: transparent;
-      border: none;
+      border: 1px solid var(--gray-500);
+      font-size: inherit;
       overflow: hidden;
       resize: none;
-      height: 3.5rem;
-      border-radius: 5rem;
+      border-radius: 2px;
       padding: 1.25rem 1.2rem;
       &:focus {
         outline: none;
         box-shadow: none;
       }
     }
-
-    button.btn.btn-secondary[type='submit'] {
-      border: none;
-      border-radius: 20rem;
-      padding: 1.15rem;
-      margin: 0.25rem;
-      background: var(--primary);
-      color: var(--light);
-    }
   }
 
-  .sidebar-header {
-    padding-top: 2rem;
+  .trace-details {
+    &.hidden {
+      display: none;
+    }
+    pre {
+      background-color: #fdfdfd;
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-size: 0.6rem;
+      overflow-x: auto; // Add horizontal scroll if needed
+      white-space: pre-wrap; /* Wrap the text */
+      word-wrap: break-word; /* Wrap the text */
+      font-family: monospace; // Use a monospace font for code-like presentation
+    }
   }
 
   .chat-preview-area {
     padding: 0 0.5rem 2rem 0.5rem;
-    height: 90%;
+    height: 100%;
     overflow: auto;
     transition: opacity 0.15s ease;
     scroll-behavior: smooth;

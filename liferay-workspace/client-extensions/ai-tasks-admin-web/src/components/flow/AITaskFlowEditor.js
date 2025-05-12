@@ -3,6 +3,7 @@
  * @author Petteri Karttunen
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,16 +25,20 @@ import '@xyflow/react/dist/style.css';
 import { AI_TASK_FLOW_EDGE } from '../../constants/AITasksEdgeTypesConstants';
 import {
   ANTHROPIC_CHAT_MODEL,
-  ENTRY_POINT_NODE,
   GEMINI_CHAT_MODEL,
+  GEMINI_STREAMING_CHAT_MODEL,
   GOOGLE_IMAGEN,
   HUGGING_FACE_CHAT_MODEL,
+  INPUT_TRIGGER,
   LIFERAY_SEARCH,
   MISTRALAI_CHAT_MODEL,
   OLLAMA_CHAT_MODEL,
+  OLLAMA_STREAMING_CHAT_MODEL,
   OPENAI_CHAT_MODEL,
   OPENAI_IMAGE_MODEL,
+  OPENAI_STREAMING_CHAT_MODEL,
   WEBHOOK,
+  getStreamingNodes,
 } from '../../constants/AITasksNodeTypesConstants';
 import { useAITasksContext } from '../../contexts/AITasksContext';
 import { useDnD } from '../../contexts/DnDContext';
@@ -41,7 +46,9 @@ import { useModal } from '../../contexts/ModalContext';
 import { useNodeMenu } from '../../contexts/NodeMenuContext';
 import { getDefaultParameters } from '../../utils/nodeUtils';
 import { toCamelCase } from '../../utils/stringUtils';
+import AITaskChatPreview from '../AITaskChatPreview';
 import Alert from '../ui/Alert';
+import Icon from '../ui/Icon';
 import ModalFooterButtonGroup from '../ui/ModalFooterButtonGroup';
 import AITaskFlowContextMenu from './AITaskFlowContextMenu';
 import AITaskFlowNodeConfigure from './AITaskFlowNodeConfigure';
@@ -50,15 +57,18 @@ import AITaskFlowNodeSetCondition from './AITaskFlowNodeSetCondition';
 import AITaskFlowNodesPane from './AITaskFlowNodesPane';
 import AITaskFlowEdge from './edges/AITaskFlowEdge';
 import AnthropicChatModelNode from './nodes/AnthropicChatModelNode';
-import EntryPointNode from './nodes/EntryPointNode';
 import GeminiChatModelNode from './nodes/GeminiChatModelNode';
+import GeminiStreamingChatModelNode from './nodes/GeminiStreamingChatModelNode';
 import GoogleImagenNode from './nodes/GoogleImagenNode';
 import HuggingFaceChatModelNode from './nodes/HuggingFaceChatModelNode';
+import InputTriggerNode from './nodes/InputTriggerNode';
 import LiferaySearchNode from './nodes/LiferaySearchNode';
 import MistralAIChatModelNode from './nodes/MistralAIChatModelNode';
 import OllamaChatModelNode from './nodes/OllamaChatModelNode';
+import OllamaStreamingChatModelNode from './nodes/OllamaStreamingChatModelNode';
 import OpenAIChatModelNode from './nodes/OpenAIChatModelNode';
 import OpenAIImageModelNode from './nodes/OpenAIImageModelNode';
+import OpenAIStreamingChatModelNode from './nodes/OpenAIStreamingChatModelNode';
 import WebhookNode from './nodes/WebhookNode';
 
 const AITaskFlowEditor = () => {
@@ -74,27 +84,29 @@ const AITaskFlowEditor = () => {
   const ref = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [entryPointPosition, setEntryPointPosition] = useState(() => {
-    const storedEntryPointPosition = localStorage.getItem(`${selectedTask.id}-entrypoint-position`);
-    return storedEntryPointPosition ? JSON.parse(storedEntryPointPosition) : { x: 0, y: 0 };
-  });
   const [menu, setMenu] = useState(null);
   const [isNodesPaneOpen, setIsNodesPaneOpen] = useState(false);
   const reactFlowWrapper = useRef(null);
   const { screenToFlowPosition } = useReactFlow();
   const [type, name] = useDnD();
   const selectedNodeRef = useRef(selectedNode);
+  const [hasStreamingNode, setHasStreamingNode] = useState(false);
+  const [isChatPreviewOpen, setIsChatPreviewOpen] = useState(false);
+  const { t } = useTranslation();
 
   const nodeTypes = {
     [ANTHROPIC_CHAT_MODEL]: AnthropicChatModelNode,
-    [ENTRY_POINT_NODE]: EntryPointNode,
+    [INPUT_TRIGGER]: InputTriggerNode,
     [GEMINI_CHAT_MODEL]: GeminiChatModelNode,
+    [GEMINI_STREAMING_CHAT_MODEL]: GeminiStreamingChatModelNode,
     [GOOGLE_IMAGEN]: GoogleImagenNode,
     [HUGGING_FACE_CHAT_MODEL]: HuggingFaceChatModelNode,
     [LIFERAY_SEARCH]: LiferaySearchNode,
     [MISTRALAI_CHAT_MODEL]: MistralAIChatModelNode,
     [OLLAMA_CHAT_MODEL]: OllamaChatModelNode,
+    [OLLAMA_STREAMING_CHAT_MODEL]: OllamaStreamingChatModelNode,
     [OPENAI_CHAT_MODEL]: OpenAIChatModelNode,
+    [OPENAI_STREAMING_CHAT_MODEL]: OpenAIStreamingChatModelNode,
     [OPENAI_IMAGE_MODEL]: OpenAIImageModelNode,
     [WEBHOOK]: WebhookNode,
   };
@@ -104,6 +116,8 @@ const AITaskFlowEditor = () => {
   };
 
   const getNodesFromConfig = (configuration) => {
+    setHasStreamingNode(configuration.nodes.some((node) => getStreamingNodes.includes(node.type)));
+
     return configuration.nodes.map((node) => ({
       id: node.id,
       type: node.type,
@@ -124,43 +138,6 @@ const AITaskFlowEditor = () => {
       source: edge.source,
       target: edge.target,
     }));
-  };
-
-  const getStartNode = (initialNodes, startNodeId) => {
-    return initialNodes.find((node) => node.id === startNodeId);
-  };
-
-  const getEntryPointNode = (startNode) => {
-    let position = entryPointPosition;
-    if (startNode && entryPointPosition.x === 0 && entryPointPosition.y === 0) {
-      position = {
-        x: startNode.position.x - 300,
-        y: startNode.position.y,
-      };
-    }
-    localStorage.setItem(`${selectedTask.id}-entrypoint-position`, JSON.stringify(position));
-    return {
-      id: 'entryPoint',
-      type: ENTRY_POINT_NODE,
-      position: {
-        x: position.x,
-        y: position.y,
-      },
-      data: { label: 'User Input' },
-    };
-  };
-
-  const getEntryPointEdge = (startNodeId) => {
-    return {
-      id: 'entryPointEdge',
-      source: 'entryPoint',
-      target: startNodeId,
-      style: {
-        strokeDasharray: 6,
-        strokeWidth: 2,
-        stroke: '#80acff',
-      },
-    };
   };
 
   const handleNodesChange = useCallback(
@@ -203,14 +180,6 @@ const AITaskFlowEditor = () => {
         }
         return configNode;
       });
-
-      if (node.id === 'entryPoint') {
-        localStorage.setItem(
-          `${selectedTask.id}-entrypoint-position`,
-          JSON.stringify(node.position),
-        );
-        setEntryPointPosition(node.position);
-      }
 
       handleFlowConfigurationChange({
         ...selectedTask.configuration,
@@ -261,23 +230,27 @@ const AITaskFlowEditor = () => {
         return;
       }
 
+      if (getStreamingNodes.includes(type)) {
+        setHasStreamingNode(true);
+      }
+
       const position = screenToFlowPosition({
         x: event.clientX - 150,
         y: event.clientY - 25,
       });
 
-      const nodeLabel = uniqueNamesGenerator({
-        dictionaries: [colors, adjectives, animals],
-        separator: ' ',
-        style: 'capital',
-      });
-
-      const nodeId = toCamelCase(nodeLabel);
+      const nodeId = toCamelCase(
+        uniqueNamesGenerator({
+          dictionaries: [colors, adjectives, animals],
+          separator: ' ',
+          style: 'capital',
+        }),
+      );
 
       const newNode = {
         id: nodeId,
         type,
-        label: nodeLabel,
+        label: t(type),
         parameters: getDefaultParameters(type),
         uiConfiguration: { position },
       };
@@ -294,25 +267,19 @@ const AITaskFlowEditor = () => {
 
   const onConnect = useCallback(
     (connection) => {
-      if (connection.source === 'entryPoint') {
-        handleFlowConfigurationChange({
-          ...selectedTask.configuration,
-          startNodeId: connection.target,
-        });
-      } else {
-        const updatedConfig = {
-          ...selectedTask.configuration,
-          edges: [
-            ...selectedTask.configuration.edges,
-            {
-              id: uuidv4(),
-              source: connection.source,
-              target: connection.target,
-            },
-          ],
-        };
-        handleFlowConfigurationChange(updatedConfig);
-      }
+      const updatedConfig = {
+        ...selectedTask.configuration,
+        edges: [
+          ...selectedTask.configuration.edges,
+          {
+            id: uuidv4(),
+            source: connection.source,
+            target: connection.target,
+          },
+        ],
+      };
+      handleFlowConfigurationChange(updatedConfig);
+
       setEdges((eds) => addEdge(connection, eds));
     },
     [selectedTask, handleFlowConfigurationChange],
@@ -366,11 +333,8 @@ const AITaskFlowEditor = () => {
     selectedNodeRef.current = selectedNode;
     const initialNodes = getNodesFromConfig(selectedTask.configuration);
     const initialEdges = getEdgesFromConfig(selectedTask.configuration);
-    const startNode = getStartNode(initialNodes, selectedTask.configuration.startNodeId);
-    const entryPointNode = getEntryPointNode(startNode);
-    const entryPointEdge = getEntryPointEdge(selectedTask.configuration.startNodeId);
-    setNodes([entryPointNode, ...initialNodes]);
-    setEdges([entryPointEdge, ...initialEdges]);
+    setNodes([...initialNodes]);
+    setEdges([...initialEdges]);
   }, [selectedTask.configuration, selectedNode]);
 
   return (
@@ -381,6 +345,7 @@ const AITaskFlowEditor = () => {
         onRename={openRenameModal}
         onConfigure={openConfigureModal}
         onSetCondition={openSetConditionModal}
+        setHasStreamingNode={setHasStreamingNode}
       />
       <ReactFlow
         ref={ref}
@@ -402,22 +367,25 @@ const AITaskFlowEditor = () => {
       >
         <Panel position="top-left">
           <button
-            className={'btn btn-primary btn-lg mt-2'}
+            className={'btn btn-sm btn-primary'}
             onClick={(e) => {
               e.preventDefault();
               setIsNodesPaneOpen(!isNodesPaneOpen);
             }}
           >
-            Add Nodes
+            {(isNodesPaneOpen ? 'Close' : 'Open') + ' Nodes Pane'}
           </button>
         </Panel>
-        <Panel position="top-center">
-          {!selectedTask.configuration.startNodeId && (
-            <Alert
-              type={'warning'}
-              message={`Connect the user input to a node to enable processing.`}
-            />
-          )}
+        <Panel position="top-right">
+          <button
+            className="btn btn-sm btn-primary"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsChatPreviewOpen(!isChatPreviewOpen);
+            }}
+          >
+            {(isChatPreviewOpen ? 'Close' : 'Open') + ' Chat Preview'}
+          </button>
         </Panel>
         <Background
           variant={BackgroundVariant.Dots}
@@ -428,6 +396,11 @@ const AITaskFlowEditor = () => {
         <Controls showInteractive={false} />
         <MiniMap position={'bottom-left'} nodeStrokeColor={'#80acff'} nodeStrokeWidth={8} />
       </ReactFlow>
+      <AITaskChatPreview
+        hasStreamingNode={hasStreamingNode}
+        isOpen={isChatPreviewOpen}
+        setIsOpen={setIsChatPreviewOpen}
+      />
     </div>
   );
 };

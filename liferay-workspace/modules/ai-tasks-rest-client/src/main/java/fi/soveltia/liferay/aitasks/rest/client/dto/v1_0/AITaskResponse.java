@@ -20,26 +20,26 @@ public class AITaskResponse implements Cloneable, Serializable {
 		return AITaskResponseSerDes.toDTO(json);
 	}
 
-	public Object getDebugInfo() {
-		return debugInfo;
+	public Object getExecutionTrace() {
+		return executionTrace;
 	}
 
-	public void setDebugInfo(Object debugInfo) {
-		this.debugInfo = debugInfo;
+	public void setExecutionTrace(Object executionTrace) {
+		this.executionTrace = executionTrace;
 	}
 
-	public void setDebugInfo(
-		UnsafeSupplier<Object, Exception> debugInfoUnsafeSupplier) {
+	public void setExecutionTrace(
+		UnsafeSupplier<Object, Exception> executionTraceUnsafeSupplier) {
 
 		try {
-			debugInfo = debugInfoUnsafeSupplier.get();
+			executionTrace = executionTraceUnsafeSupplier.get();
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	protected Object debugInfo;
+	protected Object executionTrace;
 
 	public Object getOutput() {
 		return output;

@@ -3,15 +3,17 @@
  */
 import {
   ANTHROPIC_CHAT_MODEL,
-  ENTRY_POINT_NODE,
   GEMINI_CHAT_MODEL,
+  GEMINI_STREAMING_CHAT_MODEL,
   GOOGLE_IMAGEN,
   HUGGING_FACE_CHAT_MODEL,
   LIFERAY_SEARCH,
   MISTRALAI_CHAT_MODEL,
   OLLAMA_CHAT_MODEL,
+  OLLAMA_STREAMING_CHAT_MODEL,
   OPENAI_CHAT_MODEL,
   OPENAI_IMAGE_MODEL,
+  OPENAI_STREAMING_CHAT_MODEL,
   WEBHOOK,
 } from '../constants/AITasksNodeTypesConstants';
 
@@ -32,13 +34,29 @@ export const getDefaultParameters = (nodeType) => {
   }
   if (nodeType === GEMINI_CHAT_MODEL) {
     return {
-      location: '',
+      location: 'us-central1',
       memoryMaxMessages: 20,
       modelName: 'gemini-1.5-pro',
       maxOutputTokens: 350,
       outputParameterName: 'text',
       promptTemplate: '{{input.text}}',
-      project: '',
+      project: 'env:GCLOUD_PROJECT',
+      systemMessage: '',
+      temperature: 0.7,
+      timeout: 20,
+      topK: 3,
+      topP: 1,
+      useChatMemory: true,
+    };
+  }
+  if (nodeType === GEMINI_STREAMING_CHAT_MODEL) {
+    return {
+      location: 'us-central1',
+      memoryMaxMessages: 20,
+      modelName: 'gemini-1.5-pro',
+      maxOutputTokens: 350,
+      promptTemplate: '{{input.text}}',
+      project: 'env:GCLOUD_PROJECT',
       systemMessage: '',
       temperature: 0.7,
       timeout: 20,
@@ -55,16 +73,18 @@ export const getDefaultParameters = (nodeType) => {
       modelName: 'imagegeneration@005',
       outputParameterName: 'image',
       promptTemplate: '{{input.text}}',
-      project: '',
+      project: 'env:GCLOUD_PROJECT',
       publisher: 'google',
       sampleImageSize: 1536,
+      sampleImageStyle: 'digitalArt',
     };
   }
   if (nodeType === HUGGING_FACE_CHAT_MODEL) {
     return {
-      accessToken: '',
+      accessToken: 'env:HUGGING_FACE_ACCESS_TOKEN',
       baseUrl: '',
       maxNewTokens: '',
+      memoryMaxMessages: 20,
       modelName: '',
       outputParameterName: 'text',
       returnFullText: true,
@@ -100,8 +120,19 @@ export const getDefaultParameters = (nodeType) => {
     return {
       baseUrl: 'http://localhost:11434',
       memoryMaxMessages: 20,
-      modelName: 'llama3.2',
+      modelName: 'llama3.2:1b',
       outputParameterName: 'text',
+      promptTemplate: '{{input.text}}',
+      systemMessage: '',
+      temperature: 0.7,
+      useChatMemory: true,
+    };
+  }
+  if (nodeType === OLLAMA_STREAMING_CHAT_MODEL) {
+    return {
+      baseUrl: 'http://localhost:11434',
+      memoryMaxMessages: 20,
+      modelName: 'llama3.2:1b',
       promptTemplate: '{{input.text}}',
       systemMessage: '',
       temperature: 0.7,
@@ -110,11 +141,24 @@ export const getDefaultParameters = (nodeType) => {
   }
   if (nodeType === OPENAI_CHAT_MODEL) {
     return {
-      apiKey: '',
+      apiKey: 'env:OPENAI_API_KEY',
       baseUrl: 'https://api.openai.com/v1/',
       memoryMaxMessages: 20,
       modelName: 'gpt-4o-mini',
       outputParameterName: 'text',
+      promptTemplate: '{{input.text}}',
+      systemMessage: '',
+      temperature: 0.7,
+      timeout: 20,
+      useChatMemory: true,
+    };
+  }
+  if (nodeType === OPENAI_STREAMING_CHAT_MODEL) {
+    return {
+      apiKey: 'env:OPENAI_API_KEY',
+      baseUrl: 'https://api.openai.com/v1/',
+      memoryMaxMessages: 20,
+      modelName: 'gpt-4o-mini',
       promptTemplate: '{{input.text}}',
       systemMessage: '',
       temperature: 0.7,
@@ -128,12 +172,14 @@ export const getDefaultParameters = (nodeType) => {
       modelName: 'dall-e-2',
       outputParameterName: 'image',
       promptTemplate: '{{input.text}}',
+      quality: 'standard',
       responseFormat: 'b64_json',
+      style: 'Natural',
     };
   }
   if (nodeType === WEBHOOK) {
     return {
-      method: 'POST',
+      httpMethod: 'POST',
       taskContextOutputParameterName: 'webhookResponse',
       url: '',
     };

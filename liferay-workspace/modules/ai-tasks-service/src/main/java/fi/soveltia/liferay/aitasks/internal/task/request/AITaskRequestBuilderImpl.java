@@ -6,8 +6,6 @@ import fi.soveltia.liferay.aitasks.task.context.AITaskContext;
 import fi.soveltia.liferay.aitasks.task.request.AITaskRequest;
 import fi.soveltia.liferay.aitasks.task.request.AITaskRequestBuilder;
 
-import java.util.Map;
-
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -32,18 +30,10 @@ public class AITaskRequestBuilderImpl implements AITaskRequestBuilder {
 
 	@Override
 	public AITaskRequest build() {
-		return new AITaskRequestImpl(_aiTask, _aiTaskContext, _input);
-	}
-
-	@Override
-	public AITaskRequestBuilder input(Map<String, Object> input) {
-		_input = input;
-
-		return this;
+		return new AITaskRequestImpl(_aiTask, _aiTaskContext);
 	}
 
 	private AITask _aiTask;
 	private AITaskContext _aiTaskContext;
-	private Map<String, Object> _input;
 
 }

@@ -11,11 +11,12 @@ import java.util.Map;
 public class AITaskContext {
 
 	public AITaskContext(
-		String aiTaskExternalReferenceCode, long companyId, Locale locale,
-		long userId) {
+		String aiTaskExternalReferenceCode, long companyId, Object input,
+		Locale locale, long userId) {
 
 		_aiTaskExternalReferenceCode = aiTaskExternalReferenceCode;
 		_companyId = companyId;
+		_input = input;
 		_locale = locale;
 		_userId = userId;
 	}
@@ -54,6 +55,20 @@ public class AITaskContext {
 		return _companyId;
 	}
 
+	public Object getIfMapParameter(String key) {
+		if ((_input == null) || !(_input instanceof Map)) {
+			return null;
+		}
+
+		Map<String, Object> map = (Map<String, Object>)_input;
+
+		return map.get(key);
+	}
+
+	public Object getInput() {
+		return _input;
+	}
+
 	public Locale getLocale() {
 		return _locale;
 	}
@@ -65,6 +80,7 @@ public class AITaskContext {
 	private Map<String, AITaskContextParameter> _aiTaskContextParameters;
 	private final String _aiTaskExternalReferenceCode;
 	private final long _companyId;
+	private final Object _input;
 	private final Locale _locale;
 	private final long _userId;
 

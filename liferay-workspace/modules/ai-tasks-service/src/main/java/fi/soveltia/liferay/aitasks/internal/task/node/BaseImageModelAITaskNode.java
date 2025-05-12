@@ -7,8 +7,9 @@ import dev.langchain4j.data.image.Image;
 import dev.langchain4j.model.image.ImageModel;
 import dev.langchain4j.model.output.Response;
 
-import fi.soveltia.liferay.aitasks.internal.util.PromptUtil;
-import fi.soveltia.liferay.aitasks.spi.task.node.AITaskNode;
+import fi.soveltia.liferay.aitasks.internal.task.node.type.ImageModelAITaskNode;
+import fi.soveltia.liferay.aitasks.internal.task.node.util.ExecutionTraceUtil;
+import fi.soveltia.liferay.aitasks.internal.task.node.util.PromptUtil;
 import fi.soveltia.liferay.aitasks.task.context.AITaskContext;
 import fi.soveltia.liferay.aitasks.task.node.AITaskNodeResponse;
 
@@ -21,73 +22,71 @@ import java.util.Map;
  * @author Petteri Karttunen
  */
 public abstract class BaseImageModelAITaskNode
-	extends BaseAITaskNode implements AITaskNode {
+	extends BaseAITaskNode implements ImageModelAITaskNode {
 
 	@Override
 	public AITaskNodeResponse execute(
-		AITaskContext aiTaskContext, boolean debug, String id,
-		Map<String, Object> input, JSONObject jsonObject) {
+		AITaskContext aiTaskContext, JSONObject jsonObject, String nodeId,
+		boolean trace) {
 
-		return toImageAITaskNodeResponse(
-			aiTaskContext, debug, getImageModel(jsonObject), input, jsonObject);
+		return _toImageAITaskNodeResponse(
+			aiTaskContext, getImageModel(jsonObject), jsonObject, trace);
 	}
 
-	protected abstract ImageModel getImageModel(JSONObject jsonObject);
+	private Map<String, Object> _getExecutionTrace(
+		Response<?> response, boolean trace) {
 
-	protected AITaskNodeResponse toImageAITaskNodeResponse(
-		AITaskContext aiTaskContext, boolean debug, ImageModel imageModel,
-		Map<String, Object> input, JSONObject jsonObject) {
+		if (!trace || (response == null)) {
+			return null;
+		}
+
+		Map<String, Object> executionTrace = new HashMap<>();
+
+		executionTrace.putAll(
+			ExecutionTraceUtil.getExecutionTrace(
+				response.finishReason(), response.tokenUsage()));
+
+		if (response.content() instanceof List) {
+			Map<String, Object> imageExecutionTraces = new HashMap<>();
+
+			List<Image> images = (List<Image>)response.content();
+
+			for (int i = 0; i < images.size(); i++) {
+				imageExecutionTraces.put(
+					String.valueOf(i), _getImageExecutionTrace(images.get(i)));
+			}
+
+			executionTrace.put("images", imageExecutionTraces);
+		}
+		else if (response.content() instanceof Image) {
+			executionTrace.putAll(
+				_getImageExecutionTrace((Image)response.content()));
+		}
+
+		return executionTrace;
+	}
+
+	private Map<String, Object> _getImageExecutionTrace(Image image) {
+		return HashMapBuilder.<String, Object>put(
+			"mimeType", image.mimeType()
+		).put(
+			"revisedPrompt", image.revisedPrompt()
+		).build();
+	}
+
+	private AITaskNodeResponse _toImageAITaskNodeResponse(
+		AITaskContext aiTaskContext, ImageModel imageModel,
+		JSONObject jsonObject, boolean trace) {
 
 		int numberOfImages = jsonObject.getInt("numberOfImages", 1);
 
 		if (numberOfImages > 1) {
 			return _toMultiImageAITaskNodeResponse(
-				aiTaskContext, debug, imageModel, input, jsonObject,
-				numberOfImages);
+				aiTaskContext, imageModel, jsonObject, numberOfImages, trace);
 		}
 
 		return _toSingleImageAITaskNodeResponse(
-			aiTaskContext, debug, imageModel, input, jsonObject);
-	}
-
-	private Map<String, Object> _getDebugInfo(
-		boolean debug, Response<?> response) {
-
-		if (!debug || (response == null)) {
-			return null;
-		}
-
-		Map<String, Object> debugInfo = new HashMap<>();
-
-		debugInfo.putAll(
-			getCommonDebugInfo(response.finishReason(), response.tokenUsage()));
-
-		if (response.content() instanceof List) {
-			Map<String, Object> imageDebugInfos = new HashMap<>();
-
-			List<Image> images = (List<Image>)response.content();
-
-			for (int i = 0; i < images.size(); i++) {
-				imageDebugInfos.put(
-					String.valueOf(i), _getImageDebugInfo(images.get(i)));
-			}
-
-			debugInfo.put("images", imageDebugInfos);
-		}
-		else if (response.content() instanceof Image) {
-			debugInfo.putAll(_getImageDebugInfo((Image)response.content()));
-		}
-
-		return debugInfo;
-	}
-
-	private Map<String, Object> _getImageDebugInfo(Image image) {
-		Map<String, Object> debugInfo = new HashMap<>();
-
-		debugInfo.put("mimeType", image.mimeType());
-		debugInfo.put("revisedPrompt", image.revisedPrompt());
-
-		return debugInfo;
+			aiTaskContext, imageModel, jsonObject, trace);
 	}
 
 	private Map<String, Object> _toImageEntry(Image image) {
@@ -103,11 +102,11 @@ public abstract class BaseImageModelAITaskNode
 	}
 
 	private AITaskNodeResponse _toMultiImageAITaskNodeResponse(
-		AITaskContext aiTaskContext, boolean debug, ImageModel imageModel,
-		Map<String, Object> input, JSONObject jsonObject, int numberOfImages) {
+		AITaskContext aiTaskContext, ImageModel imageModel,
+		JSONObject jsonObject, int numberOfImages, boolean trace) {
 
 		Response<List<Image>> response = imageModel.generate(
-			PromptUtil.getUserMessageString(aiTaskContext, input, jsonObject),
+			PromptUtil.getUserMessageString(aiTaskContext, jsonObject),
 			numberOfImages);
 
 		List<Image> images = response.content();
@@ -119,20 +118,20 @@ public abstract class BaseImageModelAITaskNode
 		}
 
 		return toAITaskNodeResponse(
-			aiTaskContext, debug, _getDebugInfo(debug, response), jsonObject,
-			output);
+			aiTaskContext, _getExecutionTrace(response, trace), jsonObject,
+			trace, output);
 	}
 
 	private AITaskNodeResponse _toSingleImageAITaskNodeResponse(
-		AITaskContext aiTaskContext, boolean debug, ImageModel imageModel,
-		Map<String, Object> input, JSONObject jsonObject) {
+		AITaskContext aiTaskContext, ImageModel imageModel,
+		JSONObject jsonObject, boolean trace) {
 
 		Response<Image> response = imageModel.generate(
-			PromptUtil.getUserMessageString(aiTaskContext, input, jsonObject));
+			PromptUtil.getUserMessageString(aiTaskContext, jsonObject));
 
 		return toAITaskNodeResponse(
-			aiTaskContext, debug, _getDebugInfo(debug, response), jsonObject,
-			_toImageEntry(response.content()));
+			aiTaskContext, _getExecutionTrace(response, trace), jsonObject,
+			trace, _toImageEntry(response.content()));
 	}
 
 }

@@ -21,6 +21,18 @@ ai-tasks-admin-web {
     }
   }
 
+  .jer-editor-container {
+    margin: 0 auto;
+  }
+
+  .tab-content {
+    padding-top: 105px;
+  }
+
+  .modal .tab-content {
+    padding-top: 30px;
+  }
+
   @keyframes typing {
     0% {
       opacity: 0.4;

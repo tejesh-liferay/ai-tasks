@@ -9,6 +9,9 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface ChatMemoryManager {
 
 	public void clearChatMemory(
+		long companyId, String externalReferenceCode, long userId);
+
+	public void clearChatMemory(
 		long companyId, String externalReferenceCode, String nodeId,
 		long userId);
 
